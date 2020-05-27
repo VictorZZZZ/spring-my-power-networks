@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Application</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{navigation :: navigation(Home)}" />
+
+    <h1>СМС Абонентам</h1>
+    <table class="table table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <td> Title </td>
+                <td> Actions </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="res : ${allRes}">
+                <td th:object="${res}">
+                    <span th:text="*{name}" /><br/>
+                    <div th:each="tp : *{tps}" style="margin-left:40px;">
+                        <p th:text="${tp.name + ' ' + tp.dbf_code}" />
+                        <div th:each="fider :${tp.fiders}" style="margin-left:40px;">
+                            <p th:text="${fider.name}" />
+                            <div th:each="abonent :${fider.abonents}" style="margin-left:40px;">
+                                <p th:text="${abonent.surname + ' ' + abonent.name + ' ' + abonent.middlename
+                                            + ' ' + abonent.firstPhone + ' ' + abonent.secondPhone}" />
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
+</div>
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.js}"></script>
+</body>
+</html>

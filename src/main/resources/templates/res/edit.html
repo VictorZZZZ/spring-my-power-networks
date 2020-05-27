@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Application</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{navigation :: navigation(Home)}" />
+
+    <h1>Редактировать РЭС</h1>
+
+
+    <form action="#" th:action="@{/res/saveRes}" th:object="${res}" method="post">
+        <input type="hidden" th:if="*{id!=null}" th:field="*{id}" />
+        <div class="form-group">
+            <label>Название</label>
+            <input class="form-control" type="text" th:field="*{name}" />
+            <small class="form-text text-muted">Введите название РЭСа.</small>
+        </div>
+        <input class="btn btn-outline-info" type="submit" value="Сохранить" />
+        <ul>
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
+        </ul>
+    </form>
+
+
+
+</div>
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.js}"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Application</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{navigation :: navigation(Home)}" />
+
+    <h1>Список РЭСов</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <a class="btn btn-outline-primary" th:href="@{/res/add}">Добавить новый РЭС</a>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <td> Название РЭСа </td>
+                    <td> Действия </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="res : ${allRes}">
+                    <td th:object="${res}">
+                        <span th:text="*{name}" /><br/>
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-dark" th:href="@{'/res/edit/' + ${res.id}}">Изменить</a>
+                        <a class="btn btn-outline-danger" th:href="@{'/res/delete/' + ${res.id}}">Удалить</a>
+                        <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.js}"></script>
+</body>
+</html>
