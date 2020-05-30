@@ -18,11 +18,9 @@
             <label>Название</label>
             <input class="form-control" type="text" th:field="*{name}" />
             <small class="form-text text-muted">Введите название РЭСа.</small>
+            <small class="form-text text-danger" th:each="err : ${#fields.errors('name')}" th:text="${err}" />
         </div>
         <input class="btn btn-outline-info" type="submit" value="Сохранить" />
-        <ul>
-            <li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
-        </ul>
     </form>
 
 

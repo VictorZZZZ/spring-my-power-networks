@@ -1,5 +1,9 @@
 package net.energo.grodno.pes.smsSender.entities;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -8,7 +12,11 @@ import java.util.Date;
 public class Abonent {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(name="account_number")
+    private String accountNumber;
     @Column(name="surname")
     private String surname;
     @Column(name="name")
@@ -25,9 +33,15 @@ public class Abonent {
     private String opora;
     @Column(name="notes")
     private String notes;
+
     @Column(name="created")
+    @CreationTimestamp
+    @DateTimeFormat(pattern="dd-MMM-YYYY HH:mm")
     private Date created;
+
     @Column(name="modified")
+    @UpdateTimestamp
+    @DateTimeFormat(pattern="dd-MMM-YYYY HH:mm")
     private Date modified;
 
     @ManyToOne
@@ -131,5 +145,13 @@ public class Abonent {
 
     public void setFider(Fider fider) {
         this.fider = fider;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 }

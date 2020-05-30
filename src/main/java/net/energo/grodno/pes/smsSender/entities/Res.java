@@ -2,6 +2,7 @@ package net.energo.grodno.pes.smsSender.entities;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -12,6 +13,7 @@ public class Res {
     private Integer id;
 
     @Column(name = "name")
+    @NotBlank
     private String name;
 
     @OneToMany(mappedBy = "res")

@@ -9,30 +9,32 @@
 <div class="container">
     <div th:replace="~{navigation :: navigation(Home)}" />
 
-    <h1>Список ТП</h1>
+    <h1>Список Фидеров</h1>
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <a class="btn btn-outline-primary" th:href="@{/tp/add}">Добавить новое ТП</a>
+                <a class="btn btn-outline-primary" th:href="@{/fider/add}">Добавить новый Фидер</a>
             </div>
         </div>
         <table class="table table-hover">
             <thead class="thead-dark">
                 <tr>
                     <td> РЭС </td>
+                    <td> ТП </td>
                     <td> Название </td>
                     <td> Действия </td>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="tp : ${tps}">
-                    <td th:text="${tp.res.name}"/>
-                    <td th:object="${tp}">
+                <tr th:each="fider : ${fiders}">
+                    <td th:text="${fider.tp.res.name}"/>
+                    <td th:text="${fider.tp.name}"/>
+                    <td th:object="${fider}">
                         <span th:text="*{name}" /><br/>
                     </td>
                     <td>
-                        <a class="btn btn-outline-dark" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>
-                        <a class="btn btn-outline-danger" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
+                        <a class="btn btn-outline-dark" th:href="@{'/fider/edit/' + ${fider.id}}">Изменить</a>
+                        <a class="btn btn-outline-danger" th:href="@{'/fider/delete/' + ${fider.id}}">Удалить</a>
                         <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
                     </td>
                 </tr>

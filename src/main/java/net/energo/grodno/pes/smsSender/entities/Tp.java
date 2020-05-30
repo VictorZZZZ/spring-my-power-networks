@@ -3,6 +3,7 @@ package net.energo.grodno.pes.smsSender.entities;
 import org.springframework.web.bind.annotation.Mapping;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -10,9 +11,11 @@ import java.util.List;
 public class Tp {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name="name")
+    @NotBlank
     private String name;
     @Column(name="dbf_code")
     private String dbf_code;
@@ -65,5 +68,16 @@ public class Tp {
 
     public void setFiders(List<Fider> fiders) {
         this.fiders = fiders;
+    }
+
+    @Override
+    public String toString() {
+        return "Tp{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", dbf_code='" + dbf_code + '\'' +
+                ", res=" + res +
+                ", fiders=" + fiders +
+                '}';
     }
 }

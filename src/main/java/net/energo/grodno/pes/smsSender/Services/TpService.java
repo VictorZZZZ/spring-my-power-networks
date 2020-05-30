@@ -19,4 +19,16 @@ public class TpService {
     public List<Tp> getAll() {
         return tpRepository.findAll();
     }
+
+    public void saveOne(Tp tp) {
+        tpRepository.save(tp);
+    }
+
+    public Tp getOne(Integer id) {
+        return tpRepository.getOne(id);
+    }
+
+    public void deleteOne(Integer id) {
+        tpRepository.deleteById(id);
+    }
 }

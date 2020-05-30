@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -50,11 +51,12 @@ public class ResController {
 
 
     @RequestMapping(value = "/saveRes", method = RequestMethod.POST)
-    public String saveRes(Res res, BindingResult errors, Model model) {
-        if (!errors.hasErrors()) {
+    public String saveRes(@Valid Res res, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "res/edit";
+        } else {
             resService.saveOne(res);
-            model.addAttribute("res", res);
+            return "redirect:/res/index";
         }
-        return ((errors.hasErrors()) ? "res/edit" : "redirect:/res/index");
     }
 }

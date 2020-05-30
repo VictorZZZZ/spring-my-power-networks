@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Application</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{navigation :: navigation(Home)}" />
+
+    <!-- todo найти как обращаться к URL из thymeleaf -->
+    <h1>Редактировать Абонента</h1>
+
+
+    <form action="#" th:action="@{/abonent/saveAbonent}" th:object="${abonent}" method="post">
+        <input type="hidden" th:if="*{id!=null}" th:field="*{id}" />
+
+        <div class="form-group">
+            <label>Лицевой счёт</label>
+            <input class="form-control" type="text" th:field="*{accountNumber}" />
+            <small class="form-text text-danger" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}" />
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label>Фамилия</label>
+                <input class="form-control" type="text" th:field="*{surname}" />
+                <small class="form-text text-danger" th:each="err : ${#fields.errors('surname')}" th:text="${err}" />
+            </div>
+            <div class="form-group col-md-4">
+                <label>Имя</label>
+                <input class="form-control" type="text" th:field="*{name}" />
+                <small class="form-text text-danger" th:each="err : ${#fields.errors('name')}" th:text="${err}" />
+            </div>
+            <div class="form-group col-md-4">
+                <label>Отчество</label>
+                <input class="form-control" type="text" th:field="*{middlename}" />
+                <small class="form-text text-danger" th:each="err : ${#fields.errors('middlename')}" th:text="${err}" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label>Доманий Тел</label>
+                <input class="form-control" type="text" th:field="*{homePhone}" />
+                <small class="form-text text-danger" th:each="err : ${#fields.errors('homePhone')}" th:text="${err}" />
+            </div>
+            <div class="form-group col-md-4">
+                <label>Мобильный 1</label>
+                <input class="form-control" type="text" th:field="*{firstPhone}" />
+                <small class="form-text text-danger" th:each="err : ${#fields.errors('firstPhone')}" th:text="${err}" />
+            </div>
+            <div class="form-group col-md-4">
+                <label>Мобильный 2</label>
+                <input class="form-control" type="text" th:field="*{secondPhone}" />
+                <small class="form-text text-danger" th:each="err : ${#fields.errors('secondPhone')}" th:text="${err}" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Выберите Фидер</label>
+                <select class="form-control" th:field="*{fider}">
+                    <option th:each="item : ${fiderList}"
+                            th:value="${item.id}"
+                            th:text="${item.name + '('+item.tp.name+' - '+item.tp.res.name+')'}">TP NAME</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Опора</label>
+                <input class="form-control" type="text" th:field="*{opora}" />
+                <small class="form-text text-danger" th:each="err : ${#fields.errors('opora')}" th:text="${err}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Информация</label>
+            <textarea class="form-control" th:field="*{notes}"></textarea>
+        </div>
+        <!-- todo modified чтобы сам подставлялся -->
+
+        <input class="btn btn-outline-info" type="submit" value="Сохранить" />
+    </form>
+
+
+
+</div>
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.js}"></script>
+</body>
+</html>

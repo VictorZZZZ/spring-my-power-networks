@@ -8,6 +8,7 @@ import java.util.List;
 public class Fider {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(name="name")
     private String name;
