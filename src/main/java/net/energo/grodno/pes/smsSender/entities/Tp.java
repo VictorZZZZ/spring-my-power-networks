@@ -17,8 +17,8 @@ public class Tp {
     @Column(name="name")
     @NotBlank
     private String name;
-    @Column(name="dbf_code")
-    private String dbf_code;
+    @Column(name="dbf_id")
+    private String dbf_id;
 
     @ManyToOne
     @JoinColumn(name="res_id")
@@ -28,6 +28,12 @@ public class Tp {
     private List<Fider> fiders;
 
     public Tp() {
+    }
+
+    public Tp(String name, String dbf_id, Res res) {
+        this.name = name;
+        this.dbf_id = dbf_id;
+        this.res = res;
     }
 
     public Integer getId() {
@@ -46,12 +52,12 @@ public class Tp {
         this.name = name;
     }
 
-    public String getDbf_code() {
-        return dbf_code;
+    public String getDbf_id() {
+        return dbf_id;
     }
 
-    public void setDbf_code(String dbf_code) {
-        this.dbf_code = dbf_code;
+    public void setDbf_id(String dbf_id) {
+        this.dbf_id = dbf_id;
     }
 
     public Res getRes() {
@@ -75,7 +81,7 @@ public class Tp {
         return "Tp{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", dbf_code='" + dbf_code + '\'' +
+                ", dbf_id='" + dbf_id + '\'' +
                 ", res=" + res +
                 ", fiders=" + fiders +
                 '}';
