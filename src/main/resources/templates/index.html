@@ -22,13 +22,9 @@
                 <td th:object="${res}">
                     <span th:text="*{name}" /><br/>
                     <div th:each="tp : *{tps}" style="margin-left:40px;">
-                        <p th:text="${tp.name + ' ' + tp.dbf_code}" />
+                        <p th:text="${tp.name + ' ' + tp.dbf_id}" />
                         <div th:each="fider :${tp.fiders}" style="margin-left:40px;">
                             <p th:text="${fider.name}" />
-                            <div th:each="abonent :${fider.abonents}" style="margin-left:40px;">
-                                <p th:text="${abonent.surname + ' ' + abonent.name + ' ' + abonent.middlename
-                                            + ' ' + abonent.firstPhone + ' ' + abonent.secondPhone}" />
-                            </div>
                         </div>
                     </div>
                 </td>

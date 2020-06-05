@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Абоненты</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{navigation :: navigation(Home)}" />
+<!-- todo Pagination -->
+    <h1>Список Абонентов</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <a class="btn btn-outline-primary" th:href="@{/abonent/add}">Добавить нового Абонента</a>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                        <th> РЭС </th>
+                        <th> ТП </th>
+                        <th> Фидер </th>
+                        <th> Лиц. Сч. </th>
+                        <th> ФИО </th>
+                        <th> Номера тел. </th>
+                        <th> Отметки </th>
+                        <th> Создан </th>
+                        <th> Изменен </th>
+                        <th> Действия </th>
+                </thead>
+                <tbody>
+                    <tr th:each="abonent : ${abonentsPaginated.content}">
+                        <td th:text="${abonent.fider.tp.res.name}"/>
+                        <td th:text="${abonent.fider.tp.name}"/>
+                        <td th:text="${abonent.fider.name}"/>
+                        <td th:text="${abonent.accountNumber}"/>
+                        <td th:object="${abonent}">
+                            <span th:text="*{surname+' ' + name + ' ' + middlename}" /><br/>
+                        </td>
+                        <td th:object="${abonent}">
+                            <span th:text="*{homePhone+ ' ' + firstPhone + ' ' + secondPhone }" /><br/>
+                        </td>
+                        <td th:object="${abonent}">
+                            <span th:text="*{notes}" /><br/>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(abonent.created, 'dd.MM.yyyy HH:mm')}" /><br/>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(abonent.modified, 'dd.MM.yyyy HH:mm')}" /><br/>
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-dark" th:href="@{'/abonent/edit/' + ${abonent.id}}">Изменить</a>
+                            <a class="btn btn-outline-danger" th:href="@{'/abonent/delete/' + ${abonent.id}}">Удалить</a>
+                            <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${abonentsPaginated.totalPages > 0}">
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item" th:if="${abonentsPaginated.number > 0}">
+                            <a th:href="@{/abonent/listAbonents(size=${abonentsPaginated.size}, page=${abonentsPaginated.number})}">
+                                <span class="page-link">Предыдущая</span>
+                            </a>
+                        </li>
+                        <li th:class="page-item"
+                            th:classappend="${pageNumber==abonentsPaginated.number + 1}  ? active"
+                            th:each="pageNumber : ${pageNumbers}">
+                            <a class="page-link"
+                               th:href="@{/abonent/listAbonents(size=${abonentsPaginated.size}, page=${pageNumber})}"
+                               th:text=${pageNumber}>
+                                1
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${abonentsPaginated.number +2 < abonentsPaginated.getTotalPages() }">
+                            <a class="page-link" th:href="@{/abonent/listAbonents(size=${abonentsPaginated.size}, page=${abonentsPaginated.number+2})}">
+                                Следующая</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.js}"></script>
+</body>
+</html>

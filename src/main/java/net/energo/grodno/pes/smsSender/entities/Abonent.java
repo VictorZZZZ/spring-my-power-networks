@@ -51,6 +51,18 @@ public class Abonent {
     public Abonent() {
     }
 
+    public Abonent(String accountNumber, String surname, String name, String middlename, String homePhone, String firstPhone, String secondPhone, String opora, Fider fider) {
+        this.accountNumber = accountNumber;
+        this.surname = surname;
+        this.name = name;
+        this.middlename = middlename;
+        this.homePhone = homePhone;
+        this.firstPhone = firstPhone;
+        this.secondPhone = secondPhone;
+        this.opora = opora;
+        this.fider = fider;
+    }
+
     public Integer getId() {
         return id;
     }
