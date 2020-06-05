@@ -5,16 +5,12 @@ import net.energo.grodno.pes.smsSender.entities.Abonent;
 import net.energo.grodno.pes.smsSender.entities.Fider;
 import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
 public class DBFManager {
-    private static final Logger logger = LogManager.getLogger(DatabaseManager.class.getName());
-
     private static DBFReader tpReader;
     private static DBFReader fiderReader;
     private static DBFReader abonentReader;
@@ -48,7 +44,7 @@ public class DBFManager {
     }
 
     public void manage(){
-        logger.info("Начало процесса преобразования базы данных DBF...");
+        System.out.println("Начало процесса преобразования базы данных DBF...");
         long startTime = System.currentTimeMillis(); // Get the start Time
         long endTime = 0;
 
@@ -58,7 +54,7 @@ public class DBFManager {
         clearEmptyFiders();
 
         endTime = System.currentTimeMillis(); //Get the end Time
-        logger.info("Процесс преобразования базы данных занял : "+ (endTime-startTime)/1000F +" секунд"); // Print the difference in seconds
+        System.out.println("Процесс преобразования базы данных занял : "+ (endTime-startTime)/1000F +" секунд"); // Print the difference in seconds
     }
 
     private void clearEmptyFiders() {
@@ -174,12 +170,13 @@ public class DBFManager {
                         fider.addAbonent(abonent);
                         abonentList.add(abonent);
                     } else {
-                        logger.warn(fiderCode + "  " +accountNumber + " " + tp.getName() + " " + " не добавлен ");
+                        System.out.println(fiderCode + "  " +accountNumber + " " + tp.getName() + " " + " не добавлен ");
                     }
                 }
             } else {
-                logger.warn("В файле .dbf найден Абонент с пустым полем COD_TP: \n {} {} {} {} {} {} {} {} {} {}"
-                        ,accountNumber,surname,name,middlename,homePhone,firstPhone,secondPhone,tpCode,fiderCode,opora);
+                System.out.println("В файле .dbf найден Абонент с пустым полем COD_TP:");
+                System.out.printf("%s %s %s %s %s %s %s %s %s %s \n\n"
+                    ,accountNumber,surname,name,middlename,homePhone,firstPhone,secondPhone,tpCode,fiderCode,opora);
             }
 
         }
