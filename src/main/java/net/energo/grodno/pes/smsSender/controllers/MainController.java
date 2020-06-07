@@ -2,7 +2,6 @@ package net.energo.grodno.pes.smsSender.controllers;
 
 import net.energo.grodno.pes.smsSender.Services.ResService;
 import net.energo.grodno.pes.smsSender.entities.Res;
-import net.energo.grodno.pes.smsSender.repositories.ResRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +23,11 @@ public class MainController {
         List<Res> allRes=resService.getAllRes();
         model.addAttribute("allRes",allRes);
         return "index";
+    }
+
+    @GetMapping(value={"/importPage"})
+    public String importPage(Model model){
+        return "importPage";
     }
 
 }

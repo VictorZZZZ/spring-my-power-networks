@@ -2,6 +2,8 @@ package net.energo.grodno.pes.smsSender.utils.importFromDbf;
 
 import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,11 +13,10 @@ import org.hibernate.cfg.Configuration;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 
 public class DatabaseManager {
-    private static final Logger logger = LogManager.getLogger(DatabaseManager.class);
+    static Logger logger = LogManager.getLogger(DatabaseManager.class);
 
     private static SessionFactory factory;
 
@@ -30,17 +31,17 @@ public class DatabaseManager {
             System.err.println("Failed to create sessionFactory object." + ex);
             throw new ExceptionInInitializerError(ex);
         }
-
-        //Tp tp = new Tp();
-
-
-        DatabaseManager dbManager = new DatabaseManager();
-        DBFManager dbfManager = new DBFManager(
-                System.getProperty("user.dir")+"\\src\\main\\resources\\static\\files\\ГГРЭС\\4KARTTP.DBF",
-                System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\ГГРЭС\\4KARTFID.DBF",
-                System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\ГГРЭС\\GGRES.DBF");
-
-        dbfManager.manage();
+//
+//        //Tp tp = new Tp();
+//
+//
+//        DatabaseManager dbManager = new DatabaseManager();
+//        DBFManager dbfManager = new DBFManager(
+//                System.getProperty("user.dir")+"\\src\\main\\resources\\static\\files\\ГГРЭС\\4KARTTP.DBF",
+//                System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\ГГРЭС\\4KARTFID.DBF",
+//                System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\ГГРЭС\\GGRES.DBF");
+//
+//        dbfManager.manage();
 
 
         //Res res = mTp.getRes(4);

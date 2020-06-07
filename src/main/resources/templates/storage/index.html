@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Application</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <script th:src="@{/js/jquery.js}"></script>
+</head>
+<body>
+
+<div class="container">
+    <div th:replace="~{navigation :: navigation(file)}" />
+
+    <div th:replace="~{flashMessages :: flash}" />
+
+
+
+
+    <h1>Импорт из DBF</h1>
+    <div class="container">
+        <div class="row">
+
+            <form action="#" method="POST" enctype="multipart/form-data" th:action="@{/files}">
+                <h2>ТП</h2>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">{KARTTP.DBF}</span>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" name="tpFile" class="custom-file-input" id="tpFileField">
+                            <label class="custom-file-label" for="tpFileField">Выберите файл</label>
+                        </div>
+                    </div>
+                </div>
+                <h2>Фидера</h2>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">{KARTFID.DBF}</span>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" name="fiderFile" class="custom-file-input" id="fiderFileField">
+                            <label class="custom-file-label" for="fiderFileField">Выберите файл</label>
+                        </div>
+                    </div>
+                </div>
+                <h2>Абоненты</h2>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">{RES.DBF}</span>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" name="abonentFile" class="custom-file-input" id="abonentFileField">
+                            <label class="custom-file-label" for="abonentFileField">Выберите файл</label>
+                        </div>
+                    </div>
+                </div>
+                <input class="btn btn-outline-info" type="submit" value="Загрузить файлы" />
+            </form>
+
+        </div>
+
+        <div>
+            <ul th:if="${files}">
+
+                <li th:each="file : ${files}">
+                    <a th:href="${file}" th:text="${file}" />
+                </li>
+
+            </ul>
+        </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+<script type="application/javascript">
+    $('input[type="file"]').change(function(e){
+        var fileName = e.target.files[0].name;
+        var nextSibling = e.target.nextElementSibling
+        nextSibling.innerText = fileName
+        console.log(fileName);
+    });
+
+</script>
+
+<script th:src="@{/js/bootstrap.bundle.js}"></script>
+</body>
+</html>

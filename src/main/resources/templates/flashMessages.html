@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Навигация</title>
+    <link rel="stylesheet" th:href="@{css/bootstrap.css}">
+</head>
+<body>
+<!-- todo Сделать поиск по всем объектам -->
+<div th:fragment="flash">
+
+    <div class="alert alert-danger" role="alert" th:if="${messageWarning}">
+        <p th:text="${messageWarning}"></p>
+    </div>
+    <div class="alert alert-warning" role="alert" th:if="${messageError}">
+        <p th:text="${messageError}"></p>
+    </div>
+    <div class="alert alert-info" role="alert" th:if="${messageInfo}">
+        <p th:text="${messageInfo}"></p>
+    </div>
+</div>
+
+<script th:src="@{js/jquery.js}"></script>
+<script th:src="@{js/bootstrap.bundle.js}"></script>
+</body>
+</html>
