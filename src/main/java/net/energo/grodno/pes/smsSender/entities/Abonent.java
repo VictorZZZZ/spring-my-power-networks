@@ -1,22 +1,27 @@
 package net.energo.grodno.pes.smsSender.entities;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.context.annotation.Primary;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Entity
 @Table(name="abonent")
 public class Abonent {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+//    @Id
+//    @Column(name = "id")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Integer id;
 
+    @Id
     @Column(name="account_number")
-    private String accountNumber;
+    private Long accountNumber;
     @Column(name="surname")
     private String surname;
     @Column(name="name")
@@ -33,6 +38,8 @@ public class Abonent {
     private String opora;
     @Column(name="notes")
     private String notes;
+    @Column(name="input_manually",nullable = false, columnDefinition="boolean default false")
+    private boolean inputManually;
 
     @Column(name="created")
     @CreationTimestamp
@@ -46,12 +53,13 @@ public class Abonent {
 
     @ManyToOne
     @JoinColumn(name="fider_id")
+    @OnDelete(action= OnDeleteAction.CASCADE)
     private Fider fider;
 
     public Abonent() {
     }
 
-    public Abonent(String accountNumber, String surname, String name, String middlename, String homePhone, String firstPhone, String secondPhone, String opora, Fider fider) {
+    public Abonent(Long accountNumber, String surname, String name, String middlename, String homePhone, String firstPhone, String secondPhone, String opora, Fider fider, boolean inputManually) {
         this.accountNumber = accountNumber;
         this.surname = surname;
         this.name = name;
@@ -61,15 +69,16 @@ public class Abonent {
         this.secondPhone = secondPhone;
         this.opora = opora;
         this.fider = fider;
+        this.inputManually=inputManually;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+//    public Integer getId() {
+//        return id;
+//    }
+//
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
 
     public String getSurname() {
         return surname;
@@ -159,11 +168,19 @@ public class Abonent {
         this.fider = fider;
     }
 
-    public String getAccountNumber() {
+    public Long getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(String accountNumber) {
+    public void setAccountNumber(Long accountNumber) {
         this.accountNumber = accountNumber;
+    }
+
+    public boolean getInputManually() {
+        return inputManually;
+    }
+
+    public void setInputManually(boolean inputManually) {
+        this.inputManually = inputManually;
     }
 }

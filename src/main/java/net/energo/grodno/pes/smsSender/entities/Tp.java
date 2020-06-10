@@ -1,5 +1,7 @@
 package net.energo.grodno.pes.smsSender.entities;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.web.bind.annotation.Mapping;
 
 import javax.persistence.*;
@@ -18,21 +20,22 @@ public class Tp {
     @NotBlank
     private String name;
     @Column(name="dbf_id")
-    private String dbf_id;
+    private int dbfId;
 
     @ManyToOne
     @JoinColumn(name="res_id")
     private Res res;
 
     @OneToMany(mappedBy = "tp")
+    @OnDelete(action= OnDeleteAction.CASCADE)
     private List<Fider> fiders;
 
     public Tp() {
     }
 
-    public Tp(String name, String dbf_id, Res res) {
+    public Tp(String name, int dbfId, Res res) {
         this.name = name;
-        this.dbf_id = dbf_id;
+        this.dbfId = dbfId;
         this.res = res;
     }
 
@@ -52,12 +55,12 @@ public class Tp {
         this.name = name;
     }
 
-    public String getDbf_id() {
-        return dbf_id;
+    public int getDbfId() {
+        return dbfId;
     }
 
-    public void setDbf_id(String dbf_id) {
-        this.dbf_id = dbf_id;
+    public void setDbfId(int dbfId) {
+        this.dbfId = dbfId;
     }
 
     public Res getRes() {
@@ -81,9 +84,17 @@ public class Tp {
         return "Tp{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", dbf_id='" + dbf_id + '\'' +
+                ", dbfId='" + dbfId + '\'' +
                 ", res=" + res +
                 ", fiders=" + fiders +
+                '}';
+    }
+
+    public String toShortString() {
+        return "Tp{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", dbfId='" + dbfId + '\'' +
                 '}';
     }
 }

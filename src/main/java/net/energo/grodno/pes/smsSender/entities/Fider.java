@@ -1,5 +1,8 @@
 package net.energo.grodno.pes.smsSender.entities;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,21 +17,22 @@ public class Fider {
     @Column(name="name")
     private String name;
     @Column(name="dbf_id")
-    private String dbf_id;
+    private int dbfId;
 
     @ManyToOne
     @JoinColumn(name="tp_id")
     private Tp tp;
 
     @OneToMany(mappedBy = "fider")
+    @OnDelete(action=OnDeleteAction.CASCADE)
     private List<Abonent> abonents;
 
     public Fider() {
     }
 
-    public Fider(String name, String dbf_id, Tp tp) {
+    public Fider(String name, int dbfId, Tp tp) {
         this.name = name;
-        this.dbf_id = dbf_id;
+        this.dbfId = dbfId;
         this.tp = tp;
     }
 
@@ -48,12 +52,12 @@ public class Fider {
         this.name = name;
     }
 
-    public String getDbf_id() {
-        return dbf_id;
+    public int getDbfId() {
+        return dbfId;
     }
 
-    public void setDbf_id(String dbf_id) {
-        this.dbf_id = dbf_id;
+    public void setdbfId(int dbfId) {
+        this.dbfId = dbfId;
     }
 
     public Tp getTp() {
@@ -89,7 +93,7 @@ public class Fider {
     public String toString() {
         return "Fider{" +
                 "name='" + name + '\'' +
-                ", dbf_id='" + dbf_id + '\'' +
+                ", dbfId='" + dbfId + '\'' +
                 '}';
     }
 }
