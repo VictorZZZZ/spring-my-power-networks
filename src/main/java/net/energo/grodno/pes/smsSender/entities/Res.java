@@ -1,6 +1,9 @@
 package net.energo.grodno.pes.smsSender.entities;
 
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -17,6 +20,7 @@ public class Res {
     private String name;
 
     @OneToMany(mappedBy = "res")
+    @OnDelete(action= OnDeleteAction.CASCADE)
     private List<Tp> tps;
 
     public Res() {

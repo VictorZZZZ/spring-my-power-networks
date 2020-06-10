@@ -91,7 +91,7 @@ public class DatabaseManager {
                 Tp tp = (Tp) iterator.next();
                 System.out.println("Id: " + tp.getId());
                 System.out.println("Name: " + tp.getName());
-                System.out.println("dbf_id: " + tp.getDbf_id());
+                System.out.println("dbf_id: " + tp.getDbfId());
                 System.out.println();
             }
             tx.commit();

@@ -1,6 +1,7 @@
 package net.energo.grodno.pes.smsSender.Services;
 
 import net.energo.grodno.pes.smsSender.entities.Abonent;
+import net.energo.grodno.pes.smsSender.entities.Fider;
 import net.energo.grodno.pes.smsSender.repositories.AbonentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,23 @@ public class AbonentService {
 
     public void saveOne(Abonent abonent) {
         abonentRepository.save(abonent);
+    }
+    public void saveAll(List<Abonent> abonentList) {
+//        if(abonentList.size()>1000) {
+//            for (int i = 0; i < abonentList.size() / 1000; i++) {
+//                System.out.printf("Вставка с %d по %d записей: ",i*1000,i * 1000 + 1000 - 1);
+//                long startTime=System.currentTimeMillis();
+//                long endTime = 0;
+//                List<Abonent> subList = abonentList.subList(i * 1000, i * 1000 + 1000 - 1);
+//                abonentRepository.saveAll(subList);
+//                endTime=System.currentTimeMillis();
+//                System.out.printf("заняло %f секунд \n",((endTime-startTime)/1000F));
+//                System.out.printf("Записано %d записей \n================\n",subList.size());
+//            }
+//        } else {
+            abonentRepository.saveAll(abonentList);
+            //abonentRepository.flush();
+        //}
     }
 
     public void deleteOne(Integer id) {

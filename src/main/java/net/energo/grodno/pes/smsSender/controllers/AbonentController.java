@@ -46,7 +46,7 @@ public class AbonentController {
             @RequestParam("page") Optional<Integer> page,
             @RequestParam("size") Optional<Integer> size) {
         int currentPage = page.orElse(1);
-        int pageSize = size.orElse(2);
+        int pageSize = size.orElse(50);
 
         Page<Abonent> abonentPage = abonentService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
 
