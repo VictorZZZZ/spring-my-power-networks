@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Application</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link th:href="@{/css/assets/global/css/components-md.min.css}" rel="stylesheet" id="style_components" type="text/css" />
+    <script th:src="@{/js/jquery.js}"></script>
+</head>
+<body>
+<style>
+    .input-group-text{line-height: 1;}
+</style>
+
+<div class="container">
+    <div th:replace="~{navigation :: navigation(file)}" />
+
+    <div th:replace="~{importFromDbf/step_1 :: steps(step_2)}" />
+
+    <div th:replace="~{flashMessages :: flash}" />
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Загружены Файлы</h4>
+                <ul class="list-group" th:if="${files}">
+
+                    <li class="list-group-item" th:each="file : ${files}">
+                        <a th:href="${file}" th:text="${file}" />
+                    </li>
+
+                </ul>
+            </div>
+            <div class="col-md-12">
+                <p>
+                    В файлах найдено:</br>
+                    <span th:text="${countTp}"/> ТП;<br/>
+                    <span th:text="${countFid}"/> Фидеров;<br/>
+                    <span th:text="${countAbonents}"/> Абонентов;<br/>
+                </p>
+                <a class="btn btn-outline-info" th:href="@{/importFromDbf/step_3}">Импортировать в базу данных</a>
+            </div>
+
+        </div>
+        <hr/>
+        <div class="row" th:if="${logs}">
+            <h4>Ошибки в файлах .DBF(Передать в Абонентский отдел для исправления)</h4>
+            <br/>
+            <ul class="list-group">
+                <li class="list-group-item" th:each="log : ${logs}">
+                    <span th:text="${log}"/>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<script th:src="@{/js/bootstrap.bundle.js}"></script>
+</body>
+</html>
