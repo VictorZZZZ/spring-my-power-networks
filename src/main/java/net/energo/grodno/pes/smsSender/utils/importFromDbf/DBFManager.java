@@ -5,46 +5,98 @@ import net.energo.grodno.pes.smsSender.entities.Abonent;
 import net.energo.grodno.pes.smsSender.entities.Fider;
 import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
+@Component
 public class DBFManager {
+
+    Logger logger = LoggerFactory.getLogger(DBFManager.class);
+
     private static DBFReader tpReader;
+
     private static DBFReader fiderReader;
+
     private static DBFReader abonentReader;
+
     private List<Fider> fiderList = new ArrayList<>();
-    private Map<String,Tp> tpMap = new HashMap<>();
+    private Map<Integer,Tp> tpMap = new HashMap<>();
     private List<Abonent> abonentList= new ArrayList<>();
+    private List<String> errors= new ArrayList<>();
 
-    public DBFManager(String tpFilename,String fiderFilename, String abonentFilename) {
+    public DBFManager() {
+    }
+
+    public DBFManager(String tpFilename, String fiderFilename, String abonentFilename) {
         try {
-            // create a DBFReader object
-            //reader = new DBFReader(new FileInputStream(System.getProperty("user.dir") + "/src/main/resources/static/files/ГГРЭС/GGRES.DBF"));
-            tpReader = new DBFReader(new FileInputStream(tpFilename));
-            fiderReader = new DBFReader(new FileInputStream(fiderFilename));
-            abonentReader = new DBFReader(new FileInputStream(abonentFilename));
+            if ((tpFilename.endsWith(".dbf") || tpFilename.endsWith(".DBF"))
+                    && (fiderFilename.endsWith(".dbf") || fiderFilename.endsWith(".DBF"))
+                    && (abonentFilename.endsWith(".dbf") || abonentFilename.endsWith(".DBF"))) {
+                // create a DBFReader object
+                //reader = new DBFReader(new FileInputStream(System.getProperty("user.dir") + "/src/main/resources/static/files/ГГРЭС/GGRES.DBF"));
+                tpReader = new DBFReader(new FileInputStream(tpFilename));
+                fiderReader = new DBFReader(new FileInputStream(fiderFilename));
+                abonentReader = new DBFReader(new FileInputStream(abonentFilename));
+            } else {
+                this.errors.add("Файлы имеют неверное раширение(необходимо .dbf!)");
+            }
 
-
-        } catch (DBFException e) {
+            logger.info("Connected to DBF");
+        } catch (DBFException  e){
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public boolean isValid(){
+        if(errors.size()<1) {
+
+            if (!tpReader.getField(0).getName().equals("COD")
+                    || !tpReader.getField(1).getName().equals("RES")
+                    || !tpReader.getField(2).getName().equals("TP")) {
+                errors.add("Файл со списком ТП не валиден!");
+            }
+            if (!fiderReader.getField(0).getName().equals("COD_FID")
+                    || !fiderReader.getField(1).getName().equals("НАИМЕНОВ")) {
+                errors.add("Файл со списком Фидеров не валиден!");
+            }
+
+            if (!abonentReader.getField(0).getName().equals("LIC_SCH")
+                    || !abonentReader.getField(1).getName().equals("FAM")
+                    || !abonentReader.getField(2).getName().equals("NAME")
+                    || !abonentReader.getField(3).getName().equals("OTCH")
+                    || !abonentReader.getField(4).getName().equals("TELEF")
+                    || !abonentReader.getField(6).getName().equals("COD_TP")
+                    || !abonentReader.getField(7).getName().equals("COD_FID")
+                    || !abonentReader.getField(8).getName().equals("OPORA")
+                    || !abonentReader.getField(9).getName().equals("MTC")
+                    || !abonentReader.getField(10).getName().equals("VEL")) {
+                errors.add("Файл со списком Абонентов не валиден!");
+            }
+
+        }
+
+        if(errors.size()>0) return false;
+        else return true;
+    }
+
     public static void main(String args[]) {
         DBFManager dbfManager = new DBFManager(
-                System.getProperty("user.dir")+"\\src\\main\\resources\\static\\files\\ГГРЭС\\4KARTTP.DBF",
-                System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\ГГРЭС\\4KARTFID.DBF",
-                System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\ГГРЭС\\GGRES.DBF");
-
+                System.getProperty("user.dir")+"\\src\\main\\resources\\static\\files\\БРЭС\\1KARTTP.DBF",
+                System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\БРЭС\\1KARTFID.DBF",
+                System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\БРЭС\\BRES.DBF");
+        System.out.println(dbfManager.isValid());
         dbfManager.manage();
     }
 
     public void manage(){
-        System.out.println("Начало процесса преобразования базы данных DBF...");
+        logger.info("Начало процесса преобразования базы данных DBF...");
         long startTime = System.currentTimeMillis(); // Get the start Time
         long endTime = 0;
 
@@ -54,7 +106,7 @@ public class DBFManager {
         clearEmptyFiders();
 
         endTime = System.currentTimeMillis(); //Get the end Time
-        System.out.println("Процесс преобразования базы данных занял : "+ (endTime-startTime)/1000F +" секунд"); // Print the difference in seconds
+        logger.info("Процесс преобразования базы данных занял : "+ (endTime-startTime)/1000F +" секунд"); // Print the difference in seconds
     }
 
     private void clearEmptyFiders() {
@@ -63,6 +115,8 @@ public class DBFManager {
             tp.getFiders().removeIf(f-> f.getAbonents()==null);
         });
     }
+
+
 
     private static void printFields(DBFReader reader) {
         int numberOfFields = reader.getFieldCount();
@@ -73,38 +127,45 @@ public class DBFManager {
         for (int i = 0; i < numberOfFields; i++) {
 
             DBFField field = reader.getField(i);
-            //System.out.println(field.getName());
+            System.out.println(i+":"+field.getName());
         }
         //System.out.println();
     }
 
     private void readAllTp(){
         List<Fider> newFiderList = new ArrayList<>();
-        printFields(tpReader);
+        //printFields(tpReader);
 
         // Now, lets us start reading the rows
 
         DBFRow row;
 
         while ((row = tpReader.nextRow()) != null) {
-            String dbf_id = row.getString("COD");
+            int dbfId =Integer.parseInt(row.getString("COD"));
             String res_id = row.getString("RES");
             String name = row.getString("TP");
-            //System.out.printf("%s %s %s \n",dbf_id,res_id,name);
+            //System.out.printf("%s %s %s:%d  \n",dbf_id,res_id,name,name.length());
             Res res = new Res();
             res.setId(Integer.parseInt(res_id));
-            Tp tp = new Tp(name,dbf_id,res);
-            List<Fider> newFiderListForCurrentTp = new ArrayList<>();
-            for(Fider fider :fiderList){
-                Fider newFider = new Fider();
-                newFider.setName(fider.getName());
-                newFider.setDbf_id(fider.getDbf_id());
-                newFider.setTp(tp);
-                newFiderList.add(newFider);
-                newFiderListForCurrentTp.add(newFider);
+            if(!name.equals("") && name!=null && !res_id.equals("") && res_id!=null) {
+
+                Tp tp = new Tp(name, dbfId, res);
+                List<Fider> newFiderListForCurrentTp = new ArrayList<>();
+                for(Fider fider :fiderList){
+                    Fider newFider = new Fider();
+                    newFider.setName(fider.getName());
+                    newFider.setdbfId(fider.getDbfId());
+                    newFider.setTp(tp);
+                    newFiderList.add(newFider);
+                    newFiderListForCurrentTp.add(newFider);
+                }
+                tp.setFiders(newFiderListForCurrentTp);
+                tpMap.put(dbfId,tp);
+
+            } else {
+                logger.warn("ТП с панраметрами [COD:{} TP:{} RES:{}] - этот объект нельзя записать в базу данных.", dbfId, name, res_id);
             }
-            tp.setFiders(newFiderListForCurrentTp);
-            tpMap.put(dbf_id,tp);
+
         }
 
         fiderList.clear();
@@ -113,24 +174,24 @@ public class DBFManager {
 
 
     private void readAllFider(){
-        printFields(fiderReader);
+        //printFields(fiderReader);
 
         // Now, lets us start reading the rows
 
         DBFRow row;
 
         while ((row = fiderReader.nextRow()) != null) {
-            String dbf_id = row.getString("COD_FID");
+            int dbfId =Integer.parseInt(row.getString("COD_FID"));
             String name = row.getString("НАИМЕНОВ");
             //System.out.printf("%s %s %s \n",dbf_id,name);
-            fiderList.add(new Fider(name,dbf_id,new Tp()));
+            fiderList.add(new Fider(name,dbfId,new Tp()));
         }
-        fiderList.add(new Fider("Без номера","",new Tp()));
+        fiderList.add(new Fider("Без номера",0,new Tp()));
 
     }
 
     private void readAllAbonent(){
-        printFields(abonentReader);
+        //printFields(abonentReader);
 
         // Now, lets us start reading the rows
 
@@ -144,44 +205,79 @@ public class DBFManager {
             String homePhone = row.getString("TELEF");
             String firstPhone = row.getString("MTC");
             String secondPhone = row.getString("VEL");
-            String tpCode = row.getString("COD_TP");
-            String fiderCode = row.getString("COD_FID");
+
             String opora = row.getString("OPORA");
+            String codTp = row.getString("COD_TP");
+            int tpCode=0;
+            if(!codTp.isEmpty()) {
+                tpCode =Integer.parseInt(codTp);
+            } else {
+                logger.warn("Абонент не привязан к ТП(или имеет пустое значение в поле COD_TP: {} {} {} {} {} {} {} {} {}"
+                        ,accountNumber,surname,name,middlename,homePhone,firstPhone,secondPhone,tpCode,opora);
+                continue;
+            }
+            String codFid = row.getString("COD_FID");
+            int fiderCode =0;
+            if(!codFid.isEmpty()) {
+                 codFid = codFid.replaceAll("\\s+",""); //убирает пробелы из строки
+                 fiderCode = Integer.parseInt(codFid);
+            } else {
+                logger.warn("Абонент не привязан к фидеру(или имеет пустое значение в поле COD_FID: {} {} {} {} {} {} {} {} {} {}"
+                        ,accountNumber,surname,name,middlename,homePhone,firstPhone,secondPhone,tpCode,codFid,opora);
+                continue;
+            }
             //System.out.println(fiderCode);
 //            System.out.printf("%s %s %s %s %s %s %s %s %s %s \n"
 //                    ,accountNumber,surname,name,middlename,homePhone,firstPhone,secondPhone,tpCode,fiderCode,opora);
-            if((!tpCode.equals(""))) {
-                Tp tp = tpMap.get(tpCode);
+            Tp tp = tpMap.get(tpCode);
+            if(tp!=null){
+                int finalFiderCode = fiderCode;
                 Optional<Fider> optFider = tp.getFiders()
                         .stream()
-                        .filter(f -> f.getDbf_id().equals(fiderCode))
+                        .filter(f -> f.getDbfId()== finalFiderCode)
                         .findFirst();
-                if(optFider.isPresent()){
-                    Fider fider=optFider.get();
-                    Abonent abonent = new Abonent(accountNumber, surname, name, middlename, homePhone, firstPhone, secondPhone, opora, fider);
+                if (optFider.isPresent()) {
+                    Fider fider = optFider.get();
+                    Abonent abonent = new Abonent(Long.parseLong(accountNumber), surname, name, middlename, homePhone, firstPhone, secondPhone, opora, fider, false);
                     fider.addAbonent(abonent);
                     abonentList.add(abonent);
                 } else {
                     //todo если фидер пуст.
-                    Optional<Fider> emptyFider = tp.getFiders().stream().filter(f-> f.getDbf_id().equals("")).findFirst();
-                    if(emptyFider.isPresent()){
-                        Fider fider=emptyFider.get();
-                        Abonent abonent = new Abonent(accountNumber, surname, name, middlename, homePhone, firstPhone, secondPhone, opora, fider);
+                    Optional<Fider> emptyFider = tp.getFiders().stream().filter(f -> false).findFirst();
+                    if (emptyFider.isPresent()) {
+                        Fider fider = emptyFider.get();
+                        Abonent abonent = new Abonent(Long.parseLong(accountNumber), surname, name, middlename, homePhone, firstPhone, secondPhone, opora, fider, false);
                         fider.addAbonent(abonent);
                         abonentList.add(abonent);
                     } else {
-                        System.out.println(fiderCode + "  " +accountNumber + " " + tp.getName() + " " + " не добавлен ");
+                        logger.warn(fiderCode + "  " + accountNumber + " " + tp.getName() + " " + " не добавлен ");
                     }
                 }
             } else {
-                System.out.println("В файле .dbf найден Абонент с пустым полем COD_TP:");
-                System.out.printf("%s %s %s %s %s %s %s %s %s %s \n\n"
-                    ,accountNumber,surname,name,middlename,homePhone,firstPhone,secondPhone,tpCode,fiderCode,opora);
+                logger.warn("Для Абонента: {} {} {} {} {} {} {} {} {} {} нарушена связь или ТП не валидно(имеет пустые поля)"
+                        ,accountNumber,surname,name,middlename,homePhone,firstPhone,secondPhone,tpCode,fiderCode,opora);
             }
-
         }
 
     }
 
+    public List<String> getErrors() {
+        return errors;
+    }
 
+    public void setErrors(List<String> errors) {
+        this.errors = errors;
+    }
+
+    public List<Fider> getFiderList() {
+        return fiderList;
+    }
+
+    public Map<Integer, Tp> getTpMap() {
+        return tpMap;
+    }
+
+    public List<Abonent> getAbonentList() {
+        return abonentList;
+    }
 }
