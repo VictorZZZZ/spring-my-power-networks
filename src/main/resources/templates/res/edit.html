@@ -14,6 +14,7 @@
 
     <form action="#" th:action="@{/res/saveRes}" th:object="${res}" method="post">
         <input type="hidden" th:if="*{id!=null}" th:field="*{id}" />
+
         <div class="form-group">
             <label>Название</label>
             <input class="form-control" type="text" th:field="*{name}" />

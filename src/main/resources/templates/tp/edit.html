@@ -14,6 +14,9 @@
 
     <form action="#" th:action="@{/tp/saveTp}" th:object="${tp}" method="post">
         <input type="hidden" th:if="*{id!=null}" th:field="*{id}" />
+        <!-- todo Сделать inputManually=true только при add -->
+        <input type="hidden" name="inputManually" th:value="true" />
+
         <div class="form-group">
             <label>Название</label>
             <input class="form-control" type="text" th:field="*{name}" />

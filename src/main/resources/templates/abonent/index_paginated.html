@@ -53,8 +53,8 @@
                             <span th:text="${#dates.format(abonent.modified, 'dd.MM.yyyy HH:mm')}" /><br/>
                         </td>
                         <td>
-                            <a class="btn btn-outline-dark" th:href="@{'/abonent/edit/' + ${abonent.id}}">Изменить</a>
-                            <a class="btn btn-outline-danger" th:href="@{'/abonent/delete/' + ${abonent.id}}">Удалить</a>
+                            <a class="btn btn-outline-dark" th:href="@{'/abonent/edit/' + ${abonent.accountNumber}}">Изменить</a>
+                            <a class="btn btn-outline-danger" th:href="@{'/abonent/delete/' + ${abonent.accountNumber}}">Удалить</a>
                             <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
                         </td>
                     </tr>

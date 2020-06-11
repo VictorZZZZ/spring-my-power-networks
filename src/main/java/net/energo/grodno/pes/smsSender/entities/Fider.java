@@ -16,24 +16,27 @@ public class Fider {
     private Integer id;
     @Column(name="name")
     private String name;
-    @Column(name="dbf_id")
+    @Column(name="dbf_id",nullable = false, columnDefinition="integer default 0")
     private int dbfId;
+    @Column(name="input_manually",nullable = false, columnDefinition="boolean default false")
+    private boolean inputManually;
 
     @ManyToOne
     @JoinColumn(name="tp_id")
     private Tp tp;
 
-    @OneToMany(mappedBy = "fider")
+    @OneToMany(mappedBy = "fider",fetch = FetchType.EAGER)
     @OnDelete(action=OnDeleteAction.CASCADE)
     private List<Abonent> abonents;
 
     public Fider() {
     }
 
-    public Fider(String name, int dbfId, Tp tp) {
+    public Fider(String name, int dbfId, Tp tp,boolean inputManually) {
         this.name = name;
         this.dbfId = dbfId;
         this.tp = tp;
+        this.inputManually = inputManually;
     }
 
     public Integer getId() {
@@ -56,7 +59,7 @@ public class Fider {
         return dbfId;
     }
 
-    public void setdbfId(int dbfId) {
+    public void setDbfId(int dbfId) {
         this.dbfId = dbfId;
     }
 
@@ -76,6 +79,14 @@ public class Fider {
         this.abonents = abonents;
     }
 
+    public boolean isInputManually() {
+        return inputManually;
+    }
+
+    public void setInputManually(boolean inputManually) {
+        this.inputManually = inputManually;
+    }
+
     public void addAbonent(Abonent abonent){
         if(this.getAbonents()==null){
             List<Abonent> abonentList=new ArrayList<>();
@@ -89,11 +100,16 @@ public class Fider {
 
     }
 
+
     @Override
     public String toString() {
         return "Fider{" +
                 "name='" + name + '\'' +
                 ", dbfId='" + dbfId + '\'' +
                 '}';
+    }
+
+    public String toShortString() {
+        return name+" - "+tp.getName();
     }
 }
