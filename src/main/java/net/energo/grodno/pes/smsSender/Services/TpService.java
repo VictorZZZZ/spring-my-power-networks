@@ -39,25 +39,38 @@ public class TpService {
         tpRepository.deleteById(id);
     }
 
-    public void updateAll(List<Tp> tpList) {
-        List<Tp> listToSave = new ArrayList<>();
-        for (Tp tp : tpList) {
-            Tp bufferTp = tpRepository.findTopByDbfId(tp.getDbfId());
-            if(bufferTp!=null)
-                tp.setId(bufferTp.getId());
-        }
-        tpRepository.saveAll(tpList);
-    }
-
     public Tp getOneByDbfId(int dbfId) {
         return tpRepository.findTopByDbfId(dbfId);
+    }
+
+    public List<String> updateAll(List<Tp> tpList) {
+        List<Tp> listToSave = new ArrayList<>();
+        List<String> resultList = new ArrayList<>();
+        resultList.add("Обработка ТП...");
+        for (Tp tp : tpList) {
+            //поиск уже имеющихся в базе ТП, чтобы лишний раз не сохранять. И присвоить ID для дальнейшей работы
+            Tp bufferTp = tpRepository.findTopByDbfId(tp.getDbfId());
+            if(bufferTp!=null) {
+                tp.setId(bufferTp.getId());
+            } else {
+                listToSave.add(tp);
+            }
+        }
+        if(listToSave.size()>0) {
+            tpRepository.saveAll(listToSave);
+            resultList.add("В базу добавлено "+listToSave.size()+" новых ТП");
+        }
+        resultList.add("Обработано "+tpList.size()+" ТП");
+        resultList.addAll(updateBackCouples(tpList));
+        return resultList;
     }
 
     @Transactional
     public List<String> updateBackCouples(List<Tp> tpList) {
         List<String> resultList = new ArrayList<>();
+        resultList.add("Синхронизация базы Базы данных ТП...");
         List<Tp> listFromBase = tpRepository.findAllByResId(tpList.get(0).getRes().getId());
-        int counter = 0;
+        List<Tp> listToDelete = new ArrayList<>();
         for (Tp tp: listFromBase) {
             boolean foundTp=false;
             for(Tp compareTp:tpList){
@@ -67,15 +80,24 @@ public class TpService {
                 }
             }
             if(foundTp==false) {
-                counter++;
-                deleteOne(tp.getId());
-                resultList.add("Удалено ТП: "+tp.toShortString());
+                if(!tp.isInputManually()) {
+                    //Если ТП не было введено вручную
+                    listToDelete.add(tp);
+                    resultList.add("Удалено ТП: " + tp.toShortString());
+                } else {
+                    //Сообщить о том, что найдены абоненты введённые вручную
+                    resultList.add("ТП: "
+                            + tp.toShortString()+"было введено(или изменено) вручную, и может быть удалено только вручную.");
+                }
             }
         }
-        if(counter>0) {
+        if(listToDelete.size()>0) {
+            tpRepository.deleteAll(listToDelete);
             resultList.add("==============================================================================");
-            resultList.add("Из Базы удалено "+counter+" ТП т.к. они не соответствовали списку из ДБФ файла");
+            resultList.add("Из Базы удалено "+listToDelete.size()+" ТП т.к. они не соответствовали списку из ДБФ файла");
             resultList.add("==============================================================================");
+        } else{
+            resultList.add("Несоответствий не обнаружено");
         }
         return resultList;
     }

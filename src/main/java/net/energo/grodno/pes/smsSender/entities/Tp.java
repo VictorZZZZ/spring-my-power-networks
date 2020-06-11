@@ -19,8 +19,11 @@ public class Tp {
     @Column(name="name")
     @NotBlank
     private String name;
-    @Column(name="dbf_id")
+    @Column(name="dbf_id",nullable = false, columnDefinition="integer default 0")
     private int dbfId;
+
+    @Column(name="input_manually",nullable = false, columnDefinition="boolean default false")
+    private boolean inputManually;
 
     @ManyToOne
     @JoinColumn(name="res_id")
@@ -33,10 +36,11 @@ public class Tp {
     public Tp() {
     }
 
-    public Tp(String name, int dbfId, Res res) {
+    public Tp(String name, int dbfId, Res res,boolean inputManually) {
         this.name = name;
         this.dbfId = dbfId;
         this.res = res;
+        this.inputManually = inputManually;
     }
 
     public Integer getId() {
@@ -61,6 +65,14 @@ public class Tp {
 
     public void setDbfId(int dbfId) {
         this.dbfId = dbfId;
+    }
+
+    public boolean isInputManually() {
+        return inputManually;
+    }
+
+    public void setInputManually(boolean inputManually) {
+        this.inputManually = inputManually;
     }
 
     public Res getRes() {

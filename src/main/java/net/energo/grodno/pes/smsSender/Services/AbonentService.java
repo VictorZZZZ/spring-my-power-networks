@@ -2,7 +2,9 @@ package net.energo.grodno.pes.smsSender.Services;
 
 import net.energo.grodno.pes.smsSender.entities.Abonent;
 import net.energo.grodno.pes.smsSender.entities.Fider;
+import net.energo.grodno.pes.smsSender.entities.Tp;
 import net.energo.grodno.pes.smsSender.repositories.AbonentRepository;
+import net.energo.grodno.pes.smsSender.repositories.TpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -10,24 +12,30 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Service
 public class AbonentService {
     private AbonentRepository abonentRepository;
+    private TpRepository tpRepository;
 
     @Autowired
-    public void setAbonentRepository(AbonentRepository abonentRepository) {
+    public void setAbonentRepository(AbonentRepository abonentRepository,TpRepository tpRepository) {
         this.abonentRepository = abonentRepository;
+        this.tpRepository = tpRepository;
     }
 
     public List<Abonent> getAll() {
         return abonentRepository.findAll();
     }
 
-    public Abonent getOne(Integer id) {
+    public Abonent getOne(Long id) {
         return abonentRepository.getOne(id);
+    }
+
+    public Abonent findOne(Long id) {
+        return abonentRepository.findOneByAccountNumber(id);
     }
 
     public void saveOne(Abonent abonent) {
@@ -51,7 +59,7 @@ public class AbonentService {
         //}
     }
 
-    public void deleteOne(Integer id) {
+    public void deleteOne(Long id) {
         abonentRepository.deleteById(id);
     }
 
@@ -75,5 +83,77 @@ public class AbonentService {
                 = abonentRepository.findAll(pageable);
 
         return abonentPage;
+    }
+
+    public List<String> updateAll(List<Abonent> abonentList) {
+        List<String> resultList = new ArrayList<>();
+        resultList.add("Обработка абонентов...");
+        List<Abonent> listToSave = new ArrayList<>();
+        for(Abonent abonent:abonentList){
+            //поиск абонентов для присвоения поля notes из Базы(Остальные данные считаем верными из DBF)
+            Abonent bufferAbonent = abonentRepository.findOneByAccountNumber(abonent.getAccountNumber());
+            if(bufferAbonent!=null){
+                abonent.setNotes(bufferAbonent.getNotes());
+            }
+
+        }
+        abonentRepository.saveAll(abonentList);
+        resultList.add("Обработано "+abonentList.size()+" абонентов");
+        resultList.addAll(updateBackCouples(abonentList));
+        return resultList;
+    }
+
+    private List<String> updateBackCouples(List<Abonent> abonentList) {
+        //Обратное сравнение базы со списком абонентов
+        List<Abonent> listToDelete = new ArrayList<>();
+        List<String> resultList = new ArrayList<>();
+        resultList.add("Синхронизация базы Базы данных Абонентов.....");
+        List<Abonent> listFromBase = findAllByResId(abonentList.get(0).getFider().getTp().getRes().getId());
+        int counter = 0;
+        for (Abonent abonentFromBase: listFromBase) {
+            boolean found=false;
+            for(Abonent abonentFromList:abonentList){
+                if(abonentFromList.getAccountNumber().equals(abonentFromBase.getAccountNumber())){
+                    found=true;
+                    break;
+                }
+            }
+            if(found==false) {
+                if(!abonentFromBase.getInputManually()) {
+                    //Если абонент не введён вручную, то можно его удалить
+                    listToDelete.add(abonentFromBase);
+                    resultList.add("Удален Абонент: " + abonentFromBase.toShortString());
+                } else {
+                    //Сообщить о том, что найдены абоненты введённые вручную
+                    resultList.add("Абонент: "
+                            + abonentFromBase.toShortString()+" (" + abonentFromBase.getFider().getName() +" - "+ abonentFromBase.getFider().getTp().getName()
+                            +") был введён(или изменён) вручную, и может быть удален только вручную.");
+                }
+            }
+        }
+        if(listToDelete.size()>0) {
+            abonentRepository.deleteAll(listToDelete);
+            //abonentRepository.deleteInBatch(listToDelete);
+            resultList.add("=====================================================================================");
+            resultList.add("Из Базы удалено "+listToDelete.size()+" Абонентов т.к. они не соответствовали списку из ДБФ файла");
+            resultList.add("=====================================================================================");
+        } else {
+            resultList.add("Несоответствий не обнаружено.");
+        }
+        return resultList;
+    }
+
+
+    private List<Abonent> findAllByResId(Integer id) {
+        List<Abonent> abonentList =new ArrayList<>();
+        List<Tp> tpList = tpRepository.findAllByResId(id);
+        for(Tp tp:tpList){
+            List<Fider> fiderList=tp.getFiders();
+            for(Fider fider:fiderList){
+                if(!fider.getAbonents().isEmpty())
+                    abonentList.addAll(fider.getAbonents());
+            }
+        }
+        return abonentList;
     }
 }

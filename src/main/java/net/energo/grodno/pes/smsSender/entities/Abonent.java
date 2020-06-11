@@ -183,4 +183,8 @@ public class Abonent {
     public void setInputManually(boolean inputManually) {
         this.inputManually = inputManually;
     }
+
+    public String toShortString() {
+        return accountNumber+" "+surname+" "+name+" "+middlename;
+    }
 }

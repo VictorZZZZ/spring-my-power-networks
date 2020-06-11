@@ -73,7 +73,7 @@ public class AbonentController {
     }
 
     @GetMapping("/edit/{id}")
-    public String editAbonent(Model model, @PathVariable("id") Integer id){
+    public String editAbonent(Model model, @PathVariable("id") Long id){
         Abonent abonent = abonentService.getOne(id);
         List<Fider> fiderList= fiderService.getAll();
         model.addAttribute("abonent",abonent);
@@ -93,7 +93,7 @@ public class AbonentController {
     }
     //todo сделать через POST + csrf
     @GetMapping("/delete/{id}")
-    public String deleteAbonentById(@PathVariable("id") Integer id){
+    public String deleteAbonentById(@PathVariable("id") Long id){
         abonentService.deleteOne(id);
         return "redirect:/abonent";
     }

@@ -141,7 +141,10 @@ public class DBFManager {
         DBFRow row;
 
         while ((row = tpReader.nextRow()) != null) {
-            int dbfId =Integer.parseInt(row.getString("COD"));
+            String cod = row.getString("COD");
+            if(!cod.isEmpty())
+                cod = cod.replaceAll("\\s+",""); //убирает пробелы из строки
+            int dbfId = Integer.parseInt(cod);
             String res_id = row.getString("RES");
             String name = row.getString("TP");
             //System.out.printf("%s %s %s:%d  \n",dbf_id,res_id,name,name.length());
@@ -149,12 +152,12 @@ public class DBFManager {
             res.setId(Integer.parseInt(res_id));
             if(!name.equals("") && name!=null && !res_id.equals("") && res_id!=null) {
 
-                Tp tp = new Tp(name, dbfId, res);
+                Tp tp = new Tp(name, dbfId, res,false);
                 List<Fider> newFiderListForCurrentTp = new ArrayList<>();
                 for(Fider fider :fiderList){
                     Fider newFider = new Fider();
                     newFider.setName(fider.getName());
-                    newFider.setdbfId(fider.getDbfId());
+                    newFider.setDbfId(fider.getDbfId());
                     newFider.setTp(tp);
                     newFiderList.add(newFider);
                     newFiderListForCurrentTp.add(newFider);
@@ -184,9 +187,9 @@ public class DBFManager {
             int dbfId =Integer.parseInt(row.getString("COD_FID"));
             String name = row.getString("НАИМЕНОВ");
             //System.out.printf("%s %s %s \n",dbf_id,name);
-            fiderList.add(new Fider(name,dbfId,new Tp()));
+            fiderList.add(new Fider(name,dbfId,new Tp(),false));
         }
-        fiderList.add(new Fider("Без номера",0,new Tp()));
+        fiderList.add(new Fider("Без номера",0,new Tp(),false));
 
     }
 
@@ -210,6 +213,7 @@ public class DBFManager {
             String codTp = row.getString("COD_TP");
             int tpCode=0;
             if(!codTp.isEmpty()) {
+                codTp = codTp.replaceAll("\\s+","");//убирает пробелы из строки
                 tpCode =Integer.parseInt(codTp);
             } else {
                 logger.warn("Абонент не привязан к ТП(или имеет пустое значение в поле COD_TP: {} {} {} {} {} {} {} {} {}"

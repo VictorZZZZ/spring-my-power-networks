@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FiderRepository extends JpaRepository<Fider,Integer> {
+    Fider findOneByTpIdAndDbfId(Integer tpId, int dbfId);
 }

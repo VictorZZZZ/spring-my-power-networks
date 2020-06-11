@@ -128,8 +128,9 @@ public class FileUploadController {
         long startTime = System.currentTimeMillis(); // Get the start Time
         Map<Integer, Tp> tpMap = dbfManager.getTpMap();
         List<Tp> tpList = new ArrayList<Tp>(tpMap.values());
-        tpService.updateAll(tpList);
-        resultOfImport.addAll(tpService.updateBackCouples(tpList));
+
+        resultOfImport.addAll(tpService.updateAll(tpList));
+
         List<Fider> fidersList = new ArrayList<>();
         List<Abonent> abonentList = new ArrayList<>();
         long counter=0;
@@ -139,12 +140,11 @@ public class FileUploadController {
                 abonentList.addAll(fider.getAbonents());
             }
         }
-        fiderService.updateAll(fidersList);
-        abonentService.saveAll(abonentList);
+        resultOfImport.addAll(fiderService.updateAll(fidersList));
+        resultOfImport.addAll(abonentService.updateAll(abonentList));
         //System.out.printf("%d абонентов \n", counter);
         long endTime = System.currentTimeMillis(); //Get the end Time
         float processTime = (endTime-startTime)/(1000F);
-        resultOfImport.add("Обработано "+abonentList.size()+" абонентов");
         resultOfImport.add("Время обработки "+processTime+" секунд");
 
         model.addAttribute("resultOfImport",resultOfImport);
