@@ -19,7 +19,7 @@ public class Res {
     @NotBlank
     private String name;
 
-    @OneToMany(mappedBy = "res")
+    @OneToMany(mappedBy = "res",fetch = FetchType.EAGER)
     @OnDelete(action= OnDeleteAction.CASCADE)
     private List<Tp> tps;
 
@@ -49,4 +49,5 @@ public class Res {
     public void setTps(List<Tp> tps) {
         this.tps = tps;
     }
+
 }

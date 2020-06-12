@@ -6,11 +6,15 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
+
+
+
 
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
+@EnableCaching
 public class SmsSenderApplication {
 
 	public static void main(String[] args) {
@@ -25,5 +29,6 @@ public class SmsSenderApplication {
 			storageService.init();
 		};
 	}
+
 
 }
