@@ -39,19 +39,28 @@ public class ResService {
 
     @Transactional
     @Cacheable("stat")
-    public List<Integer> getResStat(Integer id){
-        List<Integer> stat = new ArrayList<>();
+    public List<Long> getResStat(Integer id){
+        List<Long> stat = new ArrayList<>();
+        Res res=getOne(id);
+        List<Tp> tps = res.getTps();
+        long tpSize = tps.size();
+        stat.add(tpSize);
+        stat.add(res.getCachedAbonentsCount());
+        return stat;
+    }
+
+    @Transactional
+    public void countAbonents(Integer id){
         Res res=getOne(id);
         List<Tp> tps = res.getTps();
         int tpSize = tps.size();
-        stat.add(tpSize);
         int abonentSize = 0;
         for(Tp tp: tps){
             for(Fider fider:tp.getFiders()){
                 abonentSize+=fider.getAbonents().size();
             }
         }
-        stat.add(abonentSize);
-        return stat;
+        res.setCachedAbonentsCount((long) abonentSize);
+        saveOne(res);
     }
 }

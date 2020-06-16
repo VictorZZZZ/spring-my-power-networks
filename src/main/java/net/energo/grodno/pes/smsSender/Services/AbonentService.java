@@ -6,6 +6,7 @@ import net.energo.grodno.pes.smsSender.entities.Tp;
 import net.energo.grodno.pes.smsSender.repositories.AbonentRepository;
 import net.energo.grodno.pes.smsSender.repositories.TpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -72,17 +73,16 @@ public class AbonentService {
 
         if (abonentCount < startItem) {
             list = Collections.emptyList();
-        } else {
-            int toIndex = (int) Math.min(startItem + pageSize,abonentCount );
-            list = abonentRepository.findAll().subList(startItem, toIndex);
+            Page<Abonent> abonentPage
+                = new PageImpl<Abonent>(list, PageRequest.of(currentPage, pageSize), abonentCount);
 
+            return abonentPage;
+        } else {
+            Page<Abonent> abonentPage
+                    = abonentRepository.findAll(pageable);
+            return abonentPage;
         }
 
-        Page<Abonent> abonentPage
-                //= new PageImpl<Abonent>(list, PageRequest.of(currentPage, pageSize), abonentCount);
-                = abonentRepository.findAll(pageable);
-
-        return abonentPage;
     }
 
     public List<String> updateAll(List<Abonent> abonentList) {
@@ -156,4 +156,9 @@ public class AbonentService {
         }
         return abonentList;
     }
+
+    @Cacheable("totalAbonents")
+    public Long getCount(){
+        return abonentRepository.count();
+    };
 }

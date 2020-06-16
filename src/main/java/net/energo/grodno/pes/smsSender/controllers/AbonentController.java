@@ -53,6 +53,7 @@ public class AbonentController {
         model.addAttribute("abonentsPaginated", abonentPage);
 
         int totalPages = abonentPage.getTotalPages();
+
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
                     .boxed()
@@ -60,24 +61,27 @@ public class AbonentController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
+        long totalAbonents = abonentService.getCount();
+        model.addAttribute("totalAbonents",totalAbonents);
+
         return "abonent/index_paginated";
     }
 
     @GetMapping(value={"/add"})
     public String addAbonent(Model model){
         Abonent abonent = new Abonent();
-        List<Fider> fiderList= fiderService.getAll();
+        //List<Fider> fiderList= fiderService.getAll();
         model.addAttribute("abonent",abonent);
-        model.addAttribute("fiderList",fiderList);
+        //model.addAttribute("fiderList",fiderList);
         return "abonent/edit";
     }
 
     @GetMapping("/edit/{id}")
     public String editAbonent(Model model, @PathVariable("id") Long id){
         Abonent abonent = abonentService.getOne(id);
-        List<Fider> fiderList= fiderService.getAll();
+        //List<Fider> fiderList= fiderService.getAll();
         model.addAttribute("abonent",abonent);
-        model.addAttribute("fiderList",fiderList);
+        //model.addAttribute("fiderList",fiderList);
         return "abonent/edit";
     }
 

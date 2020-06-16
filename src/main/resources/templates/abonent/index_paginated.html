@@ -33,6 +33,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="abonent : ${abonentsPaginated.content}">
+
                         <td th:text="${abonent.fider.tp.res.name}"/>
                         <td th:text="${abonent.fider.tp.name}"/>
                         <td th:text="${abonent.fider.name}"/>
@@ -61,30 +62,79 @@
                 </tbody>
             </table>
 
+
+
             <div th:if="${abonentsPaginated.totalPages > 0}">
+                <p> Страница <span th:text="${abonentsPaginated.number+1}"/> из <span th:text="${abonentsPaginated.getTotalPages()}"/></p>
+                <p> Показано с <span th:text="${(abonentsPaginated.number)*(abonentsPaginated.size)+1}"/> по <span th:text="${(abonentsPaginated.number)*(abonentsPaginated.size)+abonentsPaginated.size}"/> записи</p>
+                <p>Количество абонентов <span th:text="${totalAbonents}"/></p>
                 <nav>
                     <ul class="pagination">
+                        <li class="page-item" th:if="${abonentsPaginated.number > 1}">
+                            <a th:href="@{/abonent/listAbonents(size=${abonentsPaginated.size}, page=1)}">
+                                <span class="page-link">Первая</span>
+                            </a>
+                        </li>
                         <li class="page-item" th:if="${abonentsPaginated.number > 0}">
                             <a th:href="@{/abonent/listAbonents(size=${abonentsPaginated.size}, page=${abonentsPaginated.number})}">
                                 <span class="page-link">Предыдущая</span>
                             </a>
                         </li>
-                        <li th:class="page-item"
-                            th:classappend="${pageNumber==abonentsPaginated.number + 1}  ? active"
-                            th:each="pageNumber : ${pageNumbers}">
+                        <li class="page-item" th:if="${abonentsPaginated.number > 2}">
+                            <a class="page-link" href="#">...</a>
+                        </li>
+                        <li class="page-item" th:if="${abonentsPaginated.number > 1}">
                             <a class="page-link"
-                               th:href="@{/abonent/listAbonents(size=${abonentsPaginated.size}, page=${pageNumber})}"
-                               th:text=${pageNumber}>
+                               th:href="@{/abonent/listAbonents(size=${abonentsPaginated.size}, page=${abonentsPaginated.number-1})}"
+                               th:text="${abonentsPaginated.number-1}">
+                                0
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${abonentsPaginated.number > 0}">
+                            <a class="page-link"
+                               th:href="@{/abonent/listAbonents(size=${abonentsPaginated.size}, page=${abonentsPaginated.number})}"
+                               th:text="${abonentsPaginated.number}">
                                 1
                             </a>
                         </li>
-                        <li class="page-item" th:if="${abonentsPaginated.number +2 < abonentsPaginated.getTotalPages() }">
+                        <li class="page-item active">
+                            <a class="page-link"
+                               th:href="@{/abonent/listAbonents(size=${abonentsPaginated.size}, page=${abonentsPaginated.number+1})}"
+                               th:text="${abonentsPaginated.number+1}">
+                                Текущая страница
+                            </a>
+                        </li>
+
+                        <li class="page-item" th:if="${abonentsPaginated.number < abonentsPaginated.getTotalPages()-1 }">
+                            <a class="page-link"
+                               th:href="@{/abonent/listAbonents(size=${abonentsPaginated.size}, page=${abonentsPaginated.number+2})}"
+                               th:text="${abonentsPaginated.number+2}">
+                                3
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${abonentsPaginated.number < abonentsPaginated.getTotalPages()-2 }" >
+                            <a class="page-link"
+                               th:href="@{/abonent/listAbonents(size=${abonentsPaginated.size}, page=${abonentsPaginated.number+3})}"
+                               th:text="${abonentsPaginated.number+3}">
+                                4
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${abonentsPaginated.number < abonentsPaginated.getTotalPages()-3 }">
+                            <a class="page-link" href="#">...</a>
+                        </li>
+                        <li class="page-item" th:if="${abonentsPaginated.number < abonentsPaginated.getTotalPages()-1 }">
                             <a class="page-link" th:href="@{/abonent/listAbonents(size=${abonentsPaginated.size}, page=${abonentsPaginated.number+2})}">
                                 Следующая</a>
                         </li>
+                        <li class="page-item" th:if="${abonentsPaginated.number < abonentsPaginated.getTotalPages()-2 }">
+                            <a class="page-link" th:href="@{/abonent/listAbonents(size=${abonentsPaginated.size}, page=${abonentsPaginated.getTotalPages()})}">
+                                Последняя</a>
+                        </li>
+
                     </ul>
                 </nav>
             </div>
+
 
         </div>
     </div>

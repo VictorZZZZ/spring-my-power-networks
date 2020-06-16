@@ -3,9 +3,12 @@ package net.energo.grodno.pes.smsSender.entities;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -18,6 +21,14 @@ public class Res {
     @Column(name = "name")
     @NotBlank
     private String name;
+
+    @Column(name="cached_abonents_count",nullable = false, columnDefinition="bigint default 0")
+    private Long cachedAbonentsCount;
+
+    @Column(name="modified")
+    @UpdateTimestamp
+    @DateTimeFormat(pattern="dd-MMM-YYYY HH:mm")
+    private Date modified;
 
     @OneToMany(mappedBy = "res",fetch = FetchType.EAGER)
     @OnDelete(action= OnDeleteAction.CASCADE)
@@ -50,4 +61,19 @@ public class Res {
         this.tps = tps;
     }
 
+    public Long getCachedAbonentsCount() {
+        return cachedAbonentsCount;
+    }
+
+    public void setCachedAbonentsCount(Long cachedAbonentsCount) {
+        this.cachedAbonentsCount = cachedAbonentsCount;
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
 }

@@ -27,8 +27,8 @@
                 <tr th:each="res : ${allRes}">
                     <td th:object="${res}">
                         <span th:text="*{name}" />
-                        <!-- todo закешировать
-                        <span class="badge badge-light" th:text="${res.resStat()}"/>-->
+
+                        <span class="badge badge-light" th:text="${'Количество ТП:'+res.getTps().size()+' Количество абонентов:'+res.cachedAbonentsCount}"/>
 
                     </td>
                     <td>
