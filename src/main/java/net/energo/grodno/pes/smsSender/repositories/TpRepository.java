@@ -12,4 +12,6 @@ public interface TpRepository extends JpaRepository<Tp,Integer> {
     Tp findTopByDbfId(int dbfId);
 
     List<Tp> findAllByResId(Integer id);
+
+    List<Tp> findByNameIgnoreCaseContains(String searchLine);
 }

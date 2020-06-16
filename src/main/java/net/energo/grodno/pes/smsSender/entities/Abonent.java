@@ -185,6 +185,6 @@ public class Abonent {
     }
 
     public String toShortString() {
-        return accountNumber+" "+surname+" "+name+" "+middlename;
+        return accountNumber+" "+surname+" "+name+" "+middlename+" "+homePhone+" "+firstPhone+" "+secondPhone;
     }
 }

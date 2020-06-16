@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -100,5 +101,9 @@ public class TpService {
             resultList.add("Несоответствий не обнаружено");
         }
         return resultList;
+    }
+
+    public List<Tp> searchByTpName(String searchLine) {
+        return tpRepository.findByNameIgnoreCaseContains(searchLine);
     }
 }

@@ -161,4 +161,27 @@ public class AbonentService {
     public Long getCount(){
         return abonentRepository.count();
     };
+
+    public List<Abonent> searchBySurname(String searchLine) {
+        return abonentRepository.findBySurnameIgnoreCaseContaining(searchLine);
+    }
+
+    public List<Abonent> searchByNumber(String searchLine) {
+        List<Abonent> abonentList=new ArrayList<>();
+        abonentList.addAll(abonentRepository.findByHomePhoneContaining(searchLine));
+        abonentList.addAll(abonentRepository.findByFirstPhoneContaining(searchLine));
+        abonentList.addAll(abonentRepository.findBySecondPhoneContaining(searchLine));
+
+        return abonentList;
+    }
+
+    public List<Abonent> searchByAccountNumber(String searchLine) {
+        try {
+            Long.valueOf(searchLine);
+            return abonentRepository.findAllByAccountNumber(Long.valueOf(searchLine));
+        } catch (NumberFormatException e){
+            System.out.println(e.getMessage());
+        }
+        return new ArrayList<>();
+    }
 }
