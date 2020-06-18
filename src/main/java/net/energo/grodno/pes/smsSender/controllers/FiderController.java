@@ -30,12 +30,12 @@ public class FiderController{
         this.tpService = tpService;
     }
 
-    @GetMapping(value={"","/","index"})
-    public String showAll(Model model){
-        List<Fider> fiders = fiderService.getAll();
-        model.addAttribute("fiders",fiders);
-        return "fider/index";
-    }
+//    @GetMapping(value={"","/","index"})
+//    public String showAll(Model model){
+//        List<Fider> fiders = fiderService.getAll();
+//        model.addAttribute("fiders",fiders);
+//        return "fider/index";
+//    }
 
     @GetMapping(value={"/add"})
     public String addFider(Model model){

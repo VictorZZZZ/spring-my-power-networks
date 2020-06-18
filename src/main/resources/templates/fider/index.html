@@ -8,6 +8,7 @@
 <body>
 <div class="container">
     <div th:replace="~{navigation :: navigation(Home)}" />
+    <div th:replace="~{flashMessages :: flash}" />
 
     <h1>Список Фидеров</h1>
     <div class="container">
@@ -36,6 +37,7 @@
                         <a class="btn btn-outline-dark" th:href="@{'/fider/edit/' + ${fider.id}}">Изменить</a>
                         <a class="btn btn-outline-danger" th:href="@{'/fider/delete/' + ${fider.id}}">Удалить</a>
                         <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
+                        <a class="btn btn-outline-success" th:href="@{'/cart/add/fider/' + ${fider.id}}">В рассылку</a>
                     </td>
                 </tr>
             </tbody>

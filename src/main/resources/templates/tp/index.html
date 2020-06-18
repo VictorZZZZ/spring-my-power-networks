@@ -9,6 +9,7 @@
 <body>
 <div class="container">
     <div th:replace="~{navigation :: navigation(Home)}" />
+    <div th:replace="~{flashMessages :: flash}" />
 
     <h1>Список ТП</h1>
     <div class="container">
@@ -34,6 +35,7 @@
                         <a class="btn btn-outline-dark" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>
                         <a class="btn btn-outline-danger" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
                         <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
+                        <a class="btn btn-outline-success" th:href="@{'/cart/add/tp/' + ${tp.id}}">В рассылку</a>
                     </td>
                 </tr>
             </tbody>

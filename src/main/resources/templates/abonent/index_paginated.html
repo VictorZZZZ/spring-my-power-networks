@@ -9,6 +9,7 @@
 <body>
 <div class="container">
     <div th:replace="~{navigation :: navigation(Home)}" />
+    <div th:replace="~{flashMessages :: flash}" />
 <!-- todo Pagination -->
     <h1>Список Абонентов</h1>
     <div class="container">
@@ -57,6 +58,7 @@
                             <a class="btn btn-outline-dark" th:href="@{'/abonent/edit/' + ${abonent.accountNumber}}">Изменить</a>
                             <a class="btn btn-outline-danger" th:href="@{'/abonent/delete/' + ${abonent.accountNumber}}">Удалить</a>
                             <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
+                            <a class="btn btn-outline-success" th:href="@{'/cart/add/abonent/' + ${abonent.accountNumber}}">В рассылку</a>
                         </td>
                     </tr>
                 </tbody>
