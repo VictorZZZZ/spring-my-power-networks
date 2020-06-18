@@ -2,6 +2,7 @@ package net.energo.grodno.pes.smsSender;
 
 import net.energo.grodno.pes.smsSender.storage.StorageProperties;
 import net.energo.grodno.pes.smsSender.storage.StorageService;
+import net.energo.grodno.pes.smsSender.utils.ShoppingCart;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
