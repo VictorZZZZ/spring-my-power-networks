@@ -1,14 +1,19 @@
 package net.energo.grodno.pes.smsSender.controllers;
 
+import net.energo.grodno.pes.smsSender.entities.Abonent;
+import net.energo.grodno.pes.smsSender.entities.Order;
 import net.energo.grodno.pes.smsSender.utils.ShoppingCart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/cart")
@@ -21,9 +26,11 @@ public class CartController {
     }
 
     @RequestMapping(value = {"","/","index"}, method = RequestMethod.GET)
-    public String cart(HttpSession session){
+    public String cart(HttpSession session,Model model){
         session.setAttribute("cartItemsCount",cart.getItems().size());
-
+        Order order = new Order();
+        model.addAttribute("order",order);
+        model.addAttribute("cartItems",cart.getItems());
         return "cart/index";
     }
 
@@ -57,4 +64,11 @@ public class CartController {
     }
 
     //создание ЗАКАЗА
+    @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
+    public String createOrderAndSendSms(Order order, Model model, Principal principal,RedirectAttributes redirectAttributes) {
+        Integer sentSms = cart.createOrderAndSendSms(order,principal);
+        if(sentSms>0)
+            redirectAttributes.addAttribute("messageInfo","Отправлено "+ sentSms + " сообщений");
+        return "redirect:/orders/";
+    }
 }

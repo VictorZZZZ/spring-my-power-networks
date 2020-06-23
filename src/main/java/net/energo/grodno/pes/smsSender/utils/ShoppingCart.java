@@ -3,10 +3,7 @@ package net.energo.grodno.pes.smsSender.utils;
 import net.energo.grodno.pes.smsSender.Services.AbonentService;
 import net.energo.grodno.pes.smsSender.Services.FiderService;
 import net.energo.grodno.pes.smsSender.Services.TpService;
-import net.energo.grodno.pes.smsSender.entities.Abonent;
-import net.energo.grodno.pes.smsSender.entities.Fider;
-import net.energo.grodno.pes.smsSender.entities.OrderItem;
-import net.energo.grodno.pes.smsSender.entities.Tp;
+import net.energo.grodno.pes.smsSender.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -14,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,5 +87,9 @@ public class ShoppingCart {
             }
         }
         return count;
+    }
+
+    public Integer createOrderAndSendSms(Order order, Principal principal) {
+        return 1;
     }
 }
