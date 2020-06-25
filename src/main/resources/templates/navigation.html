@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Навигация</title>
@@ -42,6 +42,7 @@
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false" aria-haspopup="true">Администрирование</a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" th:href="@{/importFromDbf/}">Импорт из DBF</a>
+                        <a class="dropdown-item" th:href="@{/countAbonents/}">Пересчитать статистику в РЭСах</a>
                     </div>
                 </li>
 
@@ -51,12 +52,24 @@
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
             </form>
             <ul class="navbar-nav ml-auto" style="margin-left:15px;">
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="!isAuthenticated()">
+                    <a class="btn btn-success" th:href="@{/login}">Вход</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
                     <a class="nav-link" th:href="@{/cart/}">
                         <svg class="bi bi-chat-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15z"/>
                         </svg>
                         <span class="badge badge-warning" th:if="${session.cartItemsCount}" th:text="${session.cartItemsCount}"/></a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()" style="padding:5px;">
+                    <span sec:authentication="name">AUTEHTICATED USER NAME</span>
+                </li>
+                <li sec:authorize="isAuthenticated()" class="nav-item">
+
+                    <form th:action="@{/logout}" method="post">
+                        <input class="btn btn-outline-success my-2 mr-2 my-sm-0" type="submit" value="Выход"/>
+                    </form>
                 </li>
             </ul>
         </div>
