@@ -73,7 +73,9 @@
                 <tbody>
                 <tr th:each="tp : ${tpList}">
 
-                    <td th:text="${tp.name}"/>
+                    <a th:href="@{'/tp/view/'+${tp.id}}" title="Просмотр данных ТП">
+                        <span th:text="*{tp.name}" />
+                    </a>
 
                     <td>
                         <a class="btn btn-outline-dark" th:href="@{'/abonent/edit/' + ${tp.id}}">Изменить</a>

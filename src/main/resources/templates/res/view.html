@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Application</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link th:href="@{/css/assets/global/css/components-md.min.css}" rel="stylesheet" id="style_components" type="text/css" />
+    <script th:src="@{/js/jquery.js}"></script>
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{navigation :: navigation(Home)}" />
+    <div class="container">
+        <div class="row">
+            <h2>РЭС</h2>
+            <div class="col-md-12">
+                <div class="portlet green-meadow box">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-cogs"></i><span th:text="${res.name}"/> </div>
+                        <div class="actions">
+                            <a th:href="@{'/res/edit/'+${res.id}}" class="btn btn-default btn-sm">
+                                <i class="fa fa-pencil"></i> Редактировать </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row static-info">
+                            <div class="col-md-5 name"> Название </div>
+                            <div class="col-md-7 value"> <span th:text="${res.name}"/> </div>
+                        </div>
+                        <div class="row static-info">
+                            <div class="col-md-5 name"> Количество ТП: </div>
+                            <div class="col-md-7 value"> <span th:text="${res.getTps().size()}"> </div>
+                        </div>
+                        <div class="row static-info">
+                            <div class="col-md-5 name"> Количество абонентов:</div>
+                            <div class="col-md-7 value">
+                                <span class="label label-success"> <span th:text="${res.cachedAbonentsCount}"/> </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h2>Cписок ТП</h2>
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <th> Название </th>
+                <th> Действия </th>
+            </thead>
+            <tbody>
+                <tr th:each="tp : ${res.tps}">
+                    <td th:object="${tp}">
+                        <a th:href="@{'/tp/view/'+${tp.id}}" title="Просмотр данных ТП">
+                            <span th:text="*{name}" />
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-dark" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>
+                        <a class="btn btn-outline-danger" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
+                        <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.js}"></script>
+</body>
+</html>

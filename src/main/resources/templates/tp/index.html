@@ -9,7 +9,6 @@
 <body>
 <div class="container">
     <div th:replace="~{navigation :: navigation(Home)}" />
-    <div th:replace="~{flashMessages :: flash}" />
 
     <h1>Список ТП</h1>
     <div class="container">
@@ -27,9 +26,17 @@
             </thead>
             <tbody>
                 <tr th:each="tp : ${tps}">
-                    <td th:text="${tp.res.name}"/>
+
+                    <td>
+                        <a th:href="@{'/res/view/'+${tp.res.id}}">
+                            <span th:text="${tp.res.name}"/>
+                        </a>
+                    </td>
+
                     <td th:object="${tp}">
-                        <span th:text="*{name}" /><br/>
+                        <a th:href="@{'/tp/view/'+${tp.id}}" title="Просмотр данных ТП">
+                            <span th:text="*{name}" />
+                        </a>
                     </td>
                     <td>
                         <a class="btn btn-outline-dark" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>

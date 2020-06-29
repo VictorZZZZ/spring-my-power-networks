@@ -51,6 +51,13 @@ public class TpController {
         return "tp/edit";
     }
 
+    @GetMapping("/view/{id}")
+    public String viewTp(Model model, @PathVariable("id") Integer id){
+        Tp tp = tpService.getOne(id);
+        model.addAttribute("tp",tp);
+        return "tp/view";
+    }
+
     @RequestMapping(value = "/saveTp", method = RequestMethod.POST)
     public String saveTp(@Valid Tp tp, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()){

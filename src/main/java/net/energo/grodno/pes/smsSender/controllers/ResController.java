@@ -39,6 +39,13 @@ public class ResController {
         return "res/edit";
     }
 
+    @GetMapping("/view/{id}")
+    public String viewRes(Model model, @PathVariable("id") Integer id){
+        Res res = resService.getOne(id);
+        model.addAttribute("res",res);
+        return "res/view";
+    }
+
     @GetMapping("/add")
     public String addRes(Model model){
         Res res = new Res();

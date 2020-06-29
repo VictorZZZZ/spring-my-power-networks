@@ -71,4 +71,22 @@ public class CartController {
             redirectAttributes.addAttribute("messageInfo","Отправлено "+ sentSms + " сообщений");
         return "redirect:/orders/";
     }
+
+    @GetMapping("/clear")
+    public String clear(RedirectAttributes redirectAttributes){
+        cart.clear();
+        redirectAttributes.addFlashAttribute("messageInfo","Список рассылки очищен");
+        return "redirect:/cart";
+    }
+
+    @GetMapping("/removeFromCart/{accountNumber}")
+    public String removeFromCart(@PathVariable("accountNumber") Long accountNumber,RedirectAttributes redirectAttributes){
+        if(cart.removeFromCart(accountNumber)) {
+            redirectAttributes.addFlashAttribute("messageInfo", "Абонент удалён из рассылки");
+        } else {
+            redirectAttributes.addFlashAttribute("messageError", "Абонент с таким Id не найден");
+        }
+        return "redirect:/cart";
+    }
+
 }

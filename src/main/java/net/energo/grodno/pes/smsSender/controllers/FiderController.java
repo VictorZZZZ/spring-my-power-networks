@@ -55,6 +55,13 @@ public class FiderController{
         return "fider/edit";
     }
 
+    @GetMapping("/view/{id}")
+    public String viewFider(Model model, @PathVariable("id") Integer id){
+        Fider fider = fiderService.getOne(id);
+        model.addAttribute("fider",fider);
+        return "fider/view";
+    }
+
     @RequestMapping(value = "/saveFider", method = RequestMethod.POST)
     public String saveFider(@Valid Fider fider, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()){

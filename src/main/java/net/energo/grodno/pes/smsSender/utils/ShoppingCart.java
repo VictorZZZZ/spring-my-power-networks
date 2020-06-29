@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Scope(value="session", proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -33,7 +34,7 @@ public class ShoppingCart {
 
 
 
-
+    @Transactional
     public List<OrderItem> getItems() {
         return items;
     }
@@ -45,14 +46,20 @@ public class ShoppingCart {
     //добавить в корзину Товар("получателя")
     @Transactional
     public int addAbonent(Long id) {
-        OrderItem newItem = new OrderItem();
+
         try {
-            //если абонент существует
-            Abonent abonent = abonentService.getOne(id);
-            System.out.println(abonent);
-            newItem.setAbonent(abonent);
-            items.add(newItem);
-            return 1;
+            //проверка на абонента в корзине
+            Optional<OrderItem> optOrderItem = items.stream()
+                    .filter(orderItem -> {return orderItem.getAbonent().getAccountNumber().equals(id);})
+                    .findFirst();
+            if(!optOrderItem.isPresent()){
+                //если абонент существует
+                Abonent abonent = abonentService.getOne(id);
+                OrderItem newItem = new OrderItem();
+                newItem.setAbonent(abonent);
+                items.add(newItem);
+                return 1;
+            } else return 0;
         } catch (EntityNotFoundException e){
             System.out.println(e.getMessage());
         }
@@ -65,10 +72,7 @@ public class ShoppingCart {
         Fider fider=fiderService.getOne(id);
         int count=0;
         for(Abonent abonent:fider.getAbonents()){
-            OrderItem newItem = new OrderItem();
-            newItem.setAbonent(abonent);
-            items.add(newItem);
-            count++;
+            count+=addAbonent(abonent.getAccountNumber());
         }
         return count;
     }
@@ -79,17 +83,26 @@ public class ShoppingCart {
         Tp tp = tpService.getOne(id);
         int count=0;
         for(Fider fider:tp.getFiders()){
-            for(Abonent abonent:fider.getAbonents()){
-                OrderItem newItem = new OrderItem();
-                newItem.setAbonent(abonent);
-                items.add(newItem);
-                count++;
-            }
+            count+=addFider(fider.getId());
         }
         return count;
     }
 
     public Integer createOrderAndSendSms(Order order, Principal principal) {
         return 1;
+    }
+
+    public void clear(){
+        this.items.clear();
+    }
+
+    public boolean removeFromCart(Long accountNumber) {
+        Optional<OrderItem> optOrderItem = items.stream()
+                                                .filter(orderItem -> {return orderItem.getAbonent().getAccountNumber().equals(accountNumber);})
+                                                .findFirst();
+        if(optOrderItem.isPresent()){
+            items.remove(optOrderItem.get());
+            return true;
+        } else return false;
     }
 }

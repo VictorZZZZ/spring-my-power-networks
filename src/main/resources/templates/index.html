@@ -19,7 +19,7 @@
         <tbody>
         <tr th:each="res : ${allRes}">
             <td th:object="${res}">
-                <span th:text="*{name}" /><br/>
+                <a th:href="@{'/res/view/'+${res.id}}"<span th:text="*{name}" /><br/>
                 <span class="badge badge-light" th:text="${'Количество ТП:'+res.getTps().size()+' Количество абонентов:'+res.cachedAbonentsCount}"/>
             </td>
             <td>
