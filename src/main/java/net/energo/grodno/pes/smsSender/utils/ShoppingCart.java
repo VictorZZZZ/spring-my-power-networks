@@ -2,8 +2,11 @@ package net.energo.grodno.pes.smsSender.utils;
 
 import net.energo.grodno.pes.smsSender.Services.AbonentService;
 import net.energo.grodno.pes.smsSender.Services.FiderService;
+import net.energo.grodno.pes.smsSender.Services.OrderService;
 import net.energo.grodno.pes.smsSender.Services.TpService;
 import net.energo.grodno.pes.smsSender.entities.*;
+import net.energo.grodno.pes.smsSender.entities.users.User;
+import net.energo.grodno.pes.smsSender.repositories.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -23,12 +26,15 @@ public class ShoppingCart {
     private TpService tpService;
     private FiderService fiderService;
     private AbonentService abonentService;
+    private OrderService orderService;
+    private UserRepository userRepository;
 
     @Autowired
-    public ShoppingCart(TpService tpService, FiderService fiderService, AbonentService abonentService) {
+    public ShoppingCart(TpService tpService, FiderService fiderService, AbonentService abonentService, OrderService orderService) {
         this.tpService = tpService;
         this.fiderService = fiderService;
         this.abonentService = abonentService;
+        this.orderService = orderService;
         this.items=new ArrayList<>();
     }
 
@@ -89,6 +95,11 @@ public class ShoppingCart {
     }
 
     public Integer createOrderAndSendSms(Order order, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName()).get();
+        order.setUser(user);
+//todo: set orderItems
+        orderService.saveOne(order);
+        System.out.println(order.getId());
         return 1;
     }
 

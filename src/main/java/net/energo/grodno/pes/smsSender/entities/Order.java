@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class Order {
     private Long id;
 
     @Column(name = "message")
+    @NotBlank
     private String message;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)

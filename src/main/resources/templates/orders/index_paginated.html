@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Абоненты</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{navigation :: navigation(Home)}" />
+    <div th:replace="~{flashMessages :: flash}" />
+<!-- todo Pagination -->
+    <h1>Список рассылок</h1>
+    <div class="container">
+        <div class="row">
+            <table class="table table-hover" th:if="${ordersPaginated.content!=null}">
+                <thead class="thead-dark">
+                        <th> ID </th>
+                        <th> Сообщение </th>
+                        <th> Дата </th>
+                        <th> Действия </th>
+                </thead>
+                <tbody>
+                    <tr th:each="order : ${ordersPaginated.content}">
+
+                        <td th:text="${order.id}"/>
+                        <td th:text="${order.message}"/>
+                        <td>
+                            <span th:text="${#dates.format(order.created, 'dd.MM.yyyy HH:mm')}" /><br/>
+                        </td>
+                        <td>
+                            <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
+                            <a class="btn btn-outline-success" th:href="@{'/orders/view/' + ${order.id}}">Посмотреть</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
+            <div th:if="${ordersPaginated.totalPages > 0}">
+                <p> Страница <span th:text="${ordersPaginated.number+1}"/> из <span th:text="${ordersPaginated.getTotalPages()}"/></p>
+                <p> Показано с <span th:text="${(ordersPaginated.number)*(ordersPaginated.size)+1}"/> по <span th:text="${(ordersPaginated.number)*(ordersPaginated.size)+ordersPaginated.size}"/> записи</p>
+                <p>Количество абонентов <span th:text="${totalAbonents}"/></p>
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item" th:if="${ordersPaginated.number > 1}">
+                            <a th:href="@{/abonent/listAbonents(size=${ordersPaginated.size}, page=1)}">
+                                <span class="page-link">Первая</span>
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${ordersPaginated.number > 0}">
+                            <a th:href="@{/abonent/listAbonents(size=${ordersPaginated.size}, page=${ordersPaginated.number})}">
+                                <span class="page-link">Предыдущая</span>
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${ordersPaginated.number > 2}">
+                            <a class="page-link" href="#">...</a>
+                        </li>
+                        <li class="page-item" th:if="${ordersPaginated.number > 1}">
+                            <a class="page-link"
+                               th:href="@{/abonent/listAbonents(size=${ordersPaginated.size}, page=${ordersPaginated.number-1})}"
+                               th:text="${ordersPaginated.number-1}">
+                                0
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${ordersPaginated.number > 0}">
+                            <a class="page-link"
+                               th:href="@{/abonent/listAbonents(size=${ordersPaginated.size}, page=${ordersPaginated.number})}"
+                               th:text="${ordersPaginated.number}">
+                                1
+                            </a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link"
+                               th:href="@{/abonent/listAbonents(size=${ordersPaginated.size}, page=${ordersPaginated.number+1})}"
+                               th:text="${ordersPaginated.number+1}">
+                                Текущая страница
+                            </a>
+                        </li>
+
+                        <li class="page-item" th:if="${ordersPaginated.number < ordersPaginated.getTotalPages()-1 }">
+                            <a class="page-link"
+                               th:href="@{/abonent/listAbonents(size=${ordersPaginated.size}, page=${ordersPaginated.number+2})}"
+                               th:text="${ordersPaginated.number+2}">
+                                3
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${ordersPaginated.number < ordersPaginated.getTotalPages()-2 }" >
+                            <a class="page-link"
+                               th:href="@{/abonent/listAbonents(size=${ordersPaginated.size}, page=${ordersPaginated.number+3})}"
+                               th:text="${ordersPaginated.number+3}">
+                                4
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${ordersPaginated.number < ordersPaginated.getTotalPages()-3 }">
+                            <a class="page-link" href="#">...</a>
+                        </li>
+                        <li class="page-item" th:if="${ordersPaginated.number < ordersPaginated.getTotalPages()-1 }">
+                            <a class="page-link" th:href="@{/abonent/listAbonents(size=${ordersPaginated.size}, page=${ordersPaginated.number+2})}">
+                                Следующая</a>
+                        </li>
+                        <li class="page-item" th:if="${ordersPaginated.number < ordersPaginated.getTotalPages()-2 }">
+                            <a class="page-link" th:href="@{/abonent/listAbonents(size=${ordersPaginated.size}, page=${ordersPaginated.getTotalPages()})}">
+                                Последняя</a>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+
+
+        </div>
+    </div>
+
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.js}"></script>
+</body>
+</html>

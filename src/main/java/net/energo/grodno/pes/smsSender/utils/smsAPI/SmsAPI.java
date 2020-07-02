@@ -29,17 +29,6 @@ public class SmsAPI {
             .build();
 
     public static void main(String[] args) {
-        try {
-            sendSms(new ArrayList<String>(Arrays.asList(new String[]{"29781977","29258934"})),"Проверка JSON");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (SmsSenderErrorException e){
-            e.printStackTrace();
-        }
-
-
     }
 
     //отправка СМС

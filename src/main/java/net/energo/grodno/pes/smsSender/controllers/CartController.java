@@ -65,11 +65,20 @@ public class CartController {
 
     //создание ЗАКАЗА
     @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
-    public String createOrderAndSendSms(Order order, Model model, Principal principal,RedirectAttributes redirectAttributes) {
-        Integer sentSms = cart.createOrderAndSendSms(order,principal);
-        if(sentSms>0)
-            redirectAttributes.addAttribute("messageInfo","Отправлено "+ sentSms + " сообщений");
-        return "redirect:/orders/";
+    public String createOrderAndSendSms(@Valid Order order,
+                                        BindingResult bindingResult,
+                                        Model model,
+                                        Principal principal,
+                                        RedirectAttributes redirectAttributes) {
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("cartItems",cart.getItems());
+            return "cart/index";
+        } else {
+            Integer sentSms = cart.createOrderAndSendSms(order,principal);
+            if(sentSms>0)
+                redirectAttributes.addAttribute("messageInfo","Отправлено "+ sentSms + " сообщений");
+            return "redirect:/orders/";
+        }
     }
 
     @GetMapping("/clear")

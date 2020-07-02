@@ -72,9 +72,9 @@
                         <span class="label label-success" th:text="*{abonents.size()}"/>
                     </td>
                     <td>
-                        <a class="btn btn-outline-dark" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>
-                        <a class="btn btn-outline-danger" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
-                        <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
+                        <a class="btn btn-outline-dark" th:href="@{'/tp/edit/' + ${fider.id}}">Изменить</a>
+                        <a class="btn btn-outline-danger" th:href="@{'/tp/delete/' + ${fider.id}}">Удалить</a>
+                        <a th:href="@{'/cart/add/fider/'+${fider.id}}" class="btn btn-outline-info btn-sm"> В рассылку</a>
                     </td>
                 </tr>
             </tbody>

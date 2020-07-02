@@ -1,17 +1,17 @@
 package net.energo.grodno.pes.smsSender.utils.smsAPI;
 
 public class SmsResponse {
-    private Integer sms_id;
-    private Integer sms_count;
+    private Integer smsId;
+    private Integer smsCount;
     private Integer operator;
-    private Integer error_code;
+    private Integer errorCode;
     private Long recipient;
 
-    public SmsResponse(Integer sms_id, Integer sms_count, Integer operator, Integer error_code, Long recipient) {
-        this.sms_id = sms_id;
-        this.sms_count = sms_count;
+    public SmsResponse(Integer smsId, Integer smsCount, Integer operator, Integer errorCode, Long recipient) {
+        this.smsId = smsId;
+        this.smsCount = smsCount;
         this.operator = operator;
-        this.error_code = error_code;
+        this.errorCode = errorCode;
         this.recipient = recipient;
     }
 }

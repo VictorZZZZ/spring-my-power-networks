@@ -58,7 +58,7 @@
                     <td>
                         <a class="btn btn-outline-dark" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>
                         <a class="btn btn-outline-danger" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
-                        <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
+                        <a th:href="@{'/cart/add/tp/'+${tp.id}}" class="btn btn-outline-info btn-sm"> В рассылку</a>
                     </td>
                 </tr>
             </tbody>

@@ -19,6 +19,21 @@ public class OrderItem {
     @JoinColumn(name = "abonent_id")
     private Abonent abonent;
 
+    @Column(name = "sms_id")
+    private Integer smsId;
+
+    @Column(name = "sms_count")
+    private Integer smsCount;
+
+    @Column(name = "operator")
+    private Integer operator;
+
+    @Column(name = "error_code")
+    private Integer errorCode;
+
+    @Column(name = "sms_status")
+    private Integer smsStatus;
+
     public OrderItem() {
     }
 
