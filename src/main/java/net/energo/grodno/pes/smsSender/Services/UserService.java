@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -26,5 +28,14 @@ public class UserService {
         user.setRes(userRepr.getRes());
         user.setRoles(userRepr.getRoles());
         userRepository.save(user);
+    }
+
+    public User findByUsername(String name) throws Exception {
+        Optional<User> optUser = userRepository.findByUsername(name);
+        if(optUser.isPresent()) {
+            return userRepository.findByUsername(name).get();
+        } else {
+            throw new Exception("User not found:"+name);
+        }
     }
 }

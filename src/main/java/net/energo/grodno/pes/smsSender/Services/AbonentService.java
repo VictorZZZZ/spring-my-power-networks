@@ -32,7 +32,7 @@ public class AbonentService {
     }
 
     public Abonent getOne(Long id) {
-        return abonentRepository.getOne(id);
+        return abonentRepository.findOneByAccountNumber(id);
     }
 
     public Abonent findOne(Long id) {

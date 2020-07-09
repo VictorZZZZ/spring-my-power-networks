@@ -20,7 +20,7 @@ public class OrderItem {
     private Abonent abonent;
 
     @Column(name = "sms_id")
-    private Integer smsId;
+    private Long smsId;
 
     @Column(name = "sms_count")
     private Integer smsCount;
@@ -32,7 +32,10 @@ public class OrderItem {
     private Integer errorCode;
 
     @Column(name = "sms_status")
-    private Integer smsStatus;
+    private String smsStatus;
+
+    @Column(name = "recipient")
+    private String recipient;
 
     public OrderItem() {
     }
@@ -59,5 +62,53 @@ public class OrderItem {
 
     public void setAbonent(Abonent abonent) {
         this.abonent = abonent;
+    }
+
+    public Long getSmsId() {
+        return smsId;
+    }
+
+    public void setSmsId(Long smsId) {
+        this.smsId = smsId;
+    }
+
+    public Integer getSmsCount() {
+        return smsCount;
+    }
+
+    public void setSmsCount(Integer smsCount) {
+        this.smsCount = smsCount;
+    }
+
+    public Integer getOperator() {
+        return operator;
+    }
+
+    public void setOperator(Integer operator) {
+        this.operator = operator;
+    }
+
+    public Integer getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(Integer errorCode) {
+        this.errorCode = errorCode;
+    }
+
+    public String getSmsStatus() {
+        return smsStatus;
+    }
+
+    public void setSmsStatus(String smsStatus) {
+        this.smsStatus = smsStatus;
+    }
+
+    public String getRecipient() {
+        return recipient;
+    }
+
+    public void setRecipient(String recipient) {
+        this.recipient = recipient;
     }
 }

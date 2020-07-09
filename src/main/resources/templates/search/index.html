@@ -73,10 +73,11 @@
                 <tbody>
                 <tr th:each="tp : ${tpList}">
 
-                    <a th:href="@{'/tp/view/'+${tp.id}}" title="Просмотр данных ТП">
-                        <span th:text="*{tp.name}" />
-                    </a>
-
+                    <td>
+                        <a th:href="@{'/tp/view/'+${tp.id}}" title="Просмотр данных ТП">
+                            <span th:text="${tp.name}" />
+                        </a>
+                    </td>
                     <td>
                         <a class="btn btn-outline-dark" th:href="@{'/abonent/edit/' + ${tp.id}}">Изменить</a>
                         <a class="btn btn-outline-danger" th:href="@{'/abonent/delete/' + ${tp.id}}">Удалить</a>

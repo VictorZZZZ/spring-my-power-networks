@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Application</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link th:href="@{/css/assets/global/css/components-md.min.css}" rel="stylesheet" id="style_components" type="text/css" />
+    <script th:src="@{/js/jquery.js}"></script>
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{navigation :: navigation(Home)}" />
+    <div th:replace="~{flashMessages :: flash}" />
+
+    <div class="container">
+        <div class="row">
+            <h2>ТП</h2>
+            <div class="col-md-12">
+                <div class="portlet green-meadow box">
+                    <div class="portlet-title">
+                            <div class="caption" th:object="${abonent}">
+                                <i class="fa fa-cogs"></i> <span th:text="*{accountNumber+ ':' + surname+' ' + name + ' ' + middlename}" />
+                            </div>
+                            <div class="actions">
+                                <a th:href="@{'/abonent/edit/'+${abonent.accountNumber}}" class="btn btn-default btn-sm">
+                                    <i class="fa fa-pencil"></i> Редактировать </a>
+                            </div>
+                    </div>
+                    <div class="portlet-body">
+
+                        <div class="row static-info">
+                            <div class="col-md-5 name"> Лицевой счёт </div>
+                            <div class="col-md-7 value">
+                                <span th:text="${abonent.accountNumber}"/>
+                            </div>
+                        </div>
+                        <div class="row static-info">
+                            <div class="col-md-5 name"> РЭС </div>
+                            <div class="col-md-7 value">
+                                <a th:href="@{'/res/view/'+${abonent.fider.tp.res.id}}">
+                                    <span th:text="${abonent.fider.tp.res.name}"/>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row static-info">
+                            <div class="col-md-5 name"> ТП </div>
+                            <div class="col-md-7 value"> <span th:text="${abonent.fider.tp.name}"/> </div>
+                        </div>
+
+                        <div class="row static-info">
+                            <div class="col-md-5 name"> Фидер: </div>
+                            <div class="col-md-7 value"> <span th:text="${abonent.fider.name}"> </div>
+                        </div>
+                        <div class="row static-info">
+                            <div class="col-md-5 name"> Пометки: </div>
+                            <div class="col-md-7 value"> <span th:text="${abonent.notes}" /> </div>
+                        </div>
+                        <div class="row static-info">
+                            <div class="col-md-5 name"> Создан: </div>
+                            <div class="col-md-7 value">
+                                <span th:text="${#dates.format(abonent.created, 'dd.MM.yyyy HH:mm')}" /><br/>
+
+
+                            </div>
+                            <div class="col-md-5 name"> Отредактирован: </div>
+                            <div class="col-md-7 value">
+                                <span th:text="${#dates.format(abonent.modified, 'dd.MM.yyyy HH:mm')}" /><br/>
+                            </div>
+                        </div>
+                        <div class="row static-info">
+                            <div class="col-md-5">
+                                <a th:href="@{'/cart/add/abonent/'+${abonent.accountNumber}}" class="btn btn-outline-info btn-sm">
+                                    <svg class="bi bi-chat-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15z"/>
+                                    </svg>
+                                    В рассылку
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.js}"></script>
+</body>
+</html>

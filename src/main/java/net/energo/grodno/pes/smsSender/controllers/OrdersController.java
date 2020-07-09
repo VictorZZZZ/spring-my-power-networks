@@ -8,10 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +32,9 @@ public class OrdersController {
 
     @RequestMapping(value = {"","/","index"}, method = RequestMethod.GET)
     public String showAllOrdersPaginated( Model model,
-                                 @RequestParam("page") Optional<Integer> page,
-                                 @RequestParam("size") Optional<Integer> size){
+                                         @RequestParam("page") Optional<Integer> page,
+                                         @RequestParam("size") Optional<Integer> size){
+        //todo изменить в сессии количество списка рассылки после отправки СМС
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(50);
         Page<Order> orderPage = orderService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
@@ -50,5 +53,12 @@ public class OrdersController {
         model.addAttribute("totalOrders",totalOrders);
 
         return "orders/index_paginated";
+    }
+
+    @RequestMapping(value = {"/view/{id}"}, method = RequestMethod.GET)
+    public String viewOrder( Model model, @PathVariable("id") Long id){
+        Order order = orderService.getOne(id);
+        model.addAttribute("order",order);
+        return "orders/view";
     }
 }

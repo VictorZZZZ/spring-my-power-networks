@@ -28,7 +28,8 @@ public class SmsAPI {
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException, SmsSenderErrorException, IOException {
+        //
     }
 
     //отправка СМС
@@ -58,31 +59,92 @@ public class SmsAPI {
 
     }
 
-
-
-    private static List<SmsResponse> parseResponse(String response) {
+    private static List<SmsResponse> parseResponse(String response) throws SmsSenderErrorException {
         //String response = "{\"message\":{\"msg\":[{\"sms_id\":886055815,\"sms_count\":1,\"operator\":2,\"error_code\":0,\"recipient\":375297819778}]}}";
         //response = "{\"message\":{\"msg\":[{\"sms_id\":886055815,\"sms_count\":1,\"operator\":2,\"error_code\":0,\"recipient\":375297819778}]}}";
-        //ответ приходит в виде: {"message":{"msg":[{"sms_id":886146113,"sms_count":1,"operator":2,"error_code":0,"recipient":375297819778},{"sms_id":886146114,"sms_count":1,"operator":2,"error_code":0,"recipient":375292589344}]}}
+        //ответ приходит в виде:
+        // {"message":{"msg":[{"sms_id":886146113,"sms_count":1,"operator":2,"error_code":0,"recipient":375297819778},
+        //                      {"sms_id":886146114,"sms_count":1,"operator":2,"error_code":0,"recipient":375292589344}
+        //                   ]
+        //            }
+        // }
 
         //или {"message":{"msg":[{"sms_id":886154330,"sms_count":0,"operator":0,"error_code":0,"recipient":29781977},{"sms_id":0,"sms_count":0,"operator":0,"error_code":-4,"recipient":29258934}]}}
 
 
         JSONObject respJson = new JSONObject(response);
+        if(!respJson.isNull("error")) {
+            throw new SmsSenderErrorException(respJson.getInt("error"));
+        }
 
-        List<SmsResponse> smsResponses = new ArrayList<>();
         JSONArray jsonArray = respJson.getJSONObject("message").getJSONArray("msg");
-        for(int i = 0 ; i < jsonArray.length() ; i++){
+        List<SmsResponse> smsResponses=new ArrayList<>();
+        for(int i = 0; i < jsonArray.length() ; i++){
             SmsResponse smsResp = new SmsResponse(
-                    jsonArray.getJSONObject(i).getInt("sms_id"),
+                    jsonArray.getJSONObject(i).getLong("sms_id"),
                     jsonArray.getJSONObject(i).getInt("sms_count"),
                     jsonArray.getJSONObject(i).getInt("operator"),
                     jsonArray.getJSONObject(i).getInt("error_code"),
-                    jsonArray.getJSONObject(i).getLong("recipient"));
+                    ((Long)jsonArray.getJSONObject(i).getLong("recipient")).toString());
             smsResponses.add(smsResp);
         }
 
         return smsResponses;
+    }
+
+
+
+    //Проверка статуса СМС
+    public static List<StatusResponse> checkStatuses(List<Long> strList) throws SmsSenderErrorException, IOException, InterruptedException {
+        //готовим JSON
+        JSONObject jsonBody = prepareJSON4Statuses(strList);
+
+        // add json header
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody.toString()))
+                .uri(URI.create(smsSendURL))
+                .setHeader("User-Agent", "ELEKTROSETI HttpClient Bot") // add request header
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("Ответ:" + response.body());
+        if(response.statusCode()==200) {
+            //Если всё ОК
+            return parseStatusResponse(response.body());
+        } else {
+            //Если ошибка
+            JSONObject respJson = new JSONObject(response.body());
+            throw new SmsSenderErrorException(respJson.getInt("error"));
+        }
+    }
+
+    private static List<StatusResponse> parseStatusResponse(String response) throws SmsSenderErrorException {
+//        {"status":{"msg":[{"sms_id":886055815,"sms_count":"1","operator":"2","sms_status":"Delivered","recipient":"+375297819778"},
+//                          {"sms_id":886055815,"sms_count":"1","operator":"2","sms_status":"Delivered","recipient":"+375297819778"},
+//                          {"sms_id":886146113,"sms_count":"1","operator":"2","sms_status":"Delivered","recipient":"+375297819778"},
+//                          {"sms_id":886146114,"sms_count":"1","operator":"2","sms_status":"Delivered","recipient":"+375292589344"}]}}
+
+        JSONObject respJson = new JSONObject(response);
+        if(!respJson.isNull("error")) {
+            throw new SmsSenderErrorException(respJson.getInt("error"));
+        }
+
+        JSONArray jsonArray = respJson.getJSONObject("status").getJSONArray("msg");
+        List<StatusResponse> statusResponses=new ArrayList<>();
+        for(int i = 0; i < jsonArray.length() ; i++){
+            StatusResponse smsResp = new StatusResponse(
+                    jsonArray.getJSONObject(i).getLong("sms_id"),
+                    jsonArray.getJSONObject(i).getInt("sms_count"),
+                    jsonArray.getJSONObject(i).getInt("operator"),
+                    jsonArray.getJSONObject(i).getString("sms_status"),
+                    jsonArray.getJSONObject(i).getString("recipient")
+            );
+            statusResponses.add(smsResp);
+        }
+
+        return statusResponses;
     }
 
     private static JSONObject prepareJSON(List<String> numbers, String message) {
@@ -103,14 +165,32 @@ public class SmsAPI {
         JSONObject jsonMessage = new JSONObject();
         jsonMessage.put("default",jsonDefault);
         jsonMessage.put("msg",jsonMsg);
-
         jsonBody.put("message",jsonMessage);
 
         //System.out.println(jsonBody.toString());
         return jsonBody;
     }
 
-    //Проверка статуса СМС
+    private static JSONObject prepareJSON4Statuses(List<Long> longList) {
+        JSONObject jsonBody = new JSONObject();
+        jsonBody.put("login",smsUser);
+        jsonBody.put("password",smsPassword);
+        jsonBody.put("command","statuses");
+
+        JSONArray smsIdArray = new JSONArray();
+        for(Long smsId:longList){
+            smsIdArray.put((new JSONObject()).put("sms_id",smsId.toString()));
+        }
+
+        JSONObject msg = new JSONObject();
+        msg.put("msg",smsIdArray);
+
+        jsonBody.put("status",msg);
+
+        System.out.println(jsonBody.toString());
+
+        return jsonBody;
+    }
 
     public static String checkBalance() throws IOException, InterruptedException {
         //https://userarea.sms-assistent.by/api/v1/credits/plain?user=Grodnoenergo&password=r9359538

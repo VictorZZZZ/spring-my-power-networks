@@ -34,6 +34,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //todo лог истории входов
         http.authorizeRequests()
                 .antMatchers(new String[]{"/", "/sms/checkBalance"}).permitAll()
                 .antMatchers("/css/**").permitAll()

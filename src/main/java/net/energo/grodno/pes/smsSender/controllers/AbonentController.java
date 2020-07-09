@@ -85,6 +85,13 @@ public class AbonentController {
         return "abonent/edit";
     }
 
+    @GetMapping("/view/{id}")
+    public String viewAbonent(Model model, @PathVariable("id") Long id){
+        Abonent abonent = abonentService.getOne(id);
+        model.addAttribute("abonent",abonent);
+        return "abonent/view";
+    }
+
     @RequestMapping(value = "/saveAbonent", method = RequestMethod.POST)
     public String saveAbonent(@Valid Abonent abonent, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()){

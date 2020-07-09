@@ -5,6 +5,8 @@ import net.energo.grodno.pes.smsSender.utils.ShoppingCart;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.security.Principal;
+
 public class CartTest extends AbstractClass {
     @Autowired
     ShoppingCart cart;

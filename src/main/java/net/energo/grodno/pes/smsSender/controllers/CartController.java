@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.security.Principal;
 
@@ -26,6 +27,7 @@ public class CartController {
     }
 
     @RequestMapping(value = {"","/","index"}, method = RequestMethod.GET)
+    @Transactional
     public String cart(HttpSession session,Model model){
         session.setAttribute("cartItemsCount",cart.getItems().size());
         Order order = new Order();
@@ -74,6 +76,7 @@ public class CartController {
             model.addAttribute("cartItems",cart.getItems());
             return "cart/index";
         } else {
+            System.out.println(order);
             Integer sentSms = cart.createOrderAndSendSms(order,principal);
             if(sentSms>0)
                 redirectAttributes.addAttribute("messageInfo","Отправлено "+ sentSms + " сообщений");

@@ -1,6 +1,8 @@
 package net.energo.grodno.pes.smsSender.Services;
 
 import net.energo.grodno.pes.smsSender.entities.Order;
+import net.energo.grodno.pes.smsSender.entities.OrderItem;
+import net.energo.grodno.pes.smsSender.repositories.OrderItemRepository;
 import net.energo.grodno.pes.smsSender.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,10 +17,16 @@ import java.util.List;
 @Service
 public class OrderService {
     private OrderRepository orderRepository;
+    private OrderItemRepository orderItemRepository;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository) {
         this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
+    }
+
+    public Order getOne(Long id){
+        return orderRepository.getOne(id);
     }
 
     public Page<Order> findPaginated(Pageable pageable) {
@@ -47,4 +55,12 @@ public class OrderService {
     }
 
     public void saveOne(Order order){ orderRepository.save(order);}
+
+    public void saveOrderWithItems(Order order, List<OrderItem> orderItems){
+        orderRepository.save(order);
+        for (OrderItem item:orderItems) {
+            item.setOrder(order);
+        }
+        orderItemRepository.saveAll(orderItems);
+    }
 }

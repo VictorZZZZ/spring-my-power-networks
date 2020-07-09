@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список рассылки</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link th:href="@{/css/assets/global/css/components-md.min.css}" rel="stylesheet" id="style_components" type="text/css" />
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{navigation :: navigation(Home)}" />
+    <div th:replace="~{flashMessages :: flash}" />
+
+<!-- todo Pagination -->
+    <div class="container">
+        <h2>Рассылка #<span th:text="${order.id}"/></h2>
+        <div class="col-md-12">
+            <div class="portlet green-meadow box">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i> Создана <span th:text="${#dates.format(order.created, 'dd.MM.yyyy HH:mm')}"/> </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row static-info">
+                        <div class="col-md-5 name"> Сообщение </div>
+                        <div class="col-md-7 value">
+
+                                <span th:text="${order.message}"/>
+
+                        </div>
+                    </div>
+                    <div class="row static-info">
+                        <div class="col-md-5 name"> Пользователь </div>
+                        <div class="col-md-7 value">
+
+                                <span th:text="${order.user.username}"/>
+
+                        </div>
+                    </div>
+                    <div class="row static-info">
+                        <div class="col-md-5">
+                            <a th:href="@{'/sms/checkStatuses/order/'+${order.id}}" class="btn btn-outline-info btn-sm">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bar-chart-line" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5h-2v12h2V2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/>
+                                    <path fill-rule="evenodd" d="M0 14.5a.5.5 0 0 1 .5-.5h15a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
+                                </svg>
+                                Проверить статусы СМС
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <p style="width:100%;">Всего в рассылке <span th:text="${order.items.size()}"/> абонентов</p>
+            <table class="table table-hover" th:if="${order.items.size()>0}">
+                <thead class="thead-dark">
+                <th>
+                    Абонент
+                </th>
+                <th>
+                    Номер СМС
+                </th>
+                <th>СМС ID</th>
+                <th>Количество СМС</th>
+                <th>Оператор</th>
+                <!-- todo: Расшифровать код ошибки -->
+                <th>Код ошибки</th>
+                <!-- todo: Расшифровать Статус ошибки -->
+                <th>Статус СМС</th>
+                </thead>
+                <tbody>
+                    <tr th:each="item:${order.items}">
+                        <td>
+                            <a th:href="@{'/abonents/view/'+${item.abonent.accountNumber} }" th:text="${item.abonent.fider.tp.name+':'+item.abonent.surname +' '+ item.abonent.name +' '+ item.abonent.middlename}"/>
+                        </td>
+                        <td th:text="${item.recipient}"/>
+                        <td th:text="${item.smsId}"/>
+                        <td th:text="${item.smsCount}"/>
+                        <td th:text="${item.operator}"/>
+                        <td th:text="${item.errorCode}"/>
+                        <td th:text="${item.smsStatus}"/>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.js}"></script>
+</body>
+</html>
