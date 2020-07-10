@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Application</title>
@@ -96,7 +96,7 @@
                     </td>
                     <td>
                         <a class="btn btn-outline-dark" th:href="@{'/abonent/edit/' + ${abonent.accountNumber}}">Изменить</a>
-                        <a class="btn btn-outline-danger" th:href="@{'/abonent/delete/' + ${abonent.accountNumber}}">Удалить</a>
+                        <a class="btn btn-outline-danger" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{'/abonent/delete/' + ${abonent.accountNumber}}">Удалить</a>
                         <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
                     </td>
                 </tr>

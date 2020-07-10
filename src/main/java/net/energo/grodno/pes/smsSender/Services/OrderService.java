@@ -2,6 +2,7 @@ package net.energo.grodno.pes.smsSender.Services;
 
 import net.energo.grodno.pes.smsSender.entities.Order;
 import net.energo.grodno.pes.smsSender.entities.OrderItem;
+import net.energo.grodno.pes.smsSender.entities.users.User;
 import net.energo.grodno.pes.smsSender.repositories.OrderItemRepository;
 import net.energo.grodno.pes.smsSender.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class OrderService {
         return orderRepository.getOne(id);
     }
 
-    public Page<Order> findPaginated(Pageable pageable) {
+    public Page<Order> findPaginatedByUserId(User user, Pageable pageable) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
@@ -44,7 +46,28 @@ public class OrderService {
             return orderPage;
         } else {
             Page<Order> orderPage
-                    = orderRepository.findAll(pageable);
+                    = orderRepository.findPageByUserId(user,pageable);
+            return orderPage;
+        }
+
+    }
+
+    public Page<Order> findAllPaginated(Pageable pageable) {
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Order> list;
+        long ordersCount = orderRepository.count();
+
+        if (ordersCount < startItem) {
+            list = Collections.emptyList();
+            Page<Order> orderPage
+                    = new PageImpl<Order>(list, PageRequest.of(currentPage, pageSize), ordersCount);
+
+            return orderPage;
+        } else {
+            Page<Order> orderPage
+                    = orderRepository.findAllByOrderByCreatedDesc(pageable);
             return orderPage;
         }
 

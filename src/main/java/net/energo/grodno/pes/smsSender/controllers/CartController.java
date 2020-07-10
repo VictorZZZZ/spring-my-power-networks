@@ -40,7 +40,11 @@ public class CartController {
     public String addTpToCart(HttpSession session,HttpServletRequest request,Model model, @PathVariable("id") Integer id, RedirectAttributes redirectAttributes){
         //добавление ТП
         int count = cart.addTp(id);
-        redirectAttributes.addFlashAttribute("messageInfo","В список рассылки добавлено " + count + " абонентов");
+        if(count>0) {
+            redirectAttributes.addFlashAttribute("messageInfo", "В список рассылки добавлено " + count + " абонентов");
+        } else {
+            redirectAttributes.addFlashAttribute("messageError", "Это ТП уже в списке рассылки");
+        }
         session.setAttribute("cartItemsCount",cart.getItems().size());
         return "redirect:"+request.getHeader("Referer");
     }

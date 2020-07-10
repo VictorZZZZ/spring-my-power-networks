@@ -4,9 +4,11 @@ import net.energo.grodno.pes.smsSender.entities.users.User;
 import net.energo.grodno.pes.smsSender.repositories.user.UserRepository;
 import net.energo.grodno.pes.smsSender.repositories.user.UserRepr;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,5 +39,9 @@ public class UserService {
         } else {
             throw new Exception("User not found:"+name);
         }
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }

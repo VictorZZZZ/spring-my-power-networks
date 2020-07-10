@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Абоненты</title>
@@ -72,6 +72,11 @@
                 </thead>
                 <tbody>
                 <tr th:each="tp : ${tpList}">
+                    <td>
+                        <a th:href="@{'/res/view/'+${tp.res.id}}" title="Просмотр данных РЭС">
+                            <span th:text="${tp.res.name}" />
+                        </a>
+                    </td>
 
                     <td>
                         <a th:href="@{'/tp/view/'+${tp.id}}" title="Просмотр данных ТП">
@@ -79,8 +84,8 @@
                         </a>
                     </td>
                     <td>
-                        <a class="btn btn-outline-dark" th:href="@{'/abonent/edit/' + ${tp.id}}">Изменить</a>
-                        <a class="btn btn-outline-danger" th:href="@{'/abonent/delete/' + ${tp.id}}">Удалить</a>
+                        <a class="btn btn-outline-dark" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>
+                        <a class="btn btn-outline-danger" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
                         <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
                         <a class="btn btn-outline-success" th:href="@{'/cart/add/tp/' + ${tp.id}}">В рассылку</a>
                     </td>

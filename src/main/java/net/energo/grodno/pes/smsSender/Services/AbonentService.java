@@ -2,8 +2,10 @@ package net.energo.grodno.pes.smsSender.Services;
 
 import net.energo.grodno.pes.smsSender.entities.Abonent;
 import net.energo.grodno.pes.smsSender.entities.Fider;
+import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
 import net.energo.grodno.pes.smsSender.repositories.AbonentRepository;
+import net.energo.grodno.pes.smsSender.repositories.ResRepository;
 import net.energo.grodno.pes.smsSender.repositories.TpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,11 +22,13 @@ import java.util.*;
 public class AbonentService {
     private AbonentRepository abonentRepository;
     private TpRepository tpRepository;
+    private ResRepository resRepository;
 
     @Autowired
-    public void setAbonentRepository(AbonentRepository abonentRepository,TpRepository tpRepository) {
+    public void setAbonentRepository(AbonentRepository abonentRepository,TpRepository tpRepository,ResRepository resRepository) {
         this.abonentRepository = abonentRepository;
         this.tpRepository = tpRepository;
+        this.resRepository = resRepository;
     }
 
     public List<Abonent> getAll() {
@@ -146,7 +150,8 @@ public class AbonentService {
 
     private List<Abonent> findAllByResId(Integer id) {
         List<Abonent> abonentList =new ArrayList<>();
-        List<Tp> tpList = tpRepository.findAllByResId(id);
+        Res res = resRepository.getOne(id);
+        List<Tp> tpList = tpRepository.findAllByResIdOrderByName(res);
         for(Tp tp:tpList){
             List<Fider> fiderList=tp.getFiders();
             for(Fider fider:fiderList){

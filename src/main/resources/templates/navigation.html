@@ -35,7 +35,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false" aria-haspopup="true">Создать</a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" th:href="@{/res/add/}">РЭС</a>
+                        <a class="dropdown-item" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/res/add/}">РЭС</a>
                         <a class="dropdown-item" th:href="@{/tp/add/}">ТП</a>
                         <a class="dropdown-item" th:href="@{/fider/add/}">Фидер 0,4</a>
                         <a class="dropdown-item" th:href="@{/abonent/add/}">Абонента</a>
@@ -47,7 +47,7 @@
                 <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false" aria-haspopup="true">Администрирование</a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" th:href="@{/users/}">Пользователи</a>
+                        <a class="dropdown-item" th:href="@{/users}">Пользователи</a>
                         <a class="dropdown-item" th:href="@{/importFromDbf/}">Импорт из DBF</a>
                         <a class="dropdown-item" th:href="@{/countAbonents/}">Пересчитать статистику в РЭСах</a>
                     </div>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Абоненты</title>
@@ -17,6 +17,7 @@
             <table class="table table-hover" th:if="${ordersPaginated.content!=null}">
                 <thead class="thead-dark">
                         <th> ID </th>
+                        <th sec:authorize="hasRole('ROLE_ADMIN')"> Пользователь </th>
                         <th> Сообщение </th>
                         <th> Дата </th>
                         <th> Действия </th>
@@ -25,6 +26,7 @@
                     <tr th:each="order : ${ordersPaginated.content}">
 
                         <td th:text="${order.id}"/>
+                        <td sec:authorize="hasRole('ROLE_ADMIN')" th:text="${order.user.username}"/>
                         <td th:text="${order.message}"/>
                         <td>
                             <span th:text="${#dates.format(order.created, 'dd.MM.yyyy HH:mm')}" /><br/>

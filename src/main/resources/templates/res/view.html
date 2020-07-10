@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Application</title>
@@ -10,6 +10,7 @@
 <body>
 <div class="container">
     <div th:replace="~{navigation :: navigation(Home)}" />
+    <div th:replace="~{flashMessages :: flash}" />
     <div class="container">
         <div class="row">
             <h2>РЭС</h2>
@@ -30,7 +31,7 @@
                         </div>
                         <div class="row static-info">
                             <div class="col-md-5 name"> Количество ТП: </div>
-                            <div class="col-md-7 value"> <span th:text="${res.getTps().size()}"> </div>
+                            <div class="col-md-7 value"> <span th:text="${tps.size()}"> </div>
                         </div>
                         <div class="row static-info">
                             <div class="col-md-5 name"> Количество абонентов:</div>
@@ -49,7 +50,7 @@
                 <th> Действия </th>
             </thead>
             <tbody>
-                <tr th:each="tp : ${res.tps}">
+                <tr th:each="tp : ${tps}">
                     <td th:object="${tp}">
                         <a th:href="@{'/tp/view/'+${tp.id}}" title="Просмотр данных ТП">
                             <span th:text="*{name}" />
@@ -57,7 +58,7 @@
                     </td>
                     <td>
                         <a class="btn btn-outline-dark" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>
-                        <a class="btn btn-outline-danger" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
+                        <a class="btn btn-outline-danger" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
                         <a th:href="@{'/cart/add/tp/'+${tp.id}}" class="btn btn-outline-info btn-sm"> В рассылку</a>
                     </td>
                 </tr>

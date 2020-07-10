@@ -1,5 +1,6 @@
 package net.energo.grodno.pes.smsSender.Services;
 
+import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
 import net.energo.grodno.pes.smsSender.repositories.TpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,10 @@ public class TpService {
 
     public List<Tp> getAll() {
         return tpRepository.findAll();
+    }
+
+    public List<Tp> getAllByRes(Res res) {
+        return tpRepository.findAllByResIdOrderByName(res);
     }
 
     public void saveOne(Tp tp) {
@@ -70,7 +75,7 @@ public class TpService {
     public List<String> updateBackCouples(List<Tp> tpList) {
         List<String> resultList = new ArrayList<>();
         resultList.add("Синхронизация базы Базы данных ТП...");
-        List<Tp> listFromBase = tpRepository.findAllByResId(tpList.get(0).getRes().getId());
+        List<Tp> listFromBase = tpRepository.findAllByResIdOrderByName(tpList.get(0).getRes());
         List<Tp> listToDelete = new ArrayList<>();
         for (Tp tp: listFromBase) {
             boolean foundTp=false;
@@ -106,4 +111,6 @@ public class TpService {
     public List<Tp> searchByTpName(String searchLine) {
         return tpRepository.findByNameIgnoreCaseContains(searchLine);
     }
+
+
 }

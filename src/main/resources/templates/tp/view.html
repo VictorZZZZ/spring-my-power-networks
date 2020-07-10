@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Application</title>
@@ -75,7 +75,7 @@
                     </td>
                     <td>
                         <a class="btn btn-outline-dark" th:href="@{'/tp/edit/' + ${fider.id}}">Изменить</a>
-                        <a class="btn btn-outline-danger" th:href="@{'/tp/delete/' + ${fider.id}}">Удалить</a>
+                        <a class="btn btn-outline-danger" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{'/tp/delete/' + ${fider.id}}">Удалить</a>
                         <a th:href="@{'/cart/add/fider/'+${fider.id}}" class="btn btn-outline-info btn-sm"> В рассылку</a>
                     </td>
                 </tr>

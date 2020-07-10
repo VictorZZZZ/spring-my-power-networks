@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Список ТП</title>
@@ -11,39 +11,41 @@
     <div th:replace="~{navigation :: navigation(Home)}" />
     <div th:replace="~{flashMessages :: flash}" />
 
-    <h1>Список ТП (<span th:text="${tps.size()}"/>) </h1>
+    <h1>Список пользователей</h1>
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <a class="btn btn-outline-primary" th:href="@{/tp/add}">Добавить новое ТП</a>
+                <a class="btn btn-outline-primary" th:href="@{/register}">Добавить нового пользователя</a>
             </div>
         </div>
 
         <table class="table table-hover">
             <thead class="thead-dark">
+                    <th> Id </th>
+                    <th> Логин </th>
                     <th> РЭС </th>
-                    <th> Название </th>
                     <th> Действия </th>
             </thead>
             <tbody>
-                <tr th:each="tp : ${tps}">
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"/>
 
                     <td>
-                        <a th:href="@{'/res/view/'+${tp.res.id}}">
-                            <span th:text="${tp.res.name}"/>
+                        <a th:href="@{'/user/view/'+${user.id}}">
+                            <span th:text="${user.username}"/>
                         </a>
                     </td>
 
-                    <td th:object="${tp}">
-                        <a th:href="@{'/tp/view/'+${tp.id}}" title="Просмотр данных ТП">
-                            <span th:text="*{name}" />
+                    <td>
+                        <a th:href="@{'/res/view/'+${user.res.id}}" title="Просмотр данных РЭСа">
+                            <span th:text="${user.res.name}" />
                         </a>
                     </td>
                     <td>
-                        <a class="btn btn-outline-dark" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>
-                        <a class="btn btn-outline-danger" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
+                        <a class="btn btn-outline-dark" th:href="@{'/user/edit/' + ${user.id}}">Изменить</a>
+                        <a class="btn btn-outline-danger" th:href="@{'/user/delete/' + ${user.id}}">Удалить</a>
                         <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
-                        <a class="btn btn-outline-success" th:href="@{'/cart/add/tp/' + ${tp.id}}">В рассылку</a>
+                        <a class="btn btn-outline-success" th:href="@{'/orders/byUser/' + ${user.id}}">Посмотреть рассылки</a>
                     </td>
                 </tr>
             </tbody>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Application</title>
@@ -14,7 +14,7 @@
     <table class="table table-hover">
         <thead class="thead-dark">
             <th> Название </th>
-            <th> Действия </th>
+            <th sec:authorize="hasRole('ROLE_ADMIN')"> Действия </th>
         </thead>
         <tbody>
         <tr th:each="res : ${allRes}">
@@ -22,7 +22,7 @@
                 <a th:href="@{'/res/view/'+${res.id}}"<span th:text="*{name}" /><br/>
                 <span class="badge badge-light" th:text="${'Количество ТП:'+res.getTps().size()+' Количество абонентов:'+res.cachedAbonentsCount}"/>
             </td>
-            <td>
+            <td sec:authorize="hasRole('ROLE_ADMIN')">
                 <a class="btn btn-outline-dark" th:href="@{'/res/edit/' + ${res.id}}">Изменить</a>
                 <a class="btn btn-outline-danger" th:href="@{'/res/delete/' + ${res.id}}">Удалить</a>
             </td>
