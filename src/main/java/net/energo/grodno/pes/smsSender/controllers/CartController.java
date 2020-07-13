@@ -43,7 +43,7 @@ public class CartController {
         if(count>0) {
             redirectAttributes.addFlashAttribute("messageInfo", "В список рассылки добавлено " + count + " абонентов");
         } else {
-            redirectAttributes.addFlashAttribute("messageError", "Это ТП уже в списке рассылки");
+            redirectAttributes.addFlashAttribute("messageError", "Это ТП уже в списке рассылки или к нему не привязано ни одного абонента.");
         }
         session.setAttribute("cartItemsCount",cart.getItems().size());
         return "redirect:"+request.getHeader("Referer");

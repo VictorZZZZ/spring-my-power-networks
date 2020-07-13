@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Список рассылки</title>
+
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link th:href="@{/css/assets/global/css/components-md.min.css}" rel="stylesheet" id="style_components" type="text/css" />
+
+    <script th:src="@{/js/jquery.js}"></script>
 </head>
 <body>
 <div class="container">
@@ -23,8 +27,8 @@
                     <small class="form-text text-danger" th:each="err : ${#fields.errors('message')}" th:text="${err}" />
                 </div>
                 <div class="form-group col-md-2">
-                    <a class="btn btn-outline-dark" href="#" title="Добавить из шаблона" style="margin-top: 32px;">
-                        Шаблон
+                    <a class="btn btn-outline-dark" href="#" data-toggle="modal" data-target="#templateWindow" title="Добавить из шаблона" style="margin-top: 32px;">
+                        Шаблоны
                     </a>
                 </div>
             </div>
@@ -75,8 +79,55 @@
 
     </div>
 
+    <!-- Шаблоны - Modal -->
+    <div class="modal fade" id="templateWindow" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Шаблоны СМС</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
-<script th:src="@{/js/jquery.js}"></script>
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr>
+                                <td>Шаблон 1</td>
+                                <td>Редактировать / Удалить</td>
+                            </tr>
+                            <tr>
+                                <td>Шаблон 2</td>
+                                <td>Редактировать / Удалить</td>
+                            </tr>
+                            <tr>
+                                <td>Шаблон 3</td>
+                                <td>Редактировать / Удалить</td>
+                            </tr>
+                            <tr>
+                                <td>Шаблон 4</td>
+                                <td>Редактировать / Удалить</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- // Шаблоны - Modal -->
+
+<script>
+    $(document).ready(function () {
+
+    });
+
+</script>
+
+
 <script th:src="@{/js/bootstrap.bundle.js}"></script>
 </body>
 </html>

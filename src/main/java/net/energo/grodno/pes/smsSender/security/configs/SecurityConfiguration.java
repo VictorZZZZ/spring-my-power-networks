@@ -36,18 +36,20 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         //todo лог истории входов
         http.authorizeRequests()
-                .antMatchers(new String[]{"/", "/sms/checkBalance"}).permitAll()
-                .antMatchers("/css/**").permitAll()
-                .antMatchers("/js/**").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/register").hasRole("ADMIN")
-                .antMatchers("/importFromDbf/**").hasRole("ADMIN")
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/users/**").hasRole("ADMIN")
-                .antMatchers("/res/add/**").hasRole("ADMIN")
-                .antMatchers("/res/edit/**").hasRole("ADMIN")
-                .antMatchers("/res/delete/**").hasRole("ADMIN")
-                .antMatchers("/tp/delete/**").hasRole("ADMIN")
+
+                .antMatchers(new String[]{"/",
+                        "/css/**",
+                        "/js/**",
+                        "/login"}).permitAll()
+                .antMatchers(new String[]{"/register",
+                        "/admin/**",
+                        "/importFromDbf/**",
+                        "/users/**",
+                        "/res/add/**",
+                        "/res/edit/**",
+                        "/res/delete/**",
+                        "/tp/delete/**",
+                        "/orders/byUser/**"}).hasRole("ADMIN")
                 .antMatchers("/**").authenticated()
                 .and()
                     .formLogin()

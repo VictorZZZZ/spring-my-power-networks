@@ -1,43 +1,69 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <!--<![endif]-->
+    <!-- BEGIN HEAD -->
 
-<head>
-    <title>Login Page</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
-    <script th:src="@{/js/jquery.js}"></script>
-</head>
+    <head>
 
-<body>
-<div>
-    <div id="loginbox" style="margin-top: 50px;" class="mainbox col-md-3 col-md-offset-2 col-sm-6 col-sm-offset-2">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <div class="panel-title">Sign In</div>
-            </div>
-            <div style="padding-top: 30px" class="panel-body">
-                <form th:action="@{/authenticateTheUser}" method="POST" class="form-horizontal">
-                    <div style="margin-bottom: 25px" class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <input type="text" name="username" placeholder="username" class="form-control">
-                    </div>
-                    <div style="margin-bottom: 25px" class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                        <input type="password" name="password" placeholder="password" class="form-control">
-                    </div>
-                    <div style="margin-top: 10px" class="form-group">
-                        <div class="col-sm-6 controls">
-                            <button type="submit" class="btn btn-success">Login</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+        <meta charset="utf-8" />
+        <title>СМС оповещение Вход</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <meta content="" name="author" />
+
+        <link th:href="@{/css/assets/global/css/components-md.min.css}" rel="stylesheet" id="style_components" type="text/css" />
+        <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+        <link rel="stylesheet" th:href="@{/css/login.css}" />
+
+        <script th:src="@{/js/jquery.js}"></script>
+    </head>
+    <!-- END HEAD -->
+
+    <body class=" login">
+        <!-- BEGIN LOGO -->
+        <div class="logo">
+
         </div>
-    </div>
-</div>
+        <!-- END LOGO -->
+        <!-- BEGIN LOGIN -->
+        <div class="content">
+            <!-- BEGIN LOGIN FORM -->
+            <form class="login-form" th:action="@{/authenticateTheUser}" method="post">
+                <h3 class="form-title">Вход</h3>
+                <div class="alert alert-danger display-hide">
+                    <button class="close" data-close="alert"></button>
+                    <span> Enter any username and password. </span>
+                </div>
+                <div class="form-group">
+                    <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+                    <label class="control-label visible-ie8 visible-ie9">Пользователь</label>
+                    <div class="input-icon">
+                        <i class="fa fa-user"></i>
+                        <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Логин" name="username" /> </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label visible-ie8 visible-ie9">Пароль</label>
+                    <div class="input-icon">
+                        <i class="fa fa-lock"></i>
+                        <input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="Пароль" name="password" /> </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn green pull-right"> Вход </button>
+                </div>
+                <div class="login-options">
 
-<script th:src="@{/js/bootstrap.bundle.js}"></script>
-</body>
+                </div>
+                <div class="forget-password">
+                </div>
+                <div class="create-account">
+                    <p> По вопросам работы приложения обращаться к Залевскому В.В.<i>(42-96)</i>
+                    </p>
+                </div>
+            </form>
+            <!-- END LOGIN FORM -->
+        </div>
+        <!-- END LOGIN -->
+    </body>
+
 </html>

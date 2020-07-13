@@ -23,12 +23,17 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public void deleteOne(Long id) {
+        userRepository.deleteById(id);
+    }
+
     public void create(UserRepr userRepr) {
         User user = new User();
         user.setUsername(userRepr.getUsername());
         user.setPassword(passwordEncoder.encode(userRepr.getPassword()));
         user.setRes(userRepr.getRes());
         user.setRoles(userRepr.getRoles());
+        user.setEnabled(true);
         userRepository.save(user);
     }
 
@@ -43,5 +48,19 @@ public class UserService {
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    public void save(UserRepr userRepr) {
+        User user = userRepository.getOne(userRepr.getId());
+        user.setUsername(userRepr.getUsername());
+        user.setPassword(passwordEncoder.encode(userRepr.getPassword()));
+        user.setRes(userRepr.getRes());
+        user.setRoles(userRepr.getRoles());
+        user.setEnabled(true);
+        userRepository.save(user);
     }
 }

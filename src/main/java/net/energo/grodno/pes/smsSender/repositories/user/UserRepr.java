@@ -2,6 +2,7 @@ package net.energo.grodno.pes.smsSender.repositories.user;
 
 import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.users.Role;
+import org.checkerframework.common.aliasing.qual.Unique;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -10,6 +11,7 @@ public class UserRepr {
     private Long id;
 
     @NotBlank
+    @Unique
     private String username;
 
     @NotBlank
@@ -68,5 +70,17 @@ public class UserRepr {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "UserRepr{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", repeatPassword='" + repeatPassword + '\'' +
+                ", roles=" + roles +
+                ", res=" + res +
+                '}';
     }
 }
