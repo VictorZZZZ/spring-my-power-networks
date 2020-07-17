@@ -73,4 +73,15 @@ public class TextTemplate {
     public void setModified(Date modified) {
         this.modified = modified;
     }
+
+    @Override
+    public String toString() {
+        return "TextTemplate{" +
+                "id=" + id +
+                ", template='" + template + '\'' +
+                ", user=" + user +
+                ", created=" + created +
+                ", modified=" + modified +
+                '}';
+    }
 }

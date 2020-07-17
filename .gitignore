@@ -32,3 +32,5 @@ build/
 
 logs/
 upload-dir/
+out/
+src/main/java/META-INF/

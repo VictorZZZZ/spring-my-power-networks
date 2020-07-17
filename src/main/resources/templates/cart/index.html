@@ -90,24 +90,14 @@
                     </button>
                 </div>
                 <div class="modal-body">
-
-                    <table class="table table-hover">
+                    <a class="btn btn-outline-primary" th:href="@{/templates/add}" style="margin-bottom:15px;">Создать Шаблон</a>
+                    <table class="table table-hover" th:if="${templates.size()>0}">
                         <tbody>
-                            <tr>
-                                <td>Шаблон 1</td>
-                                <td>Редактировать / Удалить</td>
-                            </tr>
-                            <tr>
-                                <td>Шаблон 2</td>
-                                <td>Редактировать / Удалить</td>
-                            </tr>
-                            <tr>
-                                <td>Шаблон 3</td>
-                                <td>Редактировать / Удалить</td>
-                            </tr>
-                            <tr>
-                                <td>Шаблон 4</td>
-                                <td>Редактировать / Удалить</td>
+                            <tr th:each="template:${templates}">
+                                <td th:text="${template.template}">
+                                <td>
+                                <a class="btn btn-outline-dark" th:href="@{'/templates/edit/'+${template.id}}">Редактировать</a>
+                                <a class="btn btn-outline-danger" th:href="@{'/templates/delete/'+${template.id}}">Удалить</td>
                             </tr>
                         </tbody>
                     </table>

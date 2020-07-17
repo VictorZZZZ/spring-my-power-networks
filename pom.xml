@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.geekbrains</groupId>
-	<artifactId>spring-web-app</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-web-app</name>
-	<description>Demo project for Spring Boot</description>
+	<artifactId>SmsSender</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
+	<name>sms-sender-app</name>
+	<description>Elektroseti SMS Sender</description>
 
 	<properties>
 		<java.version>14</java.version>

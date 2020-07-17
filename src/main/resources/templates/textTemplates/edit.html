@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Application</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{navigation :: navigation(Home)}" />
+
+    <h1>Редактировать шаблон</h1>
+
+
+    <form action="#" th:action="@{/templates/saveTemplate}" th:object="${template}" method="post">
+        <input type="hidden" th:if="*{id!=null}" th:field="*{id}" />
+        <input type="hidden" th:if="*{user!=null}" th:field="*{user}" />
+
+        <div class="form-group">
+            <label>Шаблон</label>
+            <textarea class="form-control" type="text" th:field="*{template}" />
+        </div>
+        <input class="btn btn-outline-info" type="submit" value="Сохранить" />
+    </form>
+
+
+
+</div>
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.js}"></script>
+</body>
+</html>

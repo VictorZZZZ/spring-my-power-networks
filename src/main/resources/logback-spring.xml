@@ -43,6 +43,7 @@
     <!-- LOG everything at INFO level -->
     <root level="info">
         <appender-ref ref="Console" />
+        <appender-ref ref="RollingFile"/>
     </root>
 
     <logger name="net.energo.grodno.pes.smsSender.utils.importFromDbf.DBFManager" level="INFO">

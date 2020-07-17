@@ -1,7 +1,9 @@
 package net.energo.grodno.pes.smsSender.controllers;
 
-import net.energo.grodno.pes.smsSender.entities.Abonent;
+import net.energo.grodno.pes.smsSender.Services.TemplateService;
 import net.energo.grodno.pes.smsSender.entities.Order;
+import net.energo.grodno.pes.smsSender.entities.TextTemplate;
+import net.energo.grodno.pes.smsSender.entities.users.User;
 import net.energo.grodno.pes.smsSender.utils.ShoppingCart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,23 +17,33 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/cart")
 public class CartController {
     private ShoppingCart cart;
+    private TemplateService templateService;
 
     @Autowired
-    public CartController(ShoppingCart cart) {
+    public CartController(ShoppingCart cart, TemplateService templateService) {
         this.cart = cart;
+        this.templateService = templateService;
     }
 
     @RequestMapping(value = {"","/","index"}, method = RequestMethod.GET)
     @Transactional
-    public String cart(HttpSession session,Model model){
+    public String cart(HttpSession session,Model model,Principal principal){
         session.setAttribute("cartItemsCount",cart.getItems().size());
         Order order = new Order();
         model.addAttribute("order",order);
+        try {
+            List<TextTemplate> templates = templateService.getAllByUser(principal.getName());
+            System.out.println(templates);
+            model.addAttribute("templates",templates);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         model.addAttribute("cartItems",cart.getItems());
         return "cart/index";
     }
