@@ -21,9 +21,9 @@
         <form action="#" th:action="@{/cart/createOrder}" th:object="${order}" method="post" th:if="${cartItems.size()>0}"
               onsubmit="return confirm('Вы действительно хотите отправить эту рассылку СМС?');">
             <div class="form-row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-10">
                     <label>Сообщение СМС</label>
-                    <textarea class="form-control" th:field="*{message}" replace="Текст сообщения"></textarea>
+                    <textarea rows="10" id="msg_text" class="form-control" th:field="*{message}" replace="Текст сообщения"></textarea>
                     <small class="form-text text-danger" th:each="err : ${#fields.errors('message')}" th:text="${err}" />
                 </div>
                 <div class="form-group col-md-2">
@@ -94,7 +94,7 @@
                     <table class="table table-hover" th:if="${templates.size()>0}">
                         <tbody>
                             <tr th:each="template:${templates}">
-                                <td th:text="${template.template}">
+                                <td class="insert_template" th:text="${template.template}">
                                 <td>
                                 <a class="btn btn-outline-dark" th:href="@{'/templates/edit/'+${template.id}}">Редактировать</a>
                                 <a class="btn btn-outline-danger" th:href="@{'/templates/delete/'+${template.id}}">Удалить</td>
@@ -112,7 +112,11 @@
 
 <script>
     $(document).ready(function () {
-
+        $(".insert_template").on("click",function(){
+            insert_text = $(this).text();
+            $("#msg_text").val(insert_text);
+            $('#templateWindow').modal('toggle');
+        });
     });
 
 </script>
