@@ -44,7 +44,7 @@
             <div th:if="${ordersPaginated.totalPages > 0}">
                 <p> Страница <span th:text="${ordersPaginated.number+1}"/> из <span th:text="${ordersPaginated.getTotalPages()}"/></p>
                 <p> Показано с <span th:text="${(ordersPaginated.number)*(ordersPaginated.size)+1}"/> по <span th:text="${(ordersPaginated.number)*(ordersPaginated.size)+ordersPaginated.size}"/> записи</p>
-                <p>Количество абонентов <span th:text="${totalOrders}"/></p>
+                <p>Количество рассылок <span th:text="${totalOrders}"/></p>
                 <nav>
                     <ul class="pagination">
                         <li class="page-item" th:if="${ordersPaginated.number > 1}">

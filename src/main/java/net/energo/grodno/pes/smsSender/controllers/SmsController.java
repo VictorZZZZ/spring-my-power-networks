@@ -61,7 +61,7 @@ public class SmsController {
         } catch(EntityNotFoundException e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("messageError","Нет рассылки с таким Id");
-        } catch (IOException| InterruptedException | SmsSenderErrorException e) {
+        } catch (IOException| InterruptedException | SmsSenderErrorException | NullPointerException e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("messageError","Ошибка: " + e.getMessage());
         }
@@ -74,7 +74,7 @@ public class SmsController {
         int counter=0;
         for(StatusResponse statusResponse:statusResponses){
             for(OrderItem orderItem:orderItems){
-                if(orderItem.getSmsId().equals(statusResponse.getSmsId())){
+                if((orderItem.getSmsId() instanceof Long) && (orderItem.getSmsId().equals(statusResponse.getSmsId()))){
                     //"sms_id":886055815,"sms_count":"1","operator":"2","sms_status":"Delivered","recipient":"+375297819778"
                     orderItem.setSmsStatus(ErrorsTable.STATUS.get(statusResponse.getSmsStatus()));
                     counter++;

@@ -179,7 +179,9 @@ public class SmsAPI {
 
         JSONArray smsIdArray = new JSONArray();
         for(Long smsId:longList){
-            smsIdArray.put((new JSONObject()).put("sms_id",smsId.toString()));
+            if(smsId instanceof Long) {
+                smsIdArray.put((new JSONObject()).put("sms_id", smsId.toString()));
+            }
         }
 
         JSONObject msg = new JSONObject();

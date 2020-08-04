@@ -15,7 +15,7 @@
 	<description>Elektroseti SMS Sender</description>
 
 	<properties>
-		<java.version>14</java.version>
+		<java.version>1.8</java.version>
 		<github.global.server>github</github.global.server>
 	</properties>
 
