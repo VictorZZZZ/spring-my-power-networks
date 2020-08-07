@@ -27,6 +27,7 @@ public class Fider {
 
     @OneToMany(mappedBy = "fider",fetch = FetchType.EAGER)
     @OnDelete(action=OnDeleteAction.CASCADE)
+    @OrderBy("surname")
     private List<Abonent> abonents;
 
     public Fider() {
