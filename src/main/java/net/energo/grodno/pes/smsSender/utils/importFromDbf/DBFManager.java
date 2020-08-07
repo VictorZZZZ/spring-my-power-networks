@@ -28,6 +28,7 @@ public class DBFManager {
     private Map<Integer,Tp> tpMap = new HashMap<>();
     private List<Abonent> abonentList= new ArrayList<>();
     private List<String> errors= new ArrayList<>();
+    private final int EMPTY_FIDER_ID = 0;
 
     public DBFManager() {
     }
@@ -189,11 +190,12 @@ public class DBFManager {
             //System.out.printf("%s %s %s \n",dbf_id,name);
             fiderList.add(new Fider(name,dbfId,new Tp(),false));
         }
-        fiderList.add(new Fider("Без номера",0,new Tp(),false));
+        fiderList.add(new Fider("Без номера",EMPTY_FIDER_ID,new Tp(),false));
 
     }
 
     private void readAllAbonent(){
+        logger.info("Формирование списка Абонентов.");
         //printFields(abonentReader);
 
         // Now, lets us start reading the rows
@@ -201,6 +203,7 @@ public class DBFManager {
         DBFRow row;
 
         while ((row = abonentReader.nextRow()) != null) {
+
             String accountNumber = row.getString("LIC_SCH");
             String surname = row.getString("FAM");
             String name = row.getString("NAME");
@@ -226,9 +229,10 @@ public class DBFManager {
                  codFid = codFid.replaceAll("\\s+",""); //убирает пробелы из строки
                  fiderCode = Integer.parseInt(codFid);
             } else {
-                logger.warn("Абонент не привязан к фидеру(или имеет пустое значение в поле COD_FID: {} {} {} {} {} {} {} {} {} {}"
+                logger.warn("Абонент не привязан к фидеру(или имеет пустое значение в поле COD_FID) и будет привязан к фидеру \"Без названия\": {} {} {} {} {} {} {} {} {} {}"
                         ,accountNumber,surname,name,middlename,homePhone,firstPhone,secondPhone,tpCode,codFid,opora);
-                continue;
+                fiderCode=EMPTY_FIDER_ID;
+                //continue;
             }
             //System.out.println(fiderCode);
 //            System.out.printf("%s %s %s %s %s %s %s %s %s %s \n"
@@ -262,6 +266,7 @@ public class DBFManager {
                         ,accountNumber,surname,name,middlename,homePhone,firstPhone,secondPhone,tpCode,fiderCode,opora);
             }
         }
+        logger.info("Формирование списка ТП закончено.");
 
     }
 

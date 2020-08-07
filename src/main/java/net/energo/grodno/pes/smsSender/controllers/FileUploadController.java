@@ -97,7 +97,6 @@ public class FileUploadController {
         int fidersCount=0;
         int abonentsCount=0;
         for (Map.Entry<Integer, Tp> entry : dbfManager.getTpMap().entrySet()) {
-            int s = entry.getKey();
             Tp tp = entry.getValue();
             fidersCount += tp.getFiders().size();
             for(Fider fider:tp.getFiders()){

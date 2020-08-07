@@ -7,8 +7,8 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link th:href="@{/css/assets/global/css/components-md.min.css}" rel="stylesheet" id="style_components" type="text/css" />
-
     <script th:src="@{/js/jquery.js}"></script>
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
 </head>
 <body>
 <div class="container">
@@ -33,6 +33,7 @@
                 </div>
             </div>
             <div class="form-group col-md-12">
+                <p>Количество символов СМС: <span id="count_symbols">0</span></p>
                 <input class="btn btn-outline-info" type="submit" value="Отправить SMS" />
             </div>
         </form>
