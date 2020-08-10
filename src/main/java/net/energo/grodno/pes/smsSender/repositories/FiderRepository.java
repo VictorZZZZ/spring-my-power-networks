@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FiderRepository extends JpaRepository<Fider,Integer> {
-    Fider findOneByTpIdAndDbfId(Integer tpId, int dbfId);
+public interface FiderRepository extends JpaRepository<Fider,Long> {
+    Fider findOneByTpIdAndDbfId(Long tpId, int dbfId);
 
 }

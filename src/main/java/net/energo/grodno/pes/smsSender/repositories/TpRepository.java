@@ -14,7 +14,12 @@ import java.util.Optional;
 public interface TpRepository extends JpaRepository<Tp,Integer> {
     Tp findTopByDbfId(int dbfId);
 
-    @Query("SELECT t from Tp t WHERE t.res=:res ORDER BY t.name")
+    //@Query("SELECT t from Tp t WHERE t.res=:res ORDER BY t.name")
+    @Query("SELECT t from Tp t WHERE t.part IN " +
+            "(SELECT p from Part p WHERE p.line IN " +
+                "(SELECT l from Line l WHERE l.section IN " +
+                    "(SELECT s from Section s WHERE s.substation IN " +
+                        "(SELECT subst FROM Substation subst WHERE subst.res=:res)))) ORDER BY t.name")
     List<Tp> findAllByResIdOrderByName(@Param("res") Res res);
 
     List<Tp> findByNameIgnoreCaseContains(String searchLine);

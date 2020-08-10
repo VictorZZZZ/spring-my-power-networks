@@ -10,10 +10,13 @@ import java.util.List;
 @Entity
 @Table(name="fider")
 public class Fider {
+    public static final int EMPTY_FIDER_ID = 0;
+    public static final String EMPTY_FIDER_NAME ="Без номера";
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @Column(name="name")
     private String name;
     @Column(name="dbf_id",nullable = false, columnDefinition="integer default 0")
@@ -40,11 +43,11 @@ public class Fider {
         this.inputManually = inputManually;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -112,5 +115,15 @@ public class Fider {
 
     public String toShortString() {
         return name+" - "+tp.getName();
+    }
+
+    public void info() {
+        System.out.println("\t\t\t\t\t\t\tFider{" +
+                "name='" + name + '\'' +
+                ", dbfId='" + dbfId + '\'' +
+                '}');
+        for (Abonent abonent:abonents) {
+            System.out.println("\t\t\t\t\t\t\t"+abonent.toShortString());
+        }
     }
 }

@@ -63,7 +63,7 @@ public class CartController {
 
     //добавление Фидера
     @GetMapping("/add/fider/{id}")
-    public String addFiderToCart(HttpSession session,HttpServletRequest request,Model model, @PathVariable("id") Integer id, RedirectAttributes redirectAttributes){
+    public String addFiderToCart(HttpSession session,HttpServletRequest request,Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
         int count = cart.addFider(id);
         redirectAttributes.addFlashAttribute("messageInfo","В список рассылки добавлено " + count + " абонентов");
         session.setAttribute("cartItemsCount",cart.getItems().size());

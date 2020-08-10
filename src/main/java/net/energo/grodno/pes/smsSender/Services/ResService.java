@@ -5,19 +5,23 @@ import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
 import net.energo.grodno.pes.smsSender.repositories.ResRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.Cacheable;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ResService {
     private ResRepository resRepository;
+    private SubstationService substationService;
 
     @Autowired
-    public void setResRepository(ResRepository resRepository) {
+    public void setResRepository(ResRepository resRepository,SubstationService substationService) {
+        this.substationService = substationService;
         this.resRepository = resRepository;
     }
 
@@ -26,7 +30,12 @@ public class ResService {
     }
 
     public Res getOne(Integer id) {
-        return resRepository.findById(id).get();
+        Optional<Res> optRes = resRepository.findById(id);
+        if(optRes.isPresent()) {
+            return resRepository.findById(id).get();
+        } else {
+            return null;
+        }
     }
 
     public void saveOne(Res res) {
@@ -62,5 +71,16 @@ public class ResService {
         }
         res.setCachedAbonentsCount((long) abonentSize);
         saveOne(res);
+    }
+
+    @Transactional
+    public void deepSave(List<Res> resList){
+        System.out.println("Res:Deep Save");
+        for (Res res:resList) {
+            if(getOne(res.getId())!=null){
+                System.out.println(res.getName() + " найден.");
+                substationService.deepSave(res.getSubstations());
+            }
+        }
     }
 }

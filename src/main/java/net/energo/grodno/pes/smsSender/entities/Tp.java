@@ -14,7 +14,7 @@ public class Tp {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name="name")
     @NotBlank
@@ -25,9 +25,13 @@ public class Tp {
     @Column(name="input_manually",nullable = false, columnDefinition="boolean default false")
     private boolean inputManually;
 
+//    @ManyToOne
+//    @JoinColumn(name="res_id")
+//    private Res res;
+
     @ManyToOne
-    @JoinColumn(name="res_id")
-    private Res res;
+    @JoinColumn(name="part_id")
+    private Part part;
 
     @OneToMany(mappedBy = "tp")
     @OnDelete(action= OnDeleteAction.CASCADE)
@@ -36,18 +40,18 @@ public class Tp {
     public Tp() {
     }
 
-    public Tp(String name, int dbfId, Res res,boolean inputManually) {
+    public Tp(String name, int dbfId, Part part,boolean inputManually) {
         this.name = name;
         this.dbfId = dbfId;
-        this.res = res;
+        this.part = part;
         this.inputManually = inputManually;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -76,11 +80,7 @@ public class Tp {
     }
 
     public Res getRes() {
-        return res;
-    }
-
-    public void setRes(Res res) {
-        this.res = res;
+        return part.getLine().getSection().getSubstation().getRes();
     }
 
     public List<Fider> getFiders() {
@@ -91,13 +91,21 @@ public class Tp {
         this.fiders = fiders;
     }
 
+    public Part getPart() {
+        return part;
+    }
+
+    public void setPart(Part part) {
+        this.part = part;
+    }
+
     @Override
     public String toString() {
         return "Tp{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", dbfId='" + dbfId + '\'' +
-                ", res=" + res +
+                ", part=" + part +
                 ", fiders=" + fiders +
                 '}';
     }
@@ -108,5 +116,20 @@ public class Tp {
                 ", name='" + name + '\'' +
                 ", dbfId='" + dbfId + '\'' +
                 '}';
+    }
+
+    public void addFider(Fider fider) {
+        fiders.add(fider);
+    }
+
+    public void info() {
+        System.out.println("\t\t\t\t\tTp{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", dbfId='" + dbfId + '\'' +
+                "}");
+        for (Fider fider:fiders) {
+            fider.info();
+        }
     }
 }

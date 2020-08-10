@@ -30,8 +30,8 @@
                 <tr th:each="tp : ${tps}">
 
                     <td>
-                        <a th:href="@{'/res/view/'+${tp.res.id}}">
-                            <span th:text="${tp.res.name}"/>
+                        <a th:href="@{'/res/view/'+${tp.getRes().getId()}}">
+                            <span th:text="${tp.getRes.getName()}"/>
                         </a>
                     </td>
 

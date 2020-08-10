@@ -38,8 +38,8 @@
                         <div class="row static-info">
                             <div class="col-md-5 name"> РЭС </div>
                             <div class="col-md-7 value">
-                                <a th:href="@{'/res/view/'+${abonent.fider.tp.res.id}}">
-                                    <span th:text="${abonent.fider.tp.res.name}"/>
+                                <a th:href="@{'/res/view/'+${abonent.fider.tp.getRes().getId()}}">
+                                    <span th:text="${abonent.fider.tp.getRes().getName()}"/>
                                 </a>
                             </div>
                         </div>

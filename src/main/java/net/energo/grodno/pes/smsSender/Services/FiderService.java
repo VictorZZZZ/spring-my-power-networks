@@ -40,11 +40,11 @@ public class FiderService {
         fiderRepository.flush();
     }
 
-    public Fider getOne(Integer id) {
+    public Fider getOne(Long id) {
         return fiderRepository.getOne(id);
     }
 
-    public void deleteOne(Integer id) {
+    public void deleteOne(Long id) {
         fiderRepository.deleteById(id);
     }
 
@@ -114,6 +114,7 @@ public class FiderService {
         List<Fider> fidersList =new ArrayList<>();
         List<Abonent> abonentList =new ArrayList<>();
         Res res = resRepository.getOne(id);
+        //todo: переделать
         List<Tp> tpList = tpRepository.findAllByResIdOrderByName(res);
         for(Tp tp:tpList){
             fidersList.addAll(tp.getFiders());

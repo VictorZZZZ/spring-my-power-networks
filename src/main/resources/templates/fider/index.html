@@ -29,7 +29,7 @@
             </thead>
             <tbody>
                 <tr th:each="fider : ${fiders}">
-                    <td th:text="${fider.tp.res.name}"/>
+                    <td th:text="${fider.tp.getRes().getName()}"/>
                     <td th:text="${fider.tp.name}"/>
                     <td th:object="${fider}">
                         <span th:text="*{name}" /><br/>

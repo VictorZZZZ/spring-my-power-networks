@@ -78,7 +78,7 @@ public class ShoppingCart {
 
     //добавить по Фидеру, или одного Абонента)
     @Transactional
-    public Integer addFider(Integer id) {
+    public Integer addFider(Long id) {
         Fider fider=fiderService.getOne(id);
         int count=0;
         for(Abonent abonent:fider.getAbonents()){

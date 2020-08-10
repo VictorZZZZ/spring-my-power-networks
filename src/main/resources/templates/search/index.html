@@ -35,7 +35,7 @@
                 <tbody>
                     <tr th:each="abonent : ${abonentList}">
 
-                        <td th:text="${abonent.fider.tp.res.name}"/>
+                        <td th:text="${abonent.fider.tp.getRes().getName()}"/>
                         <td th:text="${abonent.fider.tp.name}"/>
                         <td th:text="${abonent.fider.name}"/>
                         <td th:text="${abonent.accountNumber}"/>
@@ -75,8 +75,8 @@
                 <tbody>
                 <tr th:each="tp : ${tpList}">
                     <td>
-                        <a th:href="@{'/res/view/'+${tp.res.id}}" title="Просмотр данных РЭС">
-                            <span th:text="${tp.res.name}" />
+                        <a th:href="@{'/res/view/'+${tp.getRes().getId()}}" title="Просмотр данных РЭС">
+                            <span th:text="${tp.getRes().getName()}" />
                         </a>
                     </td>
 

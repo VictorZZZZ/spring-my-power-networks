@@ -36,7 +36,7 @@
                 <tbody>
                     <tr th:each="abonent : ${abonentsPaginated.content}">
 
-                        <td th:text="${abonent.fider.tp.res.name}"/>
+                        <td th:text="${abonent.fider.tp.getRes().getName()}"/>
                         <td th:text="${abonent.fider.tp.name}"/>
                         <td th:text="${abonent.fider.name}"/>
                         <td th:text="${abonent.accountNumber}"/>

@@ -25,7 +25,7 @@ public class CartTest extends AbstractClass {
 
     @Test
     public void testAddingFiderToCart(){
-        cart.addFider(3821);
+        cart.addFider(3821L);
         System.out.println(cart.getItems().size());
     }
 
