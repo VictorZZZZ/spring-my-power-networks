@@ -34,3 +34,4 @@ logs/
 upload-dir/
 out/
 src/main/java/META-INF/
+/restore_commands.txt

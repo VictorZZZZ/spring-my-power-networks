@@ -3,6 +3,8 @@ package net.energo.grodno.pes.smsSender.Services;
 import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
 import net.energo.grodno.pes.smsSender.repositories.TpRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import java.util.List;
 
 @Service
 public class TpService {
+    Logger logger = LoggerFactory.getLogger(TpService.class);
     private TpRepository tpRepository;
 
     @Autowired
@@ -65,6 +68,7 @@ public class TpService {
         if(listToSave.size()>0) {
             tpRepository.saveAll(listToSave);
             resultList.add("В базу добавлено "+listToSave.size()+" новых ТП");
+            logger.info("В базу добавлено {} новых ТП",listToSave.size());
         }
         resultList.add("Обработано "+tpList.size()+" ТП");
         resultList.addAll(updateBackCouples(tpList));
@@ -75,6 +79,7 @@ public class TpService {
     public List<String> updateBackCouples(List<Tp> tpList) {
         List<String> resultList = new ArrayList<>();
         resultList.add("Синхронизация базы Базы данных ТП...");
+        logger.info("Проверка обратных пар...");
         List<Tp> listFromBase = tpRepository.findAllByResIdOrderByName(tpList.get(0).getRes());
         List<Tp> listToDelete = new ArrayList<>();
         for (Tp tp: listFromBase) {
@@ -89,9 +94,12 @@ public class TpService {
                 if(!tp.isInputManually() && tp.getDbfId()!=0) {
                     //Если ТП не было введено вручную
                     listToDelete.add(tp);
+                    logger.info("Будет удалено ТП: " + tp.toShortString());
                     resultList.add("Удалено ТП: " + tp.toShortString());
                 } else {
                     //Сообщить о том, что найдены ТП введённые вручную
+                    logger.warn("ТП: "
+                            + tp.toShortString()+"было введено(или изменено) вручную, и может быть удалено только вручную.");
                     resultList.add("ТП: "
                             + tp.toShortString()+"было введено(или изменено) вручную, и может быть удалено только вручную.");
                 }
@@ -102,6 +110,7 @@ public class TpService {
             resultList.add("==============================================================================");
             resultList.add("Из Базы удалено "+listToDelete.size()+" ТП т.к. они не соответствовали списку из ДБФ файла");
             resultList.add("==============================================================================");
+            logger.info("Из Базы удалено {} ТП т.к. они не соответствовали списку из ДБФ файла",listToDelete.size());
         } else{
             resultList.add("Несоответствий не обнаружено");
         }

@@ -7,6 +7,9 @@ import net.energo.grodno.pes.smsSender.entities.Tp;
 import net.energo.grodno.pes.smsSender.repositories.AbonentRepository;
 import net.energo.grodno.pes.smsSender.repositories.ResRepository;
 import net.energo.grodno.pes.smsSender.repositories.TpRepository;
+import net.energo.grodno.pes.smsSender.utils.importFromDbf.DBFManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -20,6 +23,8 @@ import java.util.*;
 
 @Service
 public class AbonentService {
+    Logger logger = LoggerFactory.getLogger(AbonentService.class);
+
     private AbonentRepository abonentRepository;
     private TpRepository tpRepository;
     private ResRepository resRepository;
@@ -101,8 +106,10 @@ public class AbonentService {
             }
 
         }
+        logger.info("Сохранение абонентов.");
         abonentRepository.saveAll(abonentList);
         resultList.add("Обработано "+abonentList.size()+" абонентов");
+        logger.info("Проверка обратных пар.");
         resultList.addAll(updateBackCouples(abonentList));
         return resultList;
     }
@@ -126,6 +133,7 @@ public class AbonentService {
                 if(!abonentFromBase.getInputManually()) {
                     //Если абонент не введён вручную, то можно его удалить
                     listToDelete.add(abonentFromBase);
+                    logger.info("Будет удален абоент {}",abonentFromBase.toShortString());
                     resultList.add("Удален Абонент: " + abonentFromBase.toShortString());
                 } else {
                     //Сообщить о том, что найдены абоненты введённые вручную
