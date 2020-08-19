@@ -86,12 +86,12 @@ public class TpService {
                 }
             }
             if(foundTp==false) {
-                if(!tp.isInputManually()) {
+                if(!tp.isInputManually() && tp.getDbfId()!=0) {
                     //Если ТП не было введено вручную
                     listToDelete.add(tp);
                     resultList.add("Удалено ТП: " + tp.toShortString());
                 } else {
-                    //Сообщить о том, что найдены абоненты введённые вручную
+                    //Сообщить о том, что найдены ТП введённые вручную
                     resultList.add("ТП: "
                             + tp.toShortString()+"было введено(или изменено) вручную, и может быть удалено только вручную.");
                 }

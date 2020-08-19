@@ -1,6 +1,10 @@
 package net.energo.grodno.pes.smsSender.entities;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import javax.persistence.*;
+
 
 @Entity
 @Table(name="order_items")
@@ -17,6 +21,7 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "abonent_id")
+    @Cascade(CascadeType.REFRESH)
     private Abonent abonent;
 
     @Column(name = "sms_id")
