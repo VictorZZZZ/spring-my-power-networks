@@ -4,6 +4,7 @@ import net.energo.grodno.pes.smsSender.AbstractClass;
 import net.energo.grodno.pes.smsSender.Services.ResService;
 import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.utils.importFromJSON.JsonManager;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +18,7 @@ public class importJsonTest extends AbstractClass {
     JsonManager jsonManager;
 
     @Test
+    @Ignore
     public void deepSave(){
         try {
             List<Res> resList = jsonManager.readJson();

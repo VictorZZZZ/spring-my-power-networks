@@ -82,7 +82,7 @@ public class JsonManager {
                                                         Tp tp = new Tp();
                                                         tp.setName(tpsJson.getJSONObject(n).getString("name"));
                                                         tp.setPart(part);
-                                                        Fider fider = new Fider(Fider.EMPTY_FIDER_NAME, Fider.EMPTY_FIDER_ID, tp, false);
+                                                        Fider fider = new Fider(Fider.EMPTY_FIDER_NAME, Fider.EMPTY_FIDER_ID, tp, true);
                                                         tp.setFiders(new ArrayList<>());
                                                         tp.addFider(fider);
                                                         tp.setResId(res.getId());

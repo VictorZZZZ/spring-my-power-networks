@@ -148,6 +148,7 @@ public class TpService {
                     if(tpList.size()==1){
                         Tp tpFromBase=tpList.get(0);
                         tp.setId(tpFromBase.getId());
+                        tp.setDbfId(tpFromBase.getDbfId());
                         tpRepository.save(tp);
                         fiderService.deepSave(tp.getFiders());
                     }
@@ -181,6 +182,7 @@ public class TpService {
                     if(tpList.size()==1){
                         Tp tpFromBase=tpList.get(0);
                         tp.setId(tpFromBase.getId());
+                        tp.setDbfId(tpFromBase.getDbfId());
                         tpRepository.save(tp);
                         fiderService.deepSave(tp.getFiders());
                     }
@@ -210,6 +212,7 @@ public class TpService {
                 if(tpList.size()==1){
                     Tp tpFromBase=tpList.get(0);
                     tp.setId(tpFromBase.getId());
+                    tp.setDbfId(tpFromBase.getDbfId());
                     tpRepository.save(tp);
                     fiderService.deepSave(tp.getFiders());
                 } else {
@@ -234,3 +237,4 @@ public class TpService {
         return sb.toString();
     }
 }
+

@@ -130,6 +130,7 @@ public class FiderService {
             Fider fiderFromBase = fiderRepository.findOneByTpIdAndDbfId(fider.getTp().getId(),fider.getDbfId());
             if(fiderFromBase!=null){
                 fider.setId(fiderFromBase.getId());
+                fider.setDbfId(fiderFromBase.getDbfId());
                 if(fider.getAbonents().size()>0) {
                     abonentService.deepSave(fider.getAbonents());
                 }

@@ -8,6 +8,7 @@ import net.energo.grodno.pes.smsSender.entities.TextTemplate;
 import net.energo.grodno.pes.smsSender.entities.users.User;
 import net.energo.grodno.pes.smsSender.repositories.TemplateRepository;
 import org.hibernate.sql.Template;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,6 +27,7 @@ public class TemplateTest extends AbstractClass {
     private UserService userService;
 
     @Test
+    @Ignore
     public void insertRecord(){
         Optional<User> optUser = userService.findById(4L);
         if(optUser.isPresent()){
