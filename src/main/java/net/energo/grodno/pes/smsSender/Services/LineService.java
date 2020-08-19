@@ -24,11 +24,11 @@ public class LineService {
         for (Line line:lines) {
             Optional<Line> optLine = lineRepository.findByNameAndSectionId(line.getName(),line.getSection().getId());
             if(optLine.isPresent()){
-                System.out.println(line.getName()+" - линия найдена. Пересохраняем");
+                //System.out.println(line.getName()+" - линия найдена. Пересохраняем");
                 line.setId(optLine.get().getId());
                 lineRepository.save(line);
             } else {
-                System.out.println(line.getName()+" новая. Cохраняем");
+                //System.out.println(line.getName()+" новая. Cохраняем");
                 lineRepository.save(line);
             }
             partService.deepSave(line.getParts());

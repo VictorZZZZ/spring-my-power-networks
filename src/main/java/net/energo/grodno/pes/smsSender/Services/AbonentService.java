@@ -51,6 +51,7 @@ public class AbonentService {
     public void saveOne(Abonent abonent) {
         abonentRepository.save(abonent);
     }
+
     public void saveAll(List<Abonent> abonentList) {
 //        if(abonentList.size()>1000) {
 //            for (int i = 0; i < abonentList.size() / 1000; i++) {
@@ -196,5 +197,17 @@ public class AbonentService {
             System.out.println(e.getMessage());
         }
         return new ArrayList<>();
+    }
+
+    public void deepSave(List<Abonent> abonents) {
+        for (Abonent abonent:abonents){
+            Abonent abonentFromBase = abonentRepository.findByFiderIdAndSurname(abonent.getFider().getId(),abonent.getSurname());
+            if(abonentFromBase != null){
+                abonent.setAccountNumber(abonentFromBase.getAccountNumber());
+                saveOne(abonent);
+            } else {
+                saveOne(abonent);
+            }
+        }
     }
 }

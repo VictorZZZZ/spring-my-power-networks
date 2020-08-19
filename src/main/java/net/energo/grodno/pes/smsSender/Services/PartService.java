@@ -11,22 +11,28 @@ import java.util.Optional;
 @Service
 public class PartService {
     private PartRepository partRepository;
+    private TpService tpService;
 
     @Autowired
-    public PartService(PartRepository partRepository) {
+    public PartService(PartRepository partRepository, TpService tpService) {
         this.partRepository = partRepository;
+        this.tpService = tpService;
     }
 
     public void deepSave(List<Part> parts) {
         for (Part part:parts) {
             Optional<Part> optPart = partRepository.findByNameAndLineId(part.getName(),part.getLine().getId());
             if(optPart.isPresent()){
-                System.out.println(part.getName()+" - участок найден. Пересохраняем");
+                //System.out.println(part.getName()+" - участок найден. Пересохраняем");
                 part.setId(optPart.get().getId());
                 partRepository.save(part);
             } else {
-                System.out.println(part.getName()+" - новый участок. Сохраняем");
+                //System.out.println(part.getName()+" - новый участок. Сохраняем");
                 partRepository.save(part);
+            }
+            //System.out.println(part.getTps().size());
+            if(part.getTps().size()>0) {
+                tpService.deepSave(part.getTps());
             }
         }
     }

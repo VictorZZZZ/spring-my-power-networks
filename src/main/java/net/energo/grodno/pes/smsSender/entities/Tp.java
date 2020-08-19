@@ -19,12 +19,16 @@ public class Tp {
     @Column(name="name")
     @NotBlank
     private String name;
+
     @Column(name="dbf_id",nullable = false, columnDefinition="integer default 0")
     private int dbfId;
 
     @Column(name="input_manually",nullable = false, columnDefinition="boolean default false")
     private boolean inputManually;
 
+
+    @Column(name="res_id")
+    private Integer resId;
 //    @ManyToOne
 //    @JoinColumn(name="res_id")
 //    private Res res;
@@ -97,6 +101,14 @@ public class Tp {
 
     public void setPart(Part part) {
         this.part = part;
+    }
+
+    public Integer getResId() {
+        return resId;
+    }
+
+    public void setResId(Integer resId) {
+        this.resId = resId;
     }
 
     @Override

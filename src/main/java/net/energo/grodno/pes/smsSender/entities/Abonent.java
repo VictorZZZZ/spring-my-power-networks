@@ -21,7 +21,9 @@ public class Abonent {
 
     @Id
     @Column(name="account_number")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountNumber;
+
     @Column(name="surname")
     private String surname;
     @Column(name="name")

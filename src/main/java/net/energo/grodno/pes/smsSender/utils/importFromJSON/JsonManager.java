@@ -20,6 +20,7 @@ public class JsonManager {
     public static void main(String[] args) {
         try {
             readJson();
+            System.out.println("ok");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,6 +77,7 @@ public class JsonManager {
                                                 part.setLine(line);
                                                 JSONArray tpsJson = partsJson.getJSONObject(m).getJSONArray("Tp");
                                                 for (int n = 0; n < tpsJson.length(); n++) {
+                                                    System.out.println(tpsJson.getJSONObject(n).getString("name"));
                                                     if (!tpsJson.getJSONObject(n).getString("name").equals("")) {
                                                         Tp tp = new Tp();
                                                         tp.setName(tpsJson.getJSONObject(n).getString("name"));
@@ -83,14 +85,19 @@ public class JsonManager {
                                                         Fider fider = new Fider(Fider.EMPTY_FIDER_NAME, Fider.EMPTY_FIDER_ID, tp, false);
                                                         tp.setFiders(new ArrayList<>());
                                                         tp.addFider(fider);
+                                                        tp.setResId(res.getId());
                                                         fider.setAbonents(new ArrayList<>());
                                                         JSONArray abonentsJson = tpsJson.getJSONObject(n).getJSONArray("Abonents");
                                                         for (int o = 0; o < abonentsJson.length(); o++) {
                                                             Abonent abonent = new Abonent();
-                                                            abonent.setName(abonentsJson.getJSONObject(o).getString("name"));
+                                                            abonent.setSurname(abonentsJson.getJSONObject(o).getString("name"));
+                                                            abonent.setName("");
+                                                            abonent.setMiddlename("");
+                                                            abonent.setHomePhone("");
                                                             abonent.setFirstPhone(abonentsJson.getJSONObject(o).getString("phone_1"));
                                                             abonent.setSecondPhone(abonentsJson.getJSONObject(o).getString("phone_2"));
                                                             abonent.setFider(fider);
+                                                            abonent.setInputManually(true);
                                                             fider.addAbonent(abonent);
                                                         }
                                                         part.addTp(tp);

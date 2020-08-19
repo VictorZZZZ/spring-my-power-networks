@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TpRepository extends JpaRepository<Tp,Integer> {
+public interface TpRepository extends JpaRepository<Tp,Long> {
     Tp findTopByDbfId(int dbfId);
 
     //@Query("SELECT t from Tp t WHERE t.res=:res ORDER BY t.name")
@@ -23,4 +23,12 @@ public interface TpRepository extends JpaRepository<Tp,Integer> {
     List<Tp> findAllByResIdOrderByName(@Param("res") Res res);
 
     List<Tp> findByNameIgnoreCaseContains(String searchLine);
+
+    List<Tp> findByResIdAndNameContains(Integer resId, String name);
+
+    List<Tp> findByName(String name);
+
+    List<Tp> findByNameAndResId(String name,Integer resId);
+
+    List<Tp> findAll();
 }

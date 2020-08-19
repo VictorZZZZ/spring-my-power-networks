@@ -49,7 +49,7 @@ public class CartController {
     }
 
     @GetMapping("/add/tp/{id}")
-    public String addTpToCart(HttpSession session,HttpServletRequest request,Model model, @PathVariable("id") Integer id, RedirectAttributes redirectAttributes){
+    public String addTpToCart(HttpSession session,HttpServletRequest request,Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
         //добавление ТП
         int count = cart.addTp(id);
         if(count>0) {

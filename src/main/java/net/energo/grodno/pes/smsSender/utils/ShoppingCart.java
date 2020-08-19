@@ -88,7 +88,7 @@ public class ShoppingCart {
     }
 
     @Transactional
-    public Integer addTp(Integer id) {
+    public Integer addTp(Long id) {
         //добавить в корзину Товар("получателей") по ТП
         Tp tp = tpService.getOne(id);
         int count=0;

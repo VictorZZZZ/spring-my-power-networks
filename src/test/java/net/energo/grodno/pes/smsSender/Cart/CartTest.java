@@ -31,7 +31,7 @@ public class CartTest extends AbstractClass {
 
     @Test
     public void testAddingTpToCart(){
-        cart.addTp(8543);
+        cart.addTp(8543L);
         System.out.println(cart.getItems().size());
     }
 }

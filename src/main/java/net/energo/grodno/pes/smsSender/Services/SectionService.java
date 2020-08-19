@@ -24,11 +24,11 @@ public class SectionService {
         for(Section section:sections){
             Optional<Section> optSection = sectionRepository.findByNameAndSubstationId(section.getName(),section.getSubstation().getId());
             if(optSection.isPresent()){
-                System.out.println(section.getName()+" - СШ найдена. Пересохраняем");
+                //System.out.println(section.getName()+" - СШ найдена. Пересохраняем");
                 section.setId(optSection.get().getId());
                 sectionRepository.save(section);
             }else {
-                System.out.println(section.getName()+" - СШ не найдена. Сохраняем");
+                //System.out.println(section.getName()+" - СШ не найдена. Сохраняем");
                 sectionRepository.save(section);
             }
             lineService.deepSave(section.getLines());

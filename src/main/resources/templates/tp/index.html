@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Список ТП</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link th:href="@{/css/assets/global/css/components-md.min.css}" rel="stylesheet" id="style_components" type="text/css" />
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
 </head>
@@ -24,6 +25,7 @@
             <thead class="thead-dark">
                     <th> РЭС </th>
                     <th> Название </th>
+                    <th> Количество фидеров </th>
                     <th> Действия </th>
             </thead>
             <tbody>
@@ -31,7 +33,7 @@
 
                     <td>
                         <a th:href="@{'/res/view/'+${tp.getRes().getId()}}">
-                            <span th:text="${tp.getRes.getName()}"/>
+                            <span th:text="${tp.getRes().getName()}"/>
                         </a>
                     </td>
 
@@ -39,6 +41,9 @@
                         <a th:href="@{'/tp/view/'+${tp.id}}" title="Просмотр данных ТП">
                             <span th:text="*{name}" />
                         </a>
+                    </td>
+                    <td th:object="${tp}">
+                        <span class="label label-success" th:text="*{fiders.size()}"/>
                     </td>
                     <td>
                         <a class="btn btn-outline-dark" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>

@@ -19,12 +19,14 @@ public class FiderService {
     private FiderRepository fiderRepository;
     private TpRepository tpRepository;
     private ResRepository resRepository;
+    private AbonentService abonentService;
 
     @Autowired
-    public FiderService(FiderRepository fiderRepository, TpRepository tpRepository, ResRepository resRepository) {
+    public FiderService(FiderRepository fiderRepository, TpRepository tpRepository, ResRepository resRepository, AbonentService abonentService) {
         this.tpRepository = tpRepository;
         this.fiderRepository = fiderRepository;
         this.resRepository = resRepository;
+        this.abonentService = abonentService;
     }
 
     public List<Fider> getAll() {
@@ -123,4 +125,21 @@ public class FiderService {
     }
 
 
+    public void deepSave(List<Fider> fiders) {
+        for(Fider fider:fiders){
+            Fider fiderFromBase = fiderRepository.findOneByTpIdAndDbfId(fider.getTp().getId(),fider.getDbfId());
+            if(fiderFromBase!=null){
+                fider.setId(fiderFromBase.getId());
+                if(fider.getAbonents().size()>0) {
+                    abonentService.deepSave(fider.getAbonents());
+                }
+            } else {
+                //System.out.printf("В базе нет фидера %s - %s \n",fider.getTp().getName(),fider.getName());
+                if(fider.getAbonents().size()>0) {
+                    saveOne(fider);
+                    abonentService.deepSave(fider.getAbonents());
+                }
+            }
+        }
+    }
 }

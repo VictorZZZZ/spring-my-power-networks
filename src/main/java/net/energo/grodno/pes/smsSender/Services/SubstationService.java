@@ -25,11 +25,11 @@ public class SubstationService {
             Optional<Substation> optSubst = substationRepository.findByNameAndResId(substation.getName(),substation.getRes().getId());
             if(optSubst.isPresent()){
                 //Подстанция найдена. Сверяем id рэса
-                System.out.println(substation.getName()+" - Подстанция найдена. Пересохраняем");
+                //System.out.println(substation.getName()+" - Подстанция найдена. Пересохраняем");
                 substation.setId(optSubst.get().getId());
                 substationRepository.save(substation);
             } else {
-                System.out.println(substation.getName() + " - Сохраняем");
+                //System.out.println(substation.getName() + " - Сохраняем");
                 substationRepository.save(substation);
             }
             sectionService.deepSave(substation.getSections());

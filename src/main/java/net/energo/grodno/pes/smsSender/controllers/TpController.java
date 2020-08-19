@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class TpController {
 
     @GetMapping(value={"","/","index"})
     public String showAll(Model model){
+        //todo: сделать пагинацию
         List<Tp> tps = tpService.getAll();
         model.addAttribute("tps",tps);
         return "tp/index";
@@ -43,7 +45,7 @@ public class TpController {
     }
 
     @GetMapping("/edit/{id}")
-    public String editTp(Model model, @PathVariable("id") Integer id){
+    public String editTp(Model model, @PathVariable("id") Long id){
         Tp tp = tpService.getOne(id);
         List<Res> resList= resService.getAllRes();
         model.addAttribute("tp",tp);
@@ -52,7 +54,7 @@ public class TpController {
     }
 
     @GetMapping("/view/{id}")
-    public String viewTp(Model model, @PathVariable("id") Integer id){
+    public String viewTp(Model model, @PathVariable("id") Long id){
         Tp tp = tpService.getOne(id);
         model.addAttribute("tp",tp);
         return "tp/view";
@@ -71,9 +73,9 @@ public class TpController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteResById(@PathVariable("id") Integer id){
+    public String deleteResById(@PathVariable("id") Long id, HttpServletRequest request){
         tpService.deleteOne(id);
-        return "redirect:/tp";
+        return "redirect:"+request.getHeader("Referer");
     }
 
 

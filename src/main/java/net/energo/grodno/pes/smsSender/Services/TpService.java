@@ -10,17 +10,20 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class TpService {
     Logger logger = LoggerFactory.getLogger(TpService.class);
     private TpRepository tpRepository;
+    private FiderService fiderService;
 
     @Autowired
-    public void setTpRepository(TpRepository tpRepository) {
+    public TpService(TpRepository tpRepository, FiderService fiderService) {
         this.tpRepository = tpRepository;
+        this.fiderService = fiderService;
     }
 
     public List<Tp> getAll() {
@@ -40,11 +43,11 @@ public class TpService {
         tpRepository.flush();
     }
 
-    public Tp getOne(Integer id) {
+    public Tp getOne(Long id) {
         return tpRepository.getOne(id);
     }
 
-    public void deleteOne(Integer id) {
+    public void deleteOne(Long id) {
         tpRepository.deleteById(id);
     }
 
@@ -122,4 +125,112 @@ public class TpService {
     }
 
 
+    public void deepSave(List<Tp> tps) {
+        for (Tp tp:tps) {
+            //полное совпадение
+            List<Tp> tpList =tpRepository.findByNameAndResId(tp.getName(),tp.getResId());
+            if(tpList.size()==1) {
+                Tp tpFromBase = tpList.get(0);
+                tp.setId(tpFromBase.getId());
+                tpRepository.save(tp);
+                fiderService.deepSave(tp.getFiders());
+                continue;
+            }
+
+            //Берестовица
+            if(tp.getResId()==1){
+                //System.out.printf("%s \n",tp.getName());
+                Pattern pattern = Pattern.compile("[а-яА-Я]{1,2}\\-\\d{1,3}:");//от 1 до 2 русских букв  + знак "тире" + 1 или 3 цифры+ :
+                Matcher matcher = pattern.matcher(tp.getName());
+                if(matcher.find()){
+                    //System.out.printf("%s - %s\n",matcher.group(),tp.getName());
+                    tpList = tpRepository.findByNameAndResId(getDigitString(matcher.group()),tp.getRes().getId());
+                    if(tpList.size()==1){
+                        Tp tpFromBase=tpList.get(0);
+                        tp.setId(tpFromBase.getId());
+                        tpRepository.save(tp);
+                        fiderService.deepSave(tp.getFiders());
+                    }
+                    if(tpList.size()==0){
+                        if(tp.getFiders().get(0).getAbonents().size()>0){
+                            tpRepository.save(tp);
+                            fiderService.deepSave(tp.getFiders());
+                        }
+                    }
+                    if(tpList.size()>1){
+                        System.out.printf("%5s - %40s\t%d\n",matcher.group(),tp.getName(),tpList.size());
+                    }
+
+                } else {
+                    //System.out.printf("%s - не соответствет шаблону\n", tp.getName());
+                    if(tp.getFiders().get(0).getAbonents().size()>0) {
+                        tpRepository.save(tp);
+                        fiderService.deepSave(tp.getFiders());
+                    }
+                }
+
+            }
+
+            //Cельский РЭС и Щучинский РЭС
+            if(tp.getResId()==2 || tp.getResId()==3){
+                Pattern pattern = Pattern.compile("[а-яА-Я]{1,2}\\-\\d{1,3}");//от 1 до 2 русских букв  + знак "тире" + 1 или 3 цифры
+                Matcher matcher = pattern.matcher(tp.getName());
+                if(matcher.find()){
+
+                    tpList = tpRepository.findByNameAndResId(matcher.group(),tp.getRes().getId());
+                    if(tpList.size()==1){
+                        Tp tpFromBase=tpList.get(0);
+                        tp.setId(tpFromBase.getId());
+                        tpRepository.save(tp);
+                        fiderService.deepSave(tp.getFiders());
+                    }
+                    if(tpList.size()==0){
+                        if(tp.getFiders().get(0).getAbonents().size()>0){
+                            tpRepository.save(tp);
+                            fiderService.deepSave(tp.getFiders());
+                        }
+                    }
+                    if(tpList.size()>1){
+                        System.out.printf("%5s - %40s\t%d\n",matcher.group(),tp.getName(),tpList.size());
+                    }
+
+                } else {
+                    //System.out.printf("%s - совпадения не найдено\n",tp.getName());
+                    if(tp.getFiders().get(0).getAbonents().size()>0) {
+                        tpRepository.save(tp);
+                        fiderService.deepSave(tp.getFiders());
+
+                    }
+                }
+            }
+
+            //ГГРЭС
+            if(tp.getResId()==4){
+                tpList = tpRepository.findByNameAndResId(tp.getName(),tp.getRes().getId());
+                if(tpList.size()==1){
+                    Tp tpFromBase=tpList.get(0);
+                    tp.setId(tpFromBase.getId());
+                    tpRepository.save(tp);
+                    fiderService.deepSave(tp.getFiders());
+                } else {
+                    if(tp.getFiders().get(0).getAbonents().size()>0){
+                        tpRepository.save(tp);
+                        fiderService.deepSave(tp.getFiders());
+                    }
+                }
+            }
+
+        }
+    }
+
+    private String getDigitString(String str) {
+        char[] charName = str.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for (char ch:charName) {
+            if(ch=='1' || ch=='2'|| ch=='3' || ch=='4' || ch=='5' || ch=='6' || ch=='7' || ch=='8' || ch=='9' || ch=='0'){
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
 }

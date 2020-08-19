@@ -22,4 +22,6 @@ public interface AbonentRepository extends JpaRepository<Abonent,Long> {
     List<Abonent> findBySecondPhoneContaining(String searchLine);
 
     List<Abonent> findAllByAccountNumber(Long search);
+
+    Abonent findByFiderIdAndSurname(Long fiderId, String surname);
 }
