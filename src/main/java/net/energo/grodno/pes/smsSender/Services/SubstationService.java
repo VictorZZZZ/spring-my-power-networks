@@ -35,5 +35,9 @@ public class SubstationService {
             sectionService.deepSave(substation.getSections());
         }
     }
+
+    public List<Substation> getAllByRes(Integer id) {
+        return substationRepository.findByResId(id);
+    }
 }
 

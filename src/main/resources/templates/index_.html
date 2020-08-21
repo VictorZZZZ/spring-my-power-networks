@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>СМС оповещение</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{assets/global/css/plugins-md.min.css}"/>
+    <link th:href="@{/css/assets/global/css/components-md.min.css}" rel="stylesheet" id="style_components" type="text/css" />
+
+    <link th:href="@{/css/assets/layouts/layout/css/layout.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/css/assets/layouts/layout/css/themes/blue.min.css}" rel="stylesheet" type="text/css" id="style_color" />
+
+
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
+</head>
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-full-width page-md">
+<div class="container">
+    <div th:replace="~{navigation :: navigation(Home)}" />
+    <div th:replace="~{flashMessages :: flash}" />
+
+    <h1>СМС Абонентам</h1>
+    <table class="table table-hover">
+        <thead class="thead-dark">
+            <th> Название </th>
+            <th sec:authorize="hasRole('ROLE_ADMIN')"> Действия </th>
+        </thead>
+        <tbody>
+        <tr th:each="res : ${allRes}">
+            <td th:object="${res}">
+                <a th:href="@{'/res/view/'+${res.id}}"<span th:text="*{name}" /><br/>
+                <span class="badge badge-light" th:text="${'Количество ТП:{нужно посчитть} Количество абонентов:'+res.cachedAbonentsCount}"/>
+            </td>
+            <td sec:authorize="hasRole('ROLE_ADMIN')">
+                <a class="btn btn-outline-dark" th:href="@{'/res/edit/' + ${res.id}}">Изменить</a>
+                <a class="btn btn-outline-danger" th:href="@{'/res/delete/' + ${res.id}}">Удалить</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+</div>
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.js}"></script>
+</body>
+</html>

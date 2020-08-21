@@ -143,4 +143,8 @@ public class FiderService {
             }
         }
     }
+
+    public List<Fider> getAllByTp(Long parentId) {
+        return fiderRepository.findByTpId(parentId);
+    }
 }

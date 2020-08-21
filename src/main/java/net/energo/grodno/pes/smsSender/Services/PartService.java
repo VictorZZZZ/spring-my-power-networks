@@ -36,4 +36,8 @@ public class PartService {
             }
         }
     }
+
+    public List<Part> getAllByLine(Long parentId) {
+        return partRepository.findByLineId(parentId);
+    }
 }

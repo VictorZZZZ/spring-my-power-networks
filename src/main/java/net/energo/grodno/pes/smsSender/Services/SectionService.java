@@ -34,4 +34,8 @@ public class SectionService {
             lineService.deepSave(section.getLines());
         }
     }
+
+    public List<Section> getAllBySubstation(Integer parentId) {
+        return sectionRepository.findBySubstationId(parentId);
+    }
 }

@@ -31,4 +31,6 @@ public interface TpRepository extends JpaRepository<Tp,Long> {
     List<Tp> findByNameAndResId(String name,Integer resId);
 
     List<Tp> findAll();
+
+    List<Tp> findByPartId(Long parentId);
 }

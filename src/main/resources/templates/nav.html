@@ -1,0 +1,171 @@
+<div class="page-header navbar navbar-fixed-top" th:fragment="nav(activeTab)" xmlns:th="http://www.w3.org/1999/xhtml"
+     xmlns:sec="http://www.w3.org/1999/xhtml">
+    <style>
+        .page-header.navbar .page-logo .logo-default {
+            margin: 12px 0 0;
+        }
+    </style>
+    <!-- BEGIN HEADER INNER -->
+    <div class="page-header-inner ">
+        <!-- BEGIN LOGO -->
+        <div class="page-logo">
+            <a th:href="@{/}" title="СМС оповещение абонентов">
+                <img th:src="@{/img/logo.png}" alt="logo" class="logo-default" />
+            </a>
+        </div>
+        <!-- END LOGO -->
+        <!-- BEGIN MEGA MENU -->
+        <!-- DOC: Remove "hor-menu-light" class to have a horizontal menu with theme background instead of white background -->
+        <!-- DOC: This is desktop version of the horizontal menu. The mobile version is defined(duplicated) in the responsive menu below along with sidebar menu. So the horizontal menu has 2 seperate versions -->
+        <div class="hor-menu   hidden-sm hidden-xs">
+            <ul class="nav navbar-nav">
+                <!-- DOC: Remove data-hover="megamenu-dropdown" and data-close-others="true" attributes below to disable the horizontal opening on mouse hover -->
+                <li class="classic-menu-dropdown" aria-haspopup="true">
+                    <a th:href="@{/}">
+                        Главная
+                    </a>
+                </li>
+                <li class="classic-menu-dropdown" aria-haspopup="true">
+                    <a href="javascript:;" data-hover="megamenu-dropdown" data-close-others="true"> Меню
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-left">
+                        <li>
+                            <a th:href="@{/orders/}">
+                                <i class="fa fa-history"></i> История рассылок
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <i class="fa fa-envelope-o"></i> СМС Руководству
+                            </a>
+                        </li>
+                        <li class="dropdown-submenu" aria-haspopup="true">
+                            <a href="javascript:;">
+                                <i class="icon-list"></i> Списки
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="javascript:;"> Номера руководства </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/templates}"> Шаблоны для СМС </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li class="classic-menu-dropdown" aria-haspopup="true" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a href="javascript:;" data-hover="megamenu-dropdown" data-close-others="true"> Администрирование
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-left">
+                        <li>
+                            <a th:href="@{/users}">
+                                Пользователи
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/importFromDbf/}">
+                                Импорт из DBF
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/countAbonents/}">
+                                Пересчитать статистику в РЭСах
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="classic-menu-dropdown" aria-haspopup="true">
+                    <a th:href="@{/sms/checkBalance}">
+                        <i class="icon-credit-card"></i> Проверить баланс
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- END MEGA MENU -->
+        <!-- BEGIN HEADER SEARCH BOX -->
+        <!-- DOC: Apply "search-form-expanded" right after the "search-form" class to have half expanded search box -->
+        <form class="search-form" th:action="@{/search/}" method="GET">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Поиск..." name="searchLine">
+                <span class="input-group-btn">
+                                <a href="javascript:;" class="btn submit">
+                                    <i class="icon-magnifier"></i>
+                                </a>
+                            </span>
+            </div>
+        </form>
+        <!-- END HEADER SEARCH BOX -->
+        <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+            <span></span>
+        </a>
+        <!-- END RESPONSIVE MENU TOGGLER -->
+        <!-- BEGIN TOP NAVIGATION MENU -->
+        <div class="top-menu">
+            <ul class="nav navbar-nav pull-right">
+                <!-- BEGIN NOTIFICATION DROPDOWN -->
+                <!-- DOC: Apply "dropdown-dark" class after "dropdown-extended" to change the dropdown styte -->
+                <!-- DOC: Apply "dropdown-hoverable" class after below "dropdown" and remove data-toggle="dropdown" data-hover="dropdown" data-close-others="true" attributes to enable hover dropdown mode -->
+                <!-- DOC: Remove "dropdown-hoverable" and add data-toggle="dropdown" data-hover="dropdown" data-close-others="true" attributes to the below A element with dropdown-toggle class -->
+                <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar" sec:authorize="isAuthenticated()">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                        <i class="icon-bell"></i>
+                        <span class="badge badge-default"> 7 </span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
+                                <li>
+                                    <a href="javascript:;">
+                                        <span class="time">3 mins</span>
+                                        <span class="details">
+                                                        <span class="label label-sm label-icon label-danger">
+                                                            <i class="fa fa-bolt"></i>
+                                                        </span> Есть ТП не привязанные к линиям. </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <!-- END NOTIFICATION DROPDOWN -->
+                <li class="dropdown dropdown-extended dropdown-notification" sec:authorize="isAuthenticated()">
+                    <a th:href="@{/cart}" class="dropdown-toggle" style="padding-right:6px;">
+                        <i class="icon-bubble"></i>
+                        <span class="badge badge-default" th:if="${session.cartItemsCount}" th:text="${session.cartItemsCount}"/>
+                    </a>
+                </li>
+                <!-- BEGIN USER LOGIN DROPDOWN -->
+                <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                <li class="dropdown dropdown-user" sec:authorize="isAuthenticated()">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" style="padding-right:6px;">
+                        <span class="username " sec:authentication="name">AUTEHTICATED USER NAME</span>
+                    </a>
+                </li>
+                <!-- END USER LOGIN DROPDOWN -->
+                <!-- BEGIN QUICK SIDEBAR TOGGLER -->
+                <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                <li class="dropdown" sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/login}" class="dropdown-toggle" style="padding-right:6px;">
+                        <i class="icon-login"></i>
+
+                    </a>
+                </li>
+                <li sec:authorize="isAuthenticated()" class="dropdown dropdown-quick-sidebar-toggler">
+                    <form th:action="@{/logout}" method="post" class="dropdown-toggle" style="padding-right:6px;">
+                        <a class="dropdown-toggle" href="#" onclick="parentNode.submit();"><i class="icon-logout"></i></a>
+                    </form>
+                </li>
+                <!-- END QUICK SIDEBAR TOGGLER -->
+            </ul>
+        </div>
+        <!-- END TOP NAVIGATION MENU -->
+    </div>
+    <!-- END HEADER INNER -->
+</div>
+
+
+

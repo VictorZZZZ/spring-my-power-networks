@@ -236,5 +236,9 @@ public class TpService {
         }
         return sb.toString();
     }
+
+    public List<Tp> getAllByPart(Long parentId) {
+        return tpRepository.findByPartId(parentId);
+    }
 }
 

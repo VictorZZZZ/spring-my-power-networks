@@ -34,4 +34,8 @@ public class LineService {
             partService.deepSave(line.getParts());
         }
     }
+
+    public List<Line> getAllBySection(Integer parentId) {
+        return lineRepository.findBySectionId(parentId);
+    }
 }
