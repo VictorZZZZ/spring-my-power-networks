@@ -2,6 +2,7 @@ package net.energo.grodno.pes.smsSender.controllers;
 
 import net.energo.grodno.pes.smsSender.Services.*;
 import net.energo.grodno.pes.smsSender.entities.*;
+import net.energo.grodno.pes.smsSender.utils.ShoppingCart;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -14,13 +15,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
 @Controller
 @RequestMapping("/ajax")
 public class AjaxController {
+    private ShoppingCart cart;
     Logger logger = LoggerFactory.getLogger(AjaxController.class);
 
     private ResService resService;
@@ -32,7 +33,8 @@ public class AjaxController {
     private FiderService fiderService;
 
     @Autowired
-    public AjaxController(ResService resService, SubstationService substationService, SectionService sectionService, LineService lineService, PartService partService, TpService tpService, FiderService fiderService) {
+    public AjaxController(ShoppingCart cart, ResService resService, SubstationService substationService, SectionService sectionService, LineService lineService, PartService partService, TpService tpService, FiderService fiderService) {
+        this.cart = cart;
         this.resService = resService;
         this.substationService = substationService;
         this.sectionService = sectionService;
@@ -161,7 +163,7 @@ public class AjaxController {
     }
 
     @RequestMapping(value = {"/getInfo"}, method = RequestMethod.GET)
-    public String getInfo(Model model, @Param("object") String object, @Param("id") String id, RedirectAttributes redirectAttributes){
+    public String getInfo(Model model, @Param("object") String object, @Param("id") String id){
         logger.info("Ajax запрос в базу: /app/ajax/getInfo?object={}&id={}",object,id);
         switch(object){
             case "res":
@@ -201,6 +203,46 @@ public class AjaxController {
         model.addAttribute("messageError","Ошибка запроса");
         return "flashMessages";
 
+    }
+
+    @RequestMapping(value = {"/addToCart"}, method = RequestMethod.GET)
+    public String addToCart(Model model, @Param("object") String object, @Param("id") String id){
+        logger.info("Ajax запрос в базу: /app/ajax/addToCart?object={}&id={}",object,id);
+        int count=0;
+        switch(object){
+            case "substation":
+                count = cart.addSubstation(Integer.valueOf(id));
+                break;
+            case "section":
+                count = cart.addSection(Integer.valueOf(id));
+                break;
+            case "line":
+                count = cart.addLine(Long.valueOf(id));
+                break;
+            case "part":
+                count = cart.addPart(Long.valueOf(id));
+                break;
+            case "tp":
+                count = cart.addTp(Long.valueOf(id));
+                break;
+            case "fider":
+                count = cart.addFider(Long.valueOf(id));
+                break;
+            default:
+                model.addAttribute("messageError","Ошибка запроса");
+                return "flashMessages";
+        }
+        generateAddCartResponse(model, count);
+        return "flashMessages";
+
+    }
+
+    private void generateAddCartResponse(Model model, int count) {
+        if(count>0){
+            model.addAttribute("messageInfo","В список рассылки добавлено "+count+" абонентов.");
+        } else {
+            model.addAttribute("messageError","В список рассылки не добавлен ни один абонент! Возможно вы уже добавляли этот объект или он пуст.");
+        }
     }
 
 }

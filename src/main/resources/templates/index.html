@@ -1625,7 +1625,10 @@
                         "label" : "В список рассылки",
                         "action" : function (obj) {
                             var clickedNodeId = obj.reference["context"].getAttribute("aria-activedescendant");
-
+                            addToCart(clickedNodeId);
+                            $('body,html').animate({
+                                scrollTop: 0
+                            }, 400);
                         }
                     }
                 }
@@ -1634,7 +1637,7 @@
 
     }
 
-    var showInfo = function(nodeId) {
+    var showInfo = function(nodeId){
         //var requestURL="/app/ajax/getInfo?object=";
         var requestURL="/app/ajax/getInfo";
         var obj = nodeId.split('_')[0];
@@ -1647,7 +1650,6 @@
             method: "GET",
             data: {"object": obj,"id": id},
             success: function(data) {
-                console.log(data); // Возвращаемые данные выводим в консоль
                 $("#infoBlock").html(data);
             },
             error: function(err){
@@ -1655,6 +1657,48 @@
                 console.log(err);
             }
         });
+    }
+    var addToCart = function(nodeId){
+        var requestURL="/app/ajax/addToCart";
+        var obj = nodeId.split('_')[0];
+        var id= nodeId.split('_')[1];
+        console.log(requestURL);
+        $.ajax({
+            url: requestURL,
+            dataType: "html",
+            method: "GET",
+            data: {"object": obj,"id": id},
+            beforeSend:function(){
+                var imgTag = "<div id='addToCartLoading'><img src='/app/img/throbber.gif' /> Загрузка...</div>";
+                $("#infoBlock").append(imgTag);
+            },
+            complete:function(){
+                $("#addToCartLoading").remove();
+            },
+            success: function(data) {
+                $("#infoBlock").append(data);
+                getCartCount(function(newCartCount){
+
+                    $("#cartItemsCount").html(newCartCount);
+                });
+            },
+            error: function(err){
+                $("#infoBlock").append("<h3 style='color:red;'>Ошибка отображения информации</h3>");
+                console.log(err);
+            }
+        });
+    }
+
+    var getCartCount = function(handleCartCount){
+        var result="";
+        $.ajax({
+            url:"/app/cart/getCount",
+            method: "GET",
+            success: function(data){
+                handleCartCount(data);
+            }
+        });
+        return result;
     }
 
     $(document).ready(function () {

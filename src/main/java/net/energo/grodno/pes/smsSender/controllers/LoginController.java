@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -31,7 +33,13 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String loginPage() {
+    public String loginPage(HttpServletRequest request,Model model) {
+        if(request.getHeader("x-requested-with")!=null){
+            //Проверка на асинхронность запроса. Если запрос асинхронный, то есть header c именем "x-requested-with"
+            model.addAttribute("messageError","В доступе отказано, попробуйте зайти под своей учетной записью!");
+            return "flashMessages";
+        }
+
         return "user/login";
     }
 

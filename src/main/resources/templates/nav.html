@@ -135,7 +135,7 @@
                 <li class="dropdown dropdown-extended dropdown-notification" sec:authorize="isAuthenticated()">
                     <a th:href="@{/cart}" class="dropdown-toggle" style="padding-right:6px;">
                         <i class="icon-bubble"></i>
-                        <span class="badge badge-default" th:if="${session.cartItemsCount}" th:text="${session.cartItemsCount}"/>
+                        <span id="cartItemsCount" class="badge badge-default" th:text="${(session.cartItemsCount!=null) ? (session.cartItemsCount) : 0}"/>
                     </a>
                 </li>
                 <!-- BEGIN USER LOGIN DROPDOWN -->

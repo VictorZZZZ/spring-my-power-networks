@@ -3,7 +3,6 @@ package net.energo.grodno.pes.smsSender.utils;
 import net.energo.grodno.pes.smsSender.Services.*;
 import net.energo.grodno.pes.smsSender.entities.*;
 import net.energo.grodno.pes.smsSender.entities.users.User;
-import net.energo.grodno.pes.smsSender.repositories.user.UserRepository;
 import net.energo.grodno.pes.smsSender.utils.smsAPI.ErrorsTable;
 import net.energo.grodno.pes.smsSender.utils.smsAPI.SmsAPI;
 import net.energo.grodno.pes.smsSender.utils.smsAPI.SmsResponse;
@@ -16,7 +15,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,19 +23,28 @@ import java.util.Optional;
 public class ShoppingCart {
     private static final int PHONE_LENGTH = 9;
     private List<OrderItem> items;
+
     private TpService tpService;
     private FiderService fiderService;
     private AbonentService abonentService;
     private OrderService orderService;
     private UserService userService;
+    private PartService partService;
+    private LineService lineService;
+    private SectionService sectionService;
+    private SubstationService substationService;
 
     @Autowired
-    public ShoppingCart(TpService tpService, FiderService fiderService, AbonentService abonentService, OrderService orderService, UserService userService) {
+    public ShoppingCart(TpService tpService, FiderService fiderService, AbonentService abonentService, OrderService orderService, UserService userService, PartService partService, LineService lineService, SectionService sectionService, SubstationService substationService) {
         this.tpService = tpService;
         this.fiderService = fiderService;
         this.abonentService = abonentService;
         this.orderService = orderService;
         this.userService = userService;
+        this.partService = partService;
+        this.lineService = lineService;
+        this.sectionService = sectionService;
+        this.substationService = substationService;
         this.items=new ArrayList<>();
 
     }
@@ -82,7 +89,7 @@ public class ShoppingCart {
         Fider fider=fiderService.getOne(id);
         int count=0;
         for(Abonent abonent:fider.getAbonents()){
-            count+=addAbonent(abonent.getAccountNumber());
+            count+=this.addAbonent(abonent.getAccountNumber());
         }
         return count;
     }
@@ -93,7 +100,44 @@ public class ShoppingCart {
         Tp tp = tpService.getOne(id);
         int count=0;
         for(Fider fider:tp.getFiders()){
-            count+=addFider(fider.getId());
+            count+=this.addFider(fider.getId());
+        }
+        return count;
+    }
+
+    public int addPart(Long id) {
+        //добавить в корзину получателей по Участку
+        Part part = partService.getOne(id);
+        int count=0;
+        for(Tp tp:part.getTps()){
+            count+=this.addTp(tp.getId());
+        }
+        return count;
+    }
+
+    public int addLine(Long id) {
+        Line line = lineService.getOne(id);
+        int count=0;
+        for(Part part:line.getParts()){
+            count+=this.addPart(part.getId());
+        }
+        return count;
+    }
+
+    public int addSection(Integer id) {
+        Section section = sectionService.getOne(id);
+        int count=0;
+        for(Line line:section.getLines()){
+            count+=this.addLine(line.getId());
+        }
+        return count;
+    }
+
+    public int addSubstation(Integer id) {
+        Substation substation = substationService.getOne(id);
+        int count=0;
+        for(Section section:substation.getSections()){
+            count+=this.addSection(section.getId());
         }
         return count;
     }
@@ -161,4 +205,5 @@ public class ShoppingCart {
             return true;
         } else return false;
     }
+
 }

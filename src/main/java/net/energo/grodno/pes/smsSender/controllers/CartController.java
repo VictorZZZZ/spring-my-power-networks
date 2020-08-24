@@ -3,7 +3,6 @@ package net.energo.grodno.pes.smsSender.controllers;
 import net.energo.grodno.pes.smsSender.Services.TemplateService;
 import net.energo.grodno.pes.smsSender.entities.Order;
 import net.energo.grodno.pes.smsSender.entities.TextTemplate;
-import net.energo.grodno.pes.smsSender.entities.users.User;
 import net.energo.grodno.pes.smsSender.utils.ShoppingCart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -115,6 +114,12 @@ public class CartController {
             redirectAttributes.addFlashAttribute("messageError", "Абонент с таким Id не найден");
         }
         return "redirect:/cart";
+    }
+
+    @GetMapping("/getCount")
+    @ResponseBody
+    public String getCount(){
+        return String.valueOf(cart.getItems().size());
     }
 
 }

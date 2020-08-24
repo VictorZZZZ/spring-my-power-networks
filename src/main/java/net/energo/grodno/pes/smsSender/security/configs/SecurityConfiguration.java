@@ -40,8 +40,9 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
                 .antMatchers(new String[]{"/",
                         "/css/**",
                         "/js/**",
+                        "/img/**",
                         "/login,",
-                        "/ajax/**"}).permitAll()
+                        "/ajax/resTree/**"}).permitAll()
                 .antMatchers(new String[]{
                         "/register",
                         "/admin/**",
