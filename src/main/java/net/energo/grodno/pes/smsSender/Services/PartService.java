@@ -40,4 +40,8 @@ public class PartService {
     public List<Part> getAllByLine(Long parentId) {
         return partRepository.findByLineId(parentId);
     }
+
+    public Part getOne(Long id) {
+        return partRepository.getOne(id);
+    }
 }

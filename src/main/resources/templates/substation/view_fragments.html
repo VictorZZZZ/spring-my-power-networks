@@ -1,0 +1,29 @@
+<div class="portlet green-meadow box" th:fragment="mainInfo" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-circle-o"></i><span th:text="${substation.name}"/> </div>
+        <div class="actions">
+            <!-- todo: сделать страницу edit-->
+            <a th:href="@{'/substation/edit/'+${substation.id}}" class="btn btn-default btn-sm">
+                <i class="fa fa-pencil"></i> Редактировать </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row static-info">
+            <div class="col-md-5 name"> Название </div>
+            <div class="col-md-7 value"> <span th:text="${substation.name}"/> </div>
+        </div>
+        <div class="row static-info">
+            <div class="col-md-5 name"> Напряжение </div>
+            <div class="col-md-7 value"> <span th:text="${substation.voltage}"/> </div>
+        </div>
+        <div class="row static-info">
+            <div class="col-md-5 name"> РЭС </div>
+            <div class="col-md-7 value"> <span th:text="${substation.res.name}"/> </div>
+        </div>
+        <div class="row static-info">
+            <div class="col-md-5 name"> Количество ТП: </div>
+            <div class="col-md-7 value"> <span th:text="${substation.getTps().size()}"/> </div>
+        </div>
+    </div>
+</div>

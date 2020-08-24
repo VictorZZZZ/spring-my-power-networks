@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -84,5 +85,12 @@ public class Section {
         for (Line line:lines) {
             line.info();
         }
+    }
+    public List<Tp> getTps(){
+        List<Tp> tpList = new ArrayList<>();
+            for(Line line:this.getLines()){
+                tpList.addAll(line.getTps());
+            }
+        return tpList;
     }
 }

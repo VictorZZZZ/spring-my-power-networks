@@ -1519,7 +1519,32 @@
                 <!-- BEGIN PAGE TITLE-->
                 <h1 class="page-title"> Cмс оповещение абонентов</h1>
                 <!-- END PAGE TITLE-->
-                <div id="res_tree" class="tree-demo"> </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="portlet light bordered">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="fa fa-cogs"></i> Выберите объект
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <div id="res_tree" class="tree-demo"> </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="portlet light bordered">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="fa fa-eye"></i> Информация
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <div id="infoBlock"> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- END CONTENT BODY -->
         </div>
@@ -1582,9 +1607,54 @@
                 }
             },
             "state" : { "key" : "demo3" },
-            "plugins" : [ "dnd", "state", "types","checkbox" ]
+            "plugins" : [ "dnd", "state", "types","contextmenu" ],
+            "contextmenu" : {
+                "items":{
+                    "show":{
+                        "label" : "Отобразить подробные данные",
+                        "action" : function (obj) {
+                            var clickedNodeId = obj.reference["context"].getAttribute("aria-activedescendant");
+                            showInfo(clickedNodeId);
+                            //скроллим наверх
+                            $('body,html').animate({
+                                scrollTop: 0
+                            }, 400);
+                        }
+                    },
+                    "add_to_cart":{
+                        "label" : "В список рассылки",
+                        "action" : function (obj) {
+                            var clickedNodeId = obj.reference["context"].getAttribute("aria-activedescendant");
+
+                        }
+                    }
+                }
+            }
         });
 
+    }
+
+    var showInfo = function(nodeId) {
+        //var requestURL="/app/ajax/getInfo?object=";
+        var requestURL="/app/ajax/getInfo";
+        var obj = nodeId.split('_')[0];
+        var id= nodeId.split('_')[1];
+        //requestURL=requestURL+obj+"&id="+id;
+        console.log(requestURL);
+        $.ajax({
+            url: requestURL,
+            dataType: "html",
+            method: "GET",
+            data: {"object": obj,"id": id},
+            success: function(data) {
+                console.log(data); // Возвращаемые данные выводим в консоль
+                $("#infoBlock").html(data);
+            },
+            error: function(err){
+                $("#infoBlock").html("<h3 style='color:red;'>Ошибка отображения информации</h3>");
+                console.log(err);
+            }
+        });
     }
 
     $(document).ready(function () {

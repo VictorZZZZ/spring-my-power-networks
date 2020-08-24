@@ -38,4 +38,8 @@ public class SectionService {
     public List<Section> getAllBySubstation(Integer parentId) {
         return sectionRepository.findBySubstationId(parentId);
     }
+
+    public Section getOne(Integer id){
+        return sectionRepository.getOne(id);
+    }
 }

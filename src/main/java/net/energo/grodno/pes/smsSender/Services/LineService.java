@@ -38,4 +38,8 @@ public class LineService {
     public List<Line> getAllBySection(Integer parentId) {
         return lineRepository.findBySectionId(parentId);
     }
+
+    public Line getOne(Long id) {
+        return lineRepository.getOne(id);
+    }
 }

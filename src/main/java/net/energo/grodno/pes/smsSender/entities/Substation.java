@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -98,5 +99,13 @@ public class Substation {
         for (Section section: sections) {
             section.info();
         }
+    }
+
+    public List<Tp> getTps(){
+        List<Tp> tpList = new ArrayList<>();
+        for(Section section:this.getSections()){
+            tpList.addAll(section.getTps());
+        }
+        return tpList;
     }
 }

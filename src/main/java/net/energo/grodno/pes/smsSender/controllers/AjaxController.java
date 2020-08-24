@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class AjaxController {
     @ResponseBody
     public String resTree(Model model, @Param("parent") String parent){
         logger.info("Ajax запрос в базу: /app/ajax/resTree?parent=" + parent);
-        JSONArray answer = new JSONArray();
+        JSONArray response = new JSONArray();
         //{"id":"node_159799604352036","text":"Node #1","icon":"fa fa-folder icon-lg icon-state-danger","children":true,"type":"root"}
         if(parent.equals("#")){
             List<Res> resList = resService.getAllRes();
@@ -60,7 +61,7 @@ public class AjaxController {
                     treeObj.put("children",false);
                 }
                 treeObj.put("type","root");
-                answer.put(treeObj);
+                response.put(treeObj);
             }
         } else {
             String parentEntity = parent.split("_")[0];
@@ -78,7 +79,7 @@ public class AjaxController {
                         } else {
                             treeObj.put("children",false);
                         }
-                        answer.put(treeObj);
+                        response.put(treeObj);
                     }
                 break;
                 case "substation":
@@ -93,7 +94,7 @@ public class AjaxController {
                         } else {
                             treeObj.put("children",false);
                         }
-                        answer.put(treeObj);
+                        response.put(treeObj);
                     }
                 break;
                 case "section":
@@ -108,7 +109,7 @@ public class AjaxController {
                         } else {
                             treeObj.put("children",false);
                         }
-                        answer.put(treeObj);
+                        response.put(treeObj);
                     }
                 break;
                 case "line":
@@ -123,7 +124,7 @@ public class AjaxController {
                         } else {
                             treeObj.put("children",false);
                         }
-                        answer.put(treeObj);
+                        response.put(treeObj);
                     }
                 break;
                 case "part":
@@ -138,7 +139,7 @@ public class AjaxController {
                         } else {
                             treeObj.put("children",false);
                         }
-                        answer.put(treeObj);
+                        response.put(treeObj);
                     }
                 break;
                 case "tp":
@@ -149,14 +150,57 @@ public class AjaxController {
                         treeObj.put("text",fider.getName());
                         treeObj.put("icon","fa fa-dot-circle-o icon-lg icon-state-success");//todo: поменять иконку подстанции
                         treeObj.put("children",false);
-                        answer.put(treeObj);
+                        response.put(treeObj);
                     }
                 break;
 
             }
         }
 
-        return answer.toString();
+        return response.toString();
+    }
+
+    @RequestMapping(value = {"/getInfo"}, method = RequestMethod.GET)
+    public String getInfo(Model model, @Param("object") String object, @Param("id") String id, RedirectAttributes redirectAttributes){
+        logger.info("Ajax запрос в базу: /app/ajax/getInfo?object={}&id={}",object,id);
+        switch(object){
+            case "res":
+                Res res = resService.getOne(Integer.valueOf(id));
+                List<Tp> tps = tpService.getAllByRes(res);
+                model.addAttribute("res",res);
+                model.addAttribute("tps",tps);
+                return "res/view_fragments::mainInfo";
+            case "substation":
+                Substation substation = substationService.getOne(Integer.valueOf(id));
+                model.addAttribute("substation",substation);
+                return "substation/view_fragments::mainInfo";
+            case "section":
+                Section section = sectionService.getOne(Integer.valueOf(id));
+                model.addAttribute("section",section);
+                return "section/view_fragments::mainInfo";
+            case "line":
+                Line line = lineService.getOne(Long.valueOf(id));
+                model.addAttribute("line",line);
+                return "line/view_fragments::mainInfo";
+            case "part":
+                Part part = partService.getOne(Long.valueOf(id));
+                model.addAttribute("part",part);
+                return "parts/view_fragments::mainInfo";
+            case "tp":
+                Tp tp = tpService.getOne(Long.valueOf(id));
+                model.addAttribute("tp",tp);
+                List<Fider> fiderList = tp.getFiders();
+                int abonentCount = fiderList.stream().mapToInt(fider -> (int) fider.getAbonents().size()).sum();
+                model.addAttribute("abonentCount",abonentCount);
+                return "tp/view_fragment";
+            case "fider":
+                Fider fider = fiderService.getOne(Long.valueOf(id));
+                model.addAttribute("fider",fider);
+                return "fider/view_fragments::mainInfo";
+        }
+        model.addAttribute("messageError","Ошибка запроса");
+        return "flashMessages";
+
     }
 
 }

@@ -2,6 +2,7 @@ package net.energo.grodno.pes.smsSender.controllers;
 
 import net.energo.grodno.pes.smsSender.Services.ResService;
 import net.energo.grodno.pes.smsSender.Services.TpService;
+import net.energo.grodno.pes.smsSender.entities.Fider;
 import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,9 @@ public class TpController {
     public String viewTp(Model model, @PathVariable("id") Long id){
         Tp tp = tpService.getOne(id);
         model.addAttribute("tp",tp);
+        List<Fider> fiderList = tp.getFiders();
+        int abonentCount = fiderList.stream().mapToInt(fider -> (int) fider.getAbonents().size()).sum();
+        model.addAttribute("abonentCount",abonentCount);
         return "tp/view";
     }
 

@@ -39,5 +39,9 @@ public class SubstationService {
     public List<Substation> getAllByRes(Integer id) {
         return substationRepository.findByResId(id);
     }
+
+    public Substation getOne(Integer id) {
+        return substationRepository.getOne(id);
+    }
 }
 
