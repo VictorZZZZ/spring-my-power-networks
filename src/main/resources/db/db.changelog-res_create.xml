@@ -1,0 +1,31 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="
+                    http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
+>
+
+    <changeSet author="zvv" id="1">
+        <insert tableName="res">
+            <column name="id">1</column>
+            <column name="name">БРЭС</column>
+            <column name="modified">28.08.2020 00:00:00</column>
+        </insert>
+        <insert tableName="res">
+            <column name="id">2</column>
+            <column name="name">СРЭС</column>
+            <column name="modified">28.08.2020 00:00:00</column>
+        </insert>
+        <insert tableName="res">
+            <column name="id">4</column>
+            <column name="name">ГГРЭС</column>
+            <column name="modified">28.08.2020 00:00:00</column>
+        </insert>
+        <insert tableName="res">
+            <column name="id">3</column>
+            <column name="name">ЩРЭС</column>
+            <column name="modified">28.08.2020 00:00:00</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
