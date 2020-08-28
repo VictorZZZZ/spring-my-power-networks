@@ -1610,17 +1610,6 @@
             "plugins" : [ "dnd", "state", "types","contextmenu" ],
             "contextmenu" : {
                 "items":{
-                    "show":{
-                        "label" : "Отобразить подробные данные",
-                        "action" : function (obj) {
-                            var clickedNodeId = obj.reference["context"].getAttribute("aria-activedescendant");
-                            showInfo(clickedNodeId);
-                            //скроллим наверх
-                            $('body,html').animate({
-                                scrollTop: 0
-                            }, 400);
-                        }
-                    },
                     "add_to_cart":{
                         "label" : "В список рассылки",
                         "action" : function (obj) {
@@ -1635,6 +1624,10 @@
             }
         });
 
+        $("#res_tree").on("select_node.jstree", function (e, data) {
+            showInfo(data.node.id);
+        });
+
     }
 
     var showInfo = function(nodeId){
@@ -1643,7 +1636,6 @@
         var obj = nodeId.split('_')[0];
         var id= nodeId.split('_')[1];
         //requestURL=requestURL+obj+"&id="+id;
-        console.log(requestURL);
         $.ajax({
             url: requestURL,
             dataType: "html",
@@ -1688,7 +1680,6 @@
             }
         });
     }
-
     var getCartCount = function(handleCartCount){
         var result="";
         $.ajax({
@@ -1700,6 +1691,7 @@
         });
         return result;
     }
+
 
     $(document).ready(function () {
         ajaxTreeSample();

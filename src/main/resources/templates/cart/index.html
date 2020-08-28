@@ -1,127 +1,157 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<!-- BEGIN HEAD -->
 <head>
-    <meta charset="UTF-8">
-    <title>Список рассылки</title>
+    <meta charset="utf-8"/>
 
-    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
-    <link th:href="@{/css/assets/global/css/components-md.min.css}" rel="stylesheet" id="style_components" type="text/css" />
+    <title th:text="${title!=null} ? ${title} :'СМС Оповещение абонентов'">СМС оповещение Абонентов</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+
+    <th:block th:insert="~{mandatory_styles :: link}"></th:block>
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link th:href="@{/css/assets/global/plugins/jstree/dist/themes/default/style.min.css}" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
     <script th:src="@{/js/jquery.js}"></script>
-    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
+
+    <style>
+        .insert_template{cursor:pointer;}
+    </style>
 </head>
-<body>
-<div class="container">
-    <div th:replace="~{navigation :: navigation(Home)}" />
-    <div th:replace="~{flashMessages :: flash}" />
+<!-- END HEAD -->
 
-<!-- todo Pagination -->
-    <h1>Подготовка отправки СМС</h1>
-    <div class="container">
-        <form action="#" th:action="@{/cart/createOrder}" th:object="${order}" method="post" th:if="${cartItems.size()>0}"
-              onsubmit="return confirm('Вы действительно хотите отправить эту рассылку СМС?');">
-            <div class="form-row">
-                <div class="form-group col-md-10">
-                    <label>Сообщение СМС</label>
-                    <textarea rows="10" id="msg_text" class="form-control" th:field="*{message}" replace="Текст сообщения"></textarea>
-                    <small class="form-text text-danger" th:each="err : ${#fields.errors('message')}" th:text="${err}" />
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-full-width page-md">
+<div class="page-wrapper">
+    <!-- BEGIN HEADER -->
+    <div th:replace="~{nav :: nav(Home)}"/>
+    <!-- END HEADER -->
+    <!-- BEGIN HEADER & CONTENT DIVIDER -->
+    <div class="clearfix"></div>
+    <!-- END HEADER & CONTENT DIVIDER -->
+    <!-- BEGIN CONTAINER -->
+    <div class="page-container">
+        <div class="page-content-wrapper">
+            <!-- BEGIN CONTENT BODY -->
+            <div class="page-content">
+
+            <!-- todo Pagination -->
+
+                <div class="container">
+                    <div th:replace="~{flashMessages :: flash}"/>
+                    <h1>Подготовка отправки СМС</h1>
+                    <div class="row">
+                        <form action="#" th:action="@{/cart/createOrder}" th:object="${order}" method="post" th:if="${cartItems.size()>0}"
+                          onsubmit="return confirm('Вы действительно хотите отправить эту рассылку СМС?');">
+                        <div class="form-row">
+                            <div class="form-group col-md-10">
+                                <label>Сообщение СМС</label>
+                                <textarea rows="10" id="msg_text" class="form-control" th:field="*{message}" replace="Текст сообщения"></textarea>
+                                <small class="form-text text-danger" th:each="err : ${#fields.errors('message')}" th:text="${err}" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <a class="btn btn-outline-dark" href="#" data-toggle="modal" data-target="#templateWindow" title="Добавить из шаблона" style="margin-top: 32px;">
+                                    Шаблоны
+                                </a>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <p>Количество символов в СМС: <span id="count_symbols">0</span></p>
+                            <p>Количество СМС: <span id="count_sms">0</span></p>
+                            <input class="btn btn-outline purple-sharp uppercase" type="submit" value="Отправить SMS"/>
+                        </div>
+                        <script>
+                            $('#msg_text').bind('input propertychange', function() {
+                                if(this.value.length){
+                                    length = this.value.length
+                                    $("#count_symbols").html(length);
+                                    if(length<=70) $("#count_sms").html(1);
+                                    if(length>70 && length<=134) $("#count_sms").html(2);
+                                    if(length>134) $("#count_sms").html(parseInt(length/67));
+                                }
+                            });
+                        </script>
+                    </form>
+
+
+                    </div>
+                    <div class="row">
+                        <p style="width:100%;">Всего в рассылке <span th:text="${cartItems.size()}"/> абонентов</p>
+                        <a style="margin-bottom:15px;" class="btn btn-danger" th:href="@{/cart/clear}" th:if="${cartItems.size()>0}">Очистить список рассылки</a>
+                        <table class="table table-hover" th:if="${cartItems.size()>0}">
+                            <thead class="thead-dark">
+                            <th> ТП </th>
+                            <th> Фидер </th>
+                            <th> Лиц. Сч. </th>
+                            <th> ФИО </th>
+                            <th> Номера тел. </th>
+                            <th> Отметки </th>
+                            <th> Создан </th>
+                            <th> Изменен </th>
+                            <th> Действия </th>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item:${cartItems}">
+                                    <td th:text="${item.abonent.fider.tp.name}"/>
+                                    <td th:text="${item.abonent.fider.name}"/>
+                                    <td th:text="${item.abonent.accountNumber}"/>
+                                    <td th:text="${item.abonent.surname +' '+ item.abonent.name +' '+ item.abonent.middlename}"/>
+                                    <td th:object="${item.abonent}">
+                                        <span th:text="*{homePhone+ ' ' + firstPhone + ' ' + secondPhone }" /><br/>
+                                    </td>
+                                    <td th:object="${item.abonent}">
+                                        <span th:text="*{notes}" /><br/>
+                                    </td>
+                                    <td>
+                                        <span th:text="${#dates.format(item.abonent.created, 'dd.MM.yyyy HH:mm')}" /><br/>
+                                    </td>
+                                    <td>
+                                        <span th:text="${#dates.format(item.abonent.modified, 'dd.MM.yyyy HH:mm')}" /><br/>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-outline-danger" th:href="@{'/cart/removeFromCart/' + ${item.abonent.accountNumber}}">Удалить из рассылки</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
-                <div class="form-group col-md-2">
-                    <a class="btn btn-outline-dark" href="#" data-toggle="modal" data-target="#templateWindow" title="Добавить из шаблона" style="margin-top: 32px;">
-                        Шаблоны
-                    </a>
+
+                <!-- Шаблоны - Modal -->
+                <div class="modal fade" id="templateWindow" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Шаблоны СМС</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <a class="btn blue" th:href="@{/templates/add}" style="margin-bottom:15px;">Создать Шаблон</a>
+                                <table class="table table-hover" th:if="${templates.size()>0}">
+                                    <tbody>
+                                        <tr th:each="template:${templates}">
+                                            <td class="insert_template" th:text="${template.template}">
+                                            <td>
+                                            <a class="btn green" th:href="@{'/templates/edit/'+${template.id}}">Редактировать</a>
+                                            <a class="btn red" th:href="@{'/templates/delete/'+${template.id}}">Удалить</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn purple" data-dismiss="modal"><i class="fa fa-times"></i> Закрыть</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <!-- // Шаблоны - Modal -->
             </div>
-            <div class="form-group col-md-12">
-                <p>Количество символов в СМС: <span id="count_symbols">0</span></p>
-                <p>Количество СМС: <span id="count_sms">0</span></p>
-                <input class="btn btn-outline-info" type="submit" value="Отправить SMS" />
-            </div>
-            <script>
-                $('#msg_text').bind('input propertychange', function() {
-                    if(this.value.length){
-                        length = this.value.length
-                        $("#count_symbols").html(length);
-                        if(length<=70) $("#count_sms").html(1);
-                        if(length>70 && length<=134) $("#count_sms").html(2);
-                        if(length>134) $("#count_sms").html(parseInt(length/67));
-                    }
-                });
-            </script>
-        </form>
-        <div class="row">
-            <p style="width:100%;">Всего в рассылке <span th:text="${cartItems.size()}"/> абонентов</p>
-            <a style="margin-bottom:15px;" class="btn btn-danger" th:href="@{/cart/clear}" th:if="${cartItems.size()>0}">Очистить список рассылки</a>
-            <table class="table table-hover" th:if="${cartItems.size()>0}">
-                <thead class="thead-dark">
-                <th> ТП </th>
-                <th> Фидер </th>
-                <th> Лиц. Сч. </th>
-                <th> ФИО </th>
-                <th> Номера тел. </th>
-                <th> Отметки </th>
-                <th> Создан </th>
-                <th> Изменен </th>
-                <th> Действия </th>
-                </thead>
-                <tbody>
-                    <tr th:each="item:${cartItems}">
-                        <td th:text="${item.abonent.fider.tp.name}"/>
-                        <td th:text="${item.abonent.fider.name}"/>
-                        <td th:text="${item.abonent.accountNumber}"/>
-                        <td th:text="${item.abonent.surname +' '+ item.abonent.name +' '+ item.abonent.middlename}"/>
-                        <td th:object="${item.abonent}">
-                            <span th:text="*{homePhone+ ' ' + firstPhone + ' ' + secondPhone }" /><br/>
-                        </td>
-                        <td th:object="${item.abonent}">
-                            <span th:text="*{notes}" /><br/>
-                        </td>
-                        <td>
-                            <span th:text="${#dates.format(item.abonent.created, 'dd.MM.yyyy HH:mm')}" /><br/>
-                        </td>
-                        <td>
-                            <span th:text="${#dates.format(item.abonent.modified, 'dd.MM.yyyy HH:mm')}" /><br/>
-                        </td>
-                        <td>
-                            <a class="btn btn-outline-danger" th:href="@{'/cart/removeFromCart/' + ${item.abonent.accountNumber}}">Удалить из рассылки</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
-
     </div>
-
-    <!-- Шаблоны - Modal -->
-    <div class="modal fade" id="templateWindow" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Шаблоны СМС</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <a class="btn btn-outline-primary" th:href="@{/templates/add}" style="margin-bottom:15px;">Создать Шаблон</a>
-                    <table class="table table-hover" th:if="${templates.size()>0}">
-                        <tbody>
-                            <tr th:each="template:${templates}">
-                                <td class="insert_template" th:text="${template.template}">
-                                <td>
-                                <a class="btn btn-outline-dark" th:href="@{'/templates/edit/'+${template.id}}">Редактировать</a>
-                                <a class="btn btn-outline-danger" th:href="@{'/templates/delete/'+${template.id}}">Удалить</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- // Шаблоны - Modal -->
+</div>
 
 <script>
     $(document).ready(function () {
@@ -135,6 +165,10 @@
 </script>
 
 
-<script th:src="@{/js/bootstrap.bundle.js}"></script>
+<script th:src="@{/css/assets/global/scripts/bootstrap.min.js}" type="text/javascript"></script>
+<!-- BEGIN THEME GLOBAL SCRIPTS -->
+<script th:src="@{/css/assets/global/scripts/app.min.js}" type="text/javascript"></script>
+<!-- END THEME GLOBAL SCRIPTS -->
+
 </body>
 </html>

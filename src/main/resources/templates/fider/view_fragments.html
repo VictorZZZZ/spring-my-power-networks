@@ -17,6 +17,38 @@
             </div>
         </div>
         <div class="row static-info">
+            <div class="col-md-5 name"> Подстанция </div>
+            <div class="col-md-7 value">
+
+                <span th:text="${fider.tp.part.line.section.substation.name}"/>
+
+            </div>
+        </div>
+        <div class="row static-info">
+            <div class="col-md-5 name"> СШ </div>
+            <div class="col-md-7 value">
+
+                <span th:text="${fider.tp.part.line.section.name}"/>
+
+            </div>
+        </div>
+        <div class="row static-info">
+            <div class="col-md-5 name"> Линия </div>
+            <div class="col-md-7 value">
+
+                <span th:text="${fider.tp.part.line.name}"/>
+
+            </div>
+        </div>
+        <div class="row static-info">
+            <div class="col-md-5 name"> Участок </div>
+            <div class="col-md-7 value">
+
+                <span th:text="${fider.tp.part.name}"/>
+
+            </div>
+        </div>
+        <div class="row static-info">
             <div class="col-md-5 name"> ТП </div>
             <div class="col-md-7 value">
                 <a th:href="@{'/tp/view/'+${fider.tp.id}}">
