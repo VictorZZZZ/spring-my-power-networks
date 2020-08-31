@@ -5,6 +5,8 @@ import net.energo.grodno.pes.smsSender.Services.TpService;
 import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,10 +30,10 @@ public class MainController {
     public String homePage(Model model, HttpSession session, Principal principal){
         List<Res> allRes=resService.getAllRes();
         if(principal != null) {
-            List<Tp> notLinkedTps = null;
+            long notLinkedTps;
             try {
-                notLinkedTps = tpService.getNotLinkedTpsByUser(principal.getName());
-                if(notLinkedTps.size()>0) session.setAttribute("notLinkedTpsCount",notLinkedTps.size());
+                notLinkedTps = tpService.countNotLinkedTpsByUser(principal.getName());
+                if(notLinkedTps>0) session.setAttribute("notLinkedTpsCount",notLinkedTps);
             } catch (Exception e) {
                 e.printStackTrace();
             }

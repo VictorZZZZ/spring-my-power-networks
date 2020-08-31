@@ -5,12 +5,13 @@
     <nav>
         <ul class="pagination">
             <li class="page-item" th:if="${tpsPaginated.number > 1}">
-                <a th:href="@{/tp/listTp(size=${tpsPaginated.size}, page=1)}">
+                <!-- todo: переписать ссылку на thymeleaf get request link -->
+                <a th:href="@{'/tp'+${linkTo}(size=${tpsPaginated.size}, page=1)}">
                     <span class="page-link">Первая</span>
                 </a>
             </li>
             <li class="page-item" th:if="${tpsPaginated.number > 0}">
-                <a th:href="@{/tp/listTp(size=${tpsPaginated.size}, page=${tpsPaginated.number})}">
+                <a th:href="@{'/tp'+${linkTo}(size=${tpsPaginated.size}, page=${tpsPaginated.number})}">
                     <span class="page-link">Предыдущая</span>
                 </a>
             </li>
@@ -19,21 +20,21 @@
             </li>
             <li class="page-item" th:if="${tpsPaginated.number > 1}">
                 <a class="page-link"
-                   th:href="@{/tp/listTp(size=${tpsPaginated.size}, page=${tpsPaginated.number-1})}"
+                   th:href="@{'/tp'+${linkTo}(size=${tpsPaginated.size}, page=${tpsPaginated.number-1})}"
                    th:text="${tpsPaginated.number-1}">
                     0
                 </a>
             </li>
             <li class="page-item" th:if="${tpsPaginated.number > 0}">
                 <a class="page-link"
-                   th:href="@{/tp/listTp(size=${tpsPaginated.size}, page=${tpsPaginated.number})}"
+                   th:href="@{'/tp'+${linkTo}(size=${tpsPaginated.size}, page=${tpsPaginated.number})}"
                    th:text="${tpsPaginated.number}">
                     1
                 </a>
             </li>
             <li class="page-item active">
                 <a class="page-link"
-                   th:href="@{/tp/listTp(size=${tpsPaginated.size}, page=${tpsPaginated.number+1})}"
+                   th:href="@{'/tp'+${linkTo}(size=${tpsPaginated.size}, page=${tpsPaginated.number+1})}"
                    th:text="${tpsPaginated.number+1}">
                     Текущая страница
                 </a>
@@ -41,14 +42,14 @@
 
             <li class="page-item" th:if="${tpsPaginated.number < tpsPaginated.getTotalPages()-1 }">
                 <a class="page-link"
-                   th:href="@{/tp/listTp(size=${tpsPaginated.size}, page=${tpsPaginated.number+2})}"
+                   th:href="@{'/tp'+${linkTo}(size=${tpsPaginated.size}, page=${tpsPaginated.number+2})}"
                    th:text="${tpsPaginated.number+2}">
                     3
                 </a>
             </li>
             <li class="page-item" th:if="${tpsPaginated.number < tpsPaginated.getTotalPages()-2 }" >
                 <a class="page-link"
-                   th:href="@{/tp/listTp(size=${tpsPaginated.size}, page=${tpsPaginated.number+3})}"
+                   th:href="@{'/tp'+${linkTo}(size=${tpsPaginated.size}, page=${tpsPaginated.number+3})}"
                    th:text="${tpsPaginated.number+3}">
                     4
                 </a>
@@ -57,11 +58,11 @@
                 <a class="page-link" href="#">...</a>
             </li>
             <li class="page-item" th:if="${tpsPaginated.number < tpsPaginated.getTotalPages()-1 }">
-                <a class="page-link" th:href="@{/tp/listTp(size=${tpsPaginated.size}, page=${tpsPaginated.number+2})}">
+                <a class="page-link" th:href="@{'/tp'+${linkTo}(size=${tpsPaginated.size}, page=${tpsPaginated.number+2})}">
                     Следующая</a>
             </li>
             <li class="page-item" th:if="${tpsPaginated.number < tpsPaginated.getTotalPages()-2 }">
-                <a class="page-link" th:href="@{/tp/listTp(size=${tpsPaginated.size}, page=${tpsPaginated.getTotalPages()})}">
+                <a class="page-link" th:href="@{'/tp'+${linkTo}(size=${tpsPaginated.size}, page=${tpsPaginated.getTotalPages()})}">
                     Последняя</a>
             </li>
 

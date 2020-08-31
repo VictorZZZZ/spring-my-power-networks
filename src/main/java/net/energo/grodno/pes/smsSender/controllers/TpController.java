@@ -68,7 +68,7 @@ public class TpController {
 
         long totalTp = tpService.getCount();
         model.addAttribute("totalTp", totalTp);
-
+        model.addAttribute("linkTo","/listTp");
         return "tp/index_paginated";
     }
 
@@ -79,11 +79,28 @@ public class TpController {
                                   HttpServletRequest request,
                                   @RequestParam("page") Optional<Integer> page,
                                   @RequestParam("size") Optional<Integer> size){
+
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(ELEMENTS_PER_PAGE);
         try {
-            List<Tp> tpList = tpService.getNotLinkedTpsByUser(principal.getName());
-            model.addAttribute("tps",tpList);
-            return "tp/index";
-        } catch (Exception e) {
+            Page<Tp> tpPage = tpService.getNotLinkedTpsByUser(principal.getName(), PageRequest.of(currentPage - 1, pageSize));
+
+            model.addAttribute("tpsPaginated", tpPage);
+
+            int totalPages = tpPage.getTotalPages();
+
+            if (totalPages > 0) {
+                List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                        .boxed()
+                        .collect(Collectors.toList());
+                model.addAttribute("pageNumbers", pageNumbers);
+            }
+
+            long totalTp = tpService.countNotLinkedTpsByUser(principal.getName());
+            model.addAttribute("totalTp", totalTp);
+            model.addAttribute("linkTo","/viewNotLinkedTp");
+            return "tp/index_paginated";
+        } catch (Exception e){
             e.printStackTrace();
         }
         redirectAttributes.addFlashAttribute("messageError","Ошибка запроса.");

@@ -23,7 +23,7 @@ public class TpRepositoryTest extends AbstractClass {
     @Transactional
     @Ignore
     public void testGetUnlinkedTp(){
-        List<Tp> tpList = tpRepository.findAllByResIdAndPartIdOrderByName(1,null);
-        System.out.println(tpList.size());
+        Long count = tpRepository.countByResIdAndPartIdOrderByName(1,null);
+        System.out.println(count);
     }
 }

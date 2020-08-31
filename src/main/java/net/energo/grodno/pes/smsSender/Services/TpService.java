@@ -250,9 +250,14 @@ public class TpService {
         return tpRepository.findByPartId(parentId);
     }
 
-    public List<Tp> getNotLinkedTpsByUser(String name) throws Exception {
+    public Page<Tp> getNotLinkedTpsByUser(String name,Pageable pageable) throws Exception {
         User user = userService.findByUsername(name);
-        return tpRepository.findAllByResIdAndPartIdOrderByName(user.getRes().getId(),null);
+        return tpRepository.findAllByResIdAndPartIdOrderByName(user.getRes().getId(),null,pageable);
+    }
+
+    public Long countNotLinkedTpsByUser(String name) throws Exception{
+        User user = userService.findByUsername(name);
+        return tpRepository.countByResIdAndPartIdOrderByName(user.getRes().getId(),null);
     }
 
     public Page<Tp> findPaginated(Pageable pageable) {

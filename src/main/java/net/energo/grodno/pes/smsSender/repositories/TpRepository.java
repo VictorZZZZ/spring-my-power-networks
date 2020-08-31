@@ -3,6 +3,8 @@ package net.energo.grodno.pes.smsSender.repositories;
 import net.energo.grodno.pes.smsSender.entities.Part;
 import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,5 +36,7 @@ public interface TpRepository extends JpaRepository<Tp,Long> {
 
     List<Tp> findByPartId(Long parentId);
 
-    List<Tp> findAllByResIdAndPartIdOrderByName(Integer resId, Long partId);
+    Page<Tp> findAllByResIdAndPartIdOrderByName(Integer resId, Long partId, Pageable pageable);
+
+    Long countByResIdAndPartIdOrderByName(Integer id,Long partId);
 }
