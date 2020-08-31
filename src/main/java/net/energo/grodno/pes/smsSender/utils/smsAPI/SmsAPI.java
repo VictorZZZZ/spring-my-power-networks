@@ -1,7 +1,10 @@
 package net.energo.grodno.pes.smsSender.utils.smsAPI;
 
+import net.energo.grodno.pes.smsSender.utils.importFromDbf.DBFManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -16,6 +19,8 @@ import java.util.List;
 
 @Component
 public class SmsAPI {
+    private static Logger logger = LoggerFactory.getLogger(SmsAPI.class);
+
     private static final String smsUser = "Grodnoenergo";
     private static final String smsPassword = "r9359538";
     private static String smsFrom = "Elektroseti";
@@ -46,8 +51,9 @@ public class SmsAPI {
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        logger.info("Адрес запроса {}",smsSendURL);
 
-        System.out.println("Ответ:" + response.body());
+        logger.info("Статус:{},Ответ:{}",response.statusCode(),response.body());
         if(response.statusCode()==200) {
             //Если всё ОК
             return parseResponse(response.body());
@@ -109,7 +115,7 @@ public class SmsAPI {
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("Ответ:" + response.body());
+        logger.info("Ответ:" + response.body());
         if(response.statusCode()==200) {
             //Если всё ОК
             return parseStatusResponse(response.body());
@@ -167,7 +173,8 @@ public class SmsAPI {
         jsonMessage.put("msg",jsonMsg);
         jsonBody.put("message",jsonMessage);
 
-        //System.out.println(jsonBody.toString());
+        logger.info(jsonBody.toString());
+
         return jsonBody;
     }
 
@@ -189,7 +196,8 @@ public class SmsAPI {
 
         jsonBody.put("status",msg);
 
-        System.out.println(jsonBody.toString());
+        logger.info(jsonBody.toString());
+
 
         return jsonBody;
     }
@@ -197,6 +205,7 @@ public class SmsAPI {
     public static String checkBalance() throws IOException, InterruptedException {
         //https://userarea.sms-assistent.by/api/v1/credits/plain?user=Grodnoenergo&password=r9359538
         String requestURL = checkBalanceURL+"?user="+smsUser+"&password="+smsPassword;
+        logger.info("Request Balance:{}",requestURL);
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create(requestURL))
@@ -204,16 +213,9 @@ public class SmsAPI {
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        logger.info("Response.statusCode():{}",response.statusCode());
+        logger.info("Response.body:{}",response.body());
 
-        // print response headers
-        //HttpHeaders headers = response.headers();
-        //headers.map().forEach((k, v) -> System.out.println(k + ":" + v));
-
-        // print status code
-        //System.out.println(response.statusCode());
-
-        //System.out.println(response.statusCode());
-        // print response body
         return response.body();
 
     }
