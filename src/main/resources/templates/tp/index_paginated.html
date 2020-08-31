@@ -37,7 +37,7 @@
 
                 <div class="container">
                     <div th:replace="~{flashMessages :: flash}"/>
-                        <h1>Список ТП (<span th:text="${tps.size()}"/>) </h1>
+                        <h1>Список ТП (<span th:text="${totalTp}"/>) </h1>
                         <div class="container">
                             <div class="row">
                                 <div class="col-md-4">
@@ -47,6 +47,7 @@
 
                             <table class="table table-hover">
                                 <thead class="thead-dark">
+                                        <th> Id </th>
                                         <th> РЭС </th>
                                         <th> ПС </th>
                                         <th> СШ </th>
@@ -57,8 +58,11 @@
                                         <th> Действия </th>
                                 </thead>
                                 <tbody>
-                                    <tr th:each="tp : ${tps}">
+                                    <tr th:each="tp : ${tpsPaginated.content}">
 
+                                        <td>
+                                            <span th:text="${tp.id}"/>
+                                        </td>
                                         <td>
                                             <span th:if="${tp.part}" th:text="${tp.part.line.section.substation.res.name}"/>
                                         </td>
@@ -92,6 +96,8 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <div th:replace="~{tp/pagination_fragment :: pagination}"/>
+
                         </div>
                 </div>
             </div>

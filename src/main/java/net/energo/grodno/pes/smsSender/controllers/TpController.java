@@ -2,23 +2,32 @@ package net.energo.grodno.pes.smsSender.controllers;
 
 import net.energo.grodno.pes.smsSender.Services.ResService;
 import net.energo.grodno.pes.smsSender.Services.TpService;
+import net.energo.grodno.pes.smsSender.entities.Abonent;
 import net.energo.grodno.pes.smsSender.entities.Fider;
 import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/tp")
 public class TpController {
+    private static final int ELEMENTS_PER_PAGE = 20;
     private TpService tpService;
     private ResService resService;
 
@@ -28,12 +37,57 @@ public class TpController {
         this.resService = resService;
     }
 
-    @GetMapping(value={"","/","index"})
+
     public String showAll(Model model){
         //todo: сделать пагинацию
         List<Tp> tps = tpService.getAll();
         model.addAttribute("tps",tps);
         return "tp/index";
+    }
+
+    @GetMapping(value={"","/","index","/listTp"})
+    public String showPaginated(
+            Model model,
+            @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(ELEMENTS_PER_PAGE);
+
+        Page<Tp> tpPage = tpService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
+
+        model.addAttribute("tpsPaginated", tpPage);
+
+        int totalPages = tpPage.getTotalPages();
+
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        long totalTp = tpService.getCount();
+        model.addAttribute("totalTp", totalTp);
+
+        return "tp/index_paginated";
+    }
+
+    @GetMapping("/viewNotLinkedTp")
+    public String viewNotLinkedTp(Model model,
+                                  Principal principal,
+                                  RedirectAttributes redirectAttributes,
+                                  HttpServletRequest request,
+                                  @RequestParam("page") Optional<Integer> page,
+                                  @RequestParam("size") Optional<Integer> size){
+        try {
+            List<Tp> tpList = tpService.getNotLinkedTpsByUser(principal.getName());
+            model.addAttribute("tps",tpList);
+            return "tp/index";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        redirectAttributes.addFlashAttribute("messageError","Ошибка запроса.");
+        return "redirect:"+request.getHeader("Referer");
     }
 
     @GetMapping(value={"/add"})
@@ -81,6 +135,7 @@ public class TpController {
         tpService.deleteOne(id);
         return "redirect:"+request.getHeader("Referer");
     }
+
 
 
 }

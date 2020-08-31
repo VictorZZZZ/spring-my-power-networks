@@ -113,18 +113,19 @@
                 <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar" sec:authorize="isAuthenticated()">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                         <i class="icon-bell"></i>
-                        <span class="badge badge-default"> 7 </span>
+                        <span class="badge badge-default"
+                              th:text="${(session.notLinkedTpsCount!=null) ? 1 : ''}"> 7 </span>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" th:if = "${session.notLinkedTpsCount!=null}">
                         <li>
                             <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
                                 <li>
-                                    <a href="javascript:;">
-                                        <span class="time">3 mins</span>
+                                    <a th:href="@{/tp/viewNotLinkedTp}">
                                         <span class="details">
                                                         <span class="label label-sm label-icon label-danger">
                                                             <i class="fa fa-bolt"></i>
-                                                        </span> Есть ТП не привязанные к линиям. </span>
+                                                        </span> <span th:text="${'В базе есть '+ session.notLinkedTpsCount +' ТП не привязанных к линиям'}"> Есть ТП не привязанные к линиям. </span>
+                                        </span>
                                     </a>
                                 </li>
                             </ul>

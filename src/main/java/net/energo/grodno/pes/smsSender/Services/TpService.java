@@ -1,15 +1,22 @@
 package net.energo.grodno.pes.smsSender.Services;
 
+import net.energo.grodno.pes.smsSender.entities.Abonent;
 import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
+import net.energo.grodno.pes.smsSender.entities.users.User;
 import net.energo.grodno.pes.smsSender.repositories.TpRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,11 +26,13 @@ public class TpService {
     Logger logger = LoggerFactory.getLogger(TpService.class);
     private TpRepository tpRepository;
     private FiderService fiderService;
+    private UserService userService;
 
     @Autowired
-    public TpService(TpRepository tpRepository, FiderService fiderService) {
+    public TpService(TpRepository tpRepository, FiderService fiderService, UserService userService) {
         this.tpRepository = tpRepository;
         this.fiderService = fiderService;
+        this.userService = userService;
     }
 
     public List<Tp> getAll() {
@@ -239,6 +248,35 @@ public class TpService {
 
     public List<Tp> getAllByPart(Long parentId) {
         return tpRepository.findByPartId(parentId);
+    }
+
+    public List<Tp> getNotLinkedTpsByUser(String name) throws Exception {
+        User user = userService.findByUsername(name);
+        return tpRepository.findAllByResIdAndPartIdOrderByName(user.getRes().getId(),null);
+    }
+
+    public Page<Tp> findPaginated(Pageable pageable) {
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Tp> list;
+        long tpCount = tpRepository.count();
+
+        if (tpCount < startItem) {
+            list = Collections.emptyList();
+            Page<Tp> tpPage
+                    = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), tpCount);
+            return tpPage;
+        } else {
+            Page<Tp> tpPage
+                    = tpRepository.findAll(pageable);
+            return tpPage;
+        }
+
+    }
+
+    public long getCount() {
+        return tpRepository.count();
     }
 }
 

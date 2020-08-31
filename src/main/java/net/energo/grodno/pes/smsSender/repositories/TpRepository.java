@@ -1,5 +1,6 @@
 package net.energo.grodno.pes.smsSender.repositories;
 
+import net.energo.grodno.pes.smsSender.entities.Part;
 import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +15,6 @@ import java.util.Optional;
 public interface TpRepository extends JpaRepository<Tp,Long> {
     Tp findTopByDbfId(int dbfId);
 
-    //@Query("SELECT t from Tp t WHERE t.res=:res ORDER BY t.name")
     @Query("SELECT t from Tp t WHERE t.part IN " +
             "(SELECT p from Part p WHERE p.line IN " +
                 "(SELECT l from Line l WHERE l.section IN " +
@@ -33,4 +33,6 @@ public interface TpRepository extends JpaRepository<Tp,Long> {
     List<Tp> findAll();
 
     List<Tp> findByPartId(Long parentId);
+
+    List<Tp> findAllByResIdAndPartIdOrderByName(Integer resId, Long partId);
 }
