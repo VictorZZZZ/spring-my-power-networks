@@ -1,0 +1,7 @@
+-== Поменяй пути под свои ==-
+Dump:
+"C:\Program Files\PostgreSQL\12\bin\pg_dump.exe" -Fc -U "postgres" -d "smsSender_base" -f "E:\\Exchange\smsSender_base_dump.dump"
+
+Restore(Но сначала надо дропнуть БД):
+"C:\Program Files\PostgreSQL\12\bin\pg_restore.exe" -Fc -U "postgres" -d "smsSender_base" "E:\\Exchange\smsSender_base_dump.dump"
+

@@ -42,4 +42,8 @@ public class LineService {
     public Line getOne(Long id) {
         return lineRepository.getOne(id);
     }
+
+    public void saveOne(Line line) {
+        lineRepository.save(line);
+    }
 }

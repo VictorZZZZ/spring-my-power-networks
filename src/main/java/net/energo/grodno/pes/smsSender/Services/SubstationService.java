@@ -37,11 +37,15 @@ public class SubstationService {
     }
 
     public List<Substation> getAllByRes(Integer id) {
-        return substationRepository.findByResId(id);
+        return substationRepository.findByResIdOrderByName(id);
     }
 
     public Substation getOne(Integer id) {
         return substationRepository.getOne(id);
+    }
+
+    public void saveOne(Substation substation) {
+        substationRepository.save(substation);
     }
 }
 

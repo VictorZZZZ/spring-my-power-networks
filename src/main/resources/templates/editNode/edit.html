@@ -14,7 +14,7 @@
     <link th:href="@{/css/assets/global/plugins/jstree/dist/themes/default/style.min.css}" rel="stylesheet" type="text/css" />
     <!-- END PAGE LEVEL PLUGINS -->
 
-
+    <script th:src="@{/js/jquery.js}"></script>
 
 </head>
 <!-- END HEAD -->
@@ -1513,205 +1513,129 @@
         <div class="page-content-wrapper">
             <!-- BEGIN CONTENT BODY -->
             <div class="page-content">
-
-                <div th:replace="~{flashMessages :: flash}"/>
-
-                <!-- BEGIN PAGE TITLE-->
-                <h1 class="page-title"> Cмс оповещение абонентов</h1>
-                <!-- END PAGE TITLE-->
-                <div class="row">
-                    <div class="col-md-5">
-                        <div class="portlet light bordered">
-                            <div class="portlet-title">
-                                <div class="caption">
-                                    <i class="fa fa-cogs"></i> Выберите объект
+                <div class="container">
+                    <div th:replace="~{flashMessages :: flash}"/>
+                    <h2 th:text="'Редатирование объкета '+${entity}"/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form th:action="@{'/edit/save/'+${entity}}" method="post">
+                                <input th:value="${object.id}" th:if="${object.id!=null}" th:name="object[id]" type="hidden"/>
+                                <div class="form-group" th:if="${entity.equals('substation') || entity.equals('section') || entity.equals('line') || entity.equals('part') || entity.equals('tp')}">
+                                    <label>РЭС</label>
+                                    <select id="resSelect" class="form-control" th:name="object[res]" th:attr="data-last=${(entity.equals('res')) ? true : false}">
+                                        <option th:each="item : ${resList}"
+                                                th:value="${item.id}"
+                                                th:text="${item.name}" th:selected="${resId==item.id}">RES NAME</option>
+                                    </select>
+                                    <small class="form-text text-muted">Выберите РЭС.</small>
                                 </div>
-                            </div>
-                            <div class="portlet-body">
-                                <div id="res_tree" class="tree-demo"> </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-7">
-                        <div class="portlet light bordered">
-                            <div class="portlet-title">
-                                <div class="caption">
-                                    <i class="fa fa-eye"></i> Информация
+                                <div class="form-group" th:if="${entity.equals('section') || entity.equals('line') || entity.equals('part') || entity.equals('tp')}">
+                                    <label>Подстанция</label>
+                                    <select id="substationSelect" class="form-control" th:name="object[substation]" th:attr="data-last=${(entity.equals('section')) ? true : false}">
+                                        <option th:each="item : ${substationList}"
+                                                th:value="${item.id}"
+                                                th:text="${item.name}" th:selected="${substationId==item.id}">SUBSTATION NAME</option>
+                                    </select>
+                                    <small class="form-text text-muted">Выберите Подстанцию.</small>
                                 </div>
-                            </div>
-                            <div class="portlet-body">
-                                <div id="infoBlock"> </div>
-                            </div>
+                                <div class="form-group" th:if="${entity.equals('line') || entity.equals('part') || entity.equals('tp')}">
+                                    <label>Секция шин</label>
+                                    <select id="sectionSelect" class="form-control" th:name="object[section]" th:attr="data-last=${(entity.equals('line')) ? true : false}">
+                                        <option th:each="item : ${sectionList}"
+                                                th:value="${item.id}"
+                                                th:text="${item.name}" th:selected="${sectionId==item.id}">SUBSTATION NAME</option>
+                                    </select>
+                                    <small class="form-text text-muted">Выберите Секцию Шин.</small>
+                                </div>
+                                <div class="form-group" th:if="${entity.equals('part') || entity.equals('tp')}">
+                                    <label>Линия</label>
+                                    <select id="lineSelect" class="form-control" th:name="object[line]" th:attr="data-last=${(entity.equals('part')) ? true : false}">
+                                        <option th:each="item : ${lineList}"
+                                                th:value="${item.id}"
+                                                th:text="${item.name}" th:selected="${lineId==item.id}">Line name</option>
+                                    </select>
+                                    <small class="form-text text-muted">Выберите линию 10кВ.</small>
+                                </div>
+                                <div class="form-group" th:if="${entity.equals('tp')}">
+                                    <label>Участок</label>
+                                    <select id="partSelect" class="form-control" th:name="object[part]" th:attr="data-last=${(entity.equals('tp')) ? true : false}">
+                                        <option th:each="item : ${partList}"
+                                                th:value="${item.id}"
+                                                th:text="${item.name}" th:selected="${lineId==item.id}">Part name</option>
+                                    </select>
+                                    <small class="form-text text-muted">Выберите Участок.</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Название</label>
+                                    <input class="form-control" th:name="object[name]" th:value="${object.name}" type="text"/>
+                                    <small class="form-text text-muted">Введите название.</small>
+                                </div>
+                                <input id="submitButton" class="btn green" type="submit" value="Сохранить" />
+                            </form>
                         </div>
                     </div>
                 </div>
+
             </div>
-            <!-- END CONTENT BODY -->
         </div>
-        <!-- END CONTENT -->
     </div>
-    <!-- END CONTAINER -->
-    <!-- BEGIN FOOTER -->
     <div th:replace="~{footer :: footer}"/>
-    <!-- END FOOTER -->
 </div>
-
-<!-- BEGIN CORE PLUGINS -->
-<script th:src="@{/js/jquery.js}"></script>
 <script th:src="@{/css/assets/global/scripts/bootstrap.min.js}" type="text/javascript"></script>
-<script src="../assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
-<script src="../assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
-<script src="../assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
-<script src="../assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
-<!-- END CORE PLUGINS -->
-<!-- BEGIN THEME GLOBAL SCRIPTS -->
-<script th:src="@{/css/assets/global/scripts/app.min.js}" type="text/javascript"></script>
-<!-- END THEME GLOBAL SCRIPTS -->
-<!-- BEGIN THEME LAYOUT SCRIPTS -->
-<script th:src="@{/css/assets/layouts/layout/scripts/layout.min.js}" type="text/javascript"></script>
-<script src="../assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
-<script src="../assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
-<script src="../assets/layouts/global/scripts/quick-nav.min.js" type="text/javascript"></script>
-<!-- END THEME LAYOUT SCRIPTS -->
-
-<!-- BEGIN PAGE LEVEL PLUGINS -->
-<script th:src="@{/css/assets/global/plugins/jstree/dist/jstree.min.js}" type="text/javascript"></script>
-<!-- END PAGE LEVEL PLUGINS -->
-
 <script>
 
-    var ajaxTreeSample = function() {
-
-        $("#res_tree").jstree({
-            "core" : {
-                "themes" : {
-                    "responsive": false
-                },
-                // so that create works
-                "check_callback" : true,
-                'data' : {
-                    'url' : function (node) {
-                        return '/app/ajax/resTree';
-                    },
-                    'data' : function (node) {
-                        return { 'parent' : node.id };
+    //Функция изменяет options у targetObj при изменении selected value у selectedObj
+    var selectOnChange = function(selectedObj,targetObj,entity,disableArr){
+        selectedObj.on("click change",function(){
+            var selectedVal =$("option:selected", selectedObj).val();
+            var requestURL = "/app/ajax/resTree?parent="+entity+"_"+selectedVal;
+            $.ajax({
+                url: requestURL,
+                dataType: "html",
+                method: "GET",
+                success: function(data) {
+                    if(!selectedObj.data("last")) {
+                        $.each(disableArr, function (index, domObj) {
+                            domObj.attr('disabled', 'disabled');
+                            domObj.html('');
+                        });
                     }
-                }
-            },
-            "types" : {
-                "default" : {
-                    "icon" : "fa fa-folder icon-state-warning icon-lg"
+                    setSelectOptions(targetObj,data);
                 },
-                "file" : {
-                    "icon" : "fa fa-file icon-state-warning icon-lg"
+                error: function(err){
+                    console.log(err);
                 }
-            },
-            "state" : { "key" : "demo3" },
-            "plugins" : [ "dnd", "state", "types","contextmenu" ],
-            "contextmenu" : {
-                "items":{
-                    "add_to_cart":{
-                        "label" : "В список рассылки",
-                        "action" : function (obj) {
-                            var clickedNodeId = obj.reference["context"].getAttribute("aria-activedescendant");
-                            addToCart(clickedNodeId);
-                            $('body,html').animate({
-                                scrollTop: 0
-                            }, 400);
-                        }
-                    },
-                    "edit":{
-                        "label" : "Редактировать",
-                        "action" : function (obj) {
-                            var clickedNodeId = obj.reference["context"].getAttribute("aria-activedescendant");
-                            locateToEditNode(clickedNodeId);
-
-                        }
-                    }
-                }
-            }
-        });
-
-        $("#res_tree").on("select_node.jstree", function (e, data) {
-            showInfo(data.node.id);
-        });
-
-    }
-    var showInfo = function(nodeId){
-        //var requestURL="/app/ajax/getInfo?object=";
-        var requestURL="/app/ajax/getInfo";
-        var obj = nodeId.split('_')[0];
-        var id= nodeId.split('_')[1];
-        //requestURL=requestURL+obj+"&id="+id;
-        $.ajax({
-            url: requestURL,
-            dataType: "html",
-            method: "GET",
-            data: {"object": obj,"id": id},
-            success: function(data) {
-                $("#infoBlock").html(data);
-            },
-            error: function(err){
-                $("#infoBlock").html("<h3 style='color:red;'>Ошибка отображения информации</h3>");
-                console.log(err);
-            }
+            });
         });
     }
-    var addToCart = function(nodeId){
-        var requestURL="/app/ajax/addToCart";
-        var obj = nodeId.split('_')[0];
-        var id= nodeId.split('_')[1];
-        console.log(requestURL);
-        $.ajax({
-            url: requestURL,
-            dataType: "html",
-            method: "GET",
-            data: {"object": obj,"id": id},
-            beforeSend:function(){
-                var imgTag = "<div id='addToCartLoading'><img src='/app/img/throbber.gif' /> Загрузка...</div>";
-                $("#infoBlock").append(imgTag);
-            },
-            complete:function(){
-                $("#addToCartLoading").remove();
-            },
-            success: function(data) {
-                $("#infoBlock").append(data);
-                getCartCount(function(newCartCount){
 
-                    $("#cartItemsCount").html(newCartCount);
-                });
-            },
-            error: function(err){
-                $("#infoBlock").append("<h3 style='color:red;'>Ошибка отображения информации</h3>");
-                console.log(err);
+    //Функция выполняет Ajax запрос и выставляет поля <option> у changeObj
+    var setSelectOptions = function(changeObj,data){
+        changeObj.html('');
+        objArray = jQuery.parseJSON(data);
+        $.each(objArray, function(index, value){
+            var id = value.id.split('_')[1];
+            var text = value.text;
+            var tag = '<option value="'+id+'">'+text+'</option>';
+            changeObj.append(tag);
+            changeObj.removeAttr('disabled');
+            if(changeObj.data("last")) {
+                $("#submitButton").prop('disabled',false);
             }
         });
-    }
-    var getCartCount = function(handleCartCount){
-        var result="";
-        $.ajax({
-            url:"/app/cart/getCount",
-            method: "GET",
-            success: function(data){
-                handleCartCount(data);
-            }
-        });
-        return result;
-    }
-    var locateToEditNode = function(nodeId){
-        var obj = nodeId.split('_')[0];
-        var id= nodeId.split('_')[1];
-        var locationString ="/app/edit/"+obj+"/"+id;
-        window.location.href = locationString;
     }
 
 
     $(document).ready(function () {
-        ajaxTreeSample();
+        selectOnChange($("#resSelect"),$("#substationSelect"),"res",[$("#sectionSelect"),$("#lineSelect"),$("#partSelect"),$("#submitButton")]);
+        selectOnChange($("#substationSelect"),$("#sectionSelect"),"substation",[$("#lineSelect"),$("#partSelect"),$("#submitButton")]);
+        selectOnChange($("#sectionSelect"),$("#lineSelect"),"section",[$("#partSelect"),$("#submitButton")]);
+        selectOnChange($("#lineSelect"),$("#partSelect"),"line",[$("#submitButton")]);
+
+        var minHeight = $(window).height()-83;
+        $("div.page-content").css("min-height",minHeight+"px");
     });
 
 </script>
-
 </body>
-
 </html>

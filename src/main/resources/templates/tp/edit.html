@@ -1,51 +1,79 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<!-- BEGIN HEAD -->
 <head>
-    <meta charset="UTF-8">
-    <title>Application</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
-    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
+    <meta charset="utf-8"/>
+
+    <title th:text="${title!=null} ? ${title} :'СМС Оповещение абонентов'">СМС оповещение Абонентов</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+
+    <th:block th:insert="~{mandatory_styles :: link}"></th:block>
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link th:href="@{/css/assets/global/plugins/jstree/dist/themes/default/style.min.css}" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
+    <script th:src="@{/js/jquery.js}"></script>
+
+
 </head>
-<body>
-<div class="container">
-    <div th:replace="~{navigation :: navigation(Home)}" />
+<!-- END HEAD -->
 
-    <h1>Редактировать ТП</h1>
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-full-width page-md">
+<div class="page-wrapper">
+    <!-- BEGIN HEADER -->
+    <div th:replace="~{nav :: nav(Home)}"/>
+    <!-- END HEADER -->
+    <!-- BEGIN HEADER & CONTENT DIVIDER -->
+    <div class="clearfix"></div>
+    <!-- END HEADER & CONTENT DIVIDER -->
+    <!-- BEGIN CONTAINER -->
+    <div class="page-container">
+        <div class="page-content-wrapper">
+            <!-- BEGIN CONTENT BODY -->
+            <div class="page-content">
+
+                <!-- todo Pagination -->
+
+                <div class="container">
+                    <div th:replace="~{flashMessages :: flash}"/>
+
+                        <h1>Редактировать ТП</h1>
 
 
-    <form action="#" th:action="@{/tp/saveTp}" th:object="${tp}" method="post">
-        <input type="hidden" th:if="*{id!=null}" th:field="*{id}" />
-        <!-- todo Сделать inputManually=true только при add -->
-        <input type="hidden" name="inputManually" th:value="true" />
+                        <form action="#" th:action="@{/tp/saveTp}" th:object="${tp}" method="post">
+                            <input type="hidden" th:if="*{id!=null}" th:field="*{id}" />
+                            <!-- todo Сделать inputManually=true только при add -->
+                            <input type="hidden" name="inputManually" th:value="true" />
 
-        <div class="form-group">
-            <label>Название</label>
-            <input class="form-control" type="text" th:field="*{name}" />
-            <small class="form-text text-muted">Введите название ТП.</small>
-            <small class="form-text text-danger" th:each="err : ${#fields.errors('name')}" th:text="${err}" />
+                            <div class="form-group">
+                                <label>Название</label>
+                                <input class="form-control" type="text" th:field="*{name}" />
+                                <small class="form-text text-muted">Введите название ТП.</small>
+                                <small class="form-text text-danger" th:each="err : ${#fields.errors('name')}" th:text="${err}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Код ДБФ(не обязательно)</label>
+                                <input class="form-control" type="text" th:field="*{dbfId}" />
+                                <small class="form-text text-danger" th:each="err : ${#fields.errors('dbfId')}" th:text="${err}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Выберите РЭС</label>
+                                <select class="form-control" th:field="*{resId}">
+                                    <option th:each="item : ${resList}"
+                                            th:value="${item.id}"
+                                            th:text="${item.name}">RES NAME</option>
+                                </select>
+                            </div>
+
+                            <input id="saveButton" disabled class="btn green" type="submit" value="Сохранить" />
+                        </form>
+                    </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Код ДБФ(не обязательно)</label>
-            <input class="form-control" type="text" th:field="*{dbfId}" />
-            <small class="form-text text-danger" th:each="err : ${#fields.errors('dbfId')}" th:text="${err}" />
-        </div>
-        <div class="form-group">
-            <label>Выберите РЭС</label>
-            <select class="form-control" th:field="*{res}">
-                <option th:each="item : ${resList}"
-                        th:value="${item.id}"
-                        th:text="${item.name}">RES NAME</option>
-            </select>
-        </div>
-
-        <input class="btn btn-outline-info" type="submit" value="Сохранить" />
-    </form>
-
-
-
+    </div>
 </div>
 
-<script th:src="@{/js/jquery.js}"></script>
-<script th:src="@{/js/bootstrap.bundle.js}"></script>
+<script th:src="@{/css/assets/global/scripts/bootstrap.min.js}" type="text/javascript"></script>
 </body>
 </html>

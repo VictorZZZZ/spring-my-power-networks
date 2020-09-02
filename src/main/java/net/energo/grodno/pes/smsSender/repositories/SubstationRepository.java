@@ -12,4 +12,6 @@ public interface SubstationRepository extends JpaRepository<Substation,Integer> 
     Optional<Substation> findByNameAndResId(String name,Integer id);
 
     List<Substation> findByResId(Integer id);
+
+    List<Substation> findByResIdOrderByName(Integer id);
 }

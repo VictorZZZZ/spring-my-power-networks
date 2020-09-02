@@ -44,4 +44,8 @@ public class PartService {
     public Part getOne(Long id) {
         return partRepository.getOne(id);
     }
+
+    public void saveOne(Part part) {
+        partRepository.save(part);
+    }
 }

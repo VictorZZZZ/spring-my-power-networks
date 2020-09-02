@@ -42,4 +42,8 @@ public class SectionService {
     public Section getOne(Integer id){
         return sectionRepository.getOne(id);
     }
+
+    public void saveOne(Section section) {
+        sectionRepository.save(section);
+    }
 }
