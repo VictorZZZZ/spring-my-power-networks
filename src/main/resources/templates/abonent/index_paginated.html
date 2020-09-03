@@ -56,10 +56,10 @@
                             <span th:text="${#dates.format(abonent.modified, 'dd.MM.yyyy HH:mm')}" /><br/>
                         </td>
                         <td>
-                            <a class="btn btn-outline-dark" th:href="@{'/abonent/edit/' + ${abonent.accountNumber}}">Изменить</a>
-                            <a class="btn btn-outline-danger" th:href="@{'/abonent/delete/' + ${abonent.accountNumber}}">Удалить</a>
+                            <a class="btn blue" th:href="@{'/abonent/edit/' + ${abonent.accountNumber}}">Изменить</a>
+                            <a class="btn red-mint btn-outline" th:href="@{'/abonent/delete/' + ${abonent.accountNumber}}">Удалить</a>
                             <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
-                            <a class="btn btn-outline-success" th:href="@{'/cart/add/abonent/' + ${abonent.accountNumber}}">В рассылку</a>
+                            <a class="btn green" th:href="@{'/cart/add/abonent/' + ${abonent.accountNumber}}">В рассылку</a>
                         </td>
                     </tr>
                 </tbody>

@@ -12,12 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Controller
 @RequestMapping("/edit")
 public class EditController {
+    private static final int EMPTY_VALUE = 0;
+    private static final List<Object> EMPTY_LIST = new ArrayList<>();
+
     Logger logger = LoggerFactory.getLogger(AjaxController.class);
 
     private ResService resService;
@@ -144,29 +148,43 @@ public class EditController {
                 }
             case "tp":
                 object = tpService.getOne(id.longValue());
+                System.out.println(object);
                 if(object!=null){
                     Tp tp = (Tp)object;
-                    Long partId = tp.getPart().getId();
-                    model.addAttribute("partId",partId);
-                    Long lineId = tp.getPart().getLine().getId();
-                    model.addAttribute("lineId",lineId);
-                    Integer sectionId = tp.getPart().getLine().getSection().getId();
-                    model.addAttribute("sectionId",sectionId);
-                    Integer substationId = tp.getPart().getLine().getSection().getSubstation().getId();
-                    model.addAttribute("substationId",substationId);
-                    Integer resId = tp.getPart().getLine().getSection().getSubstation().getRes().getId();
-                    model.addAttribute("resId",resId);
+                    Part part = tp.getPart();
+                    if(part!=null) {
+                        Long partId = part.getId();
+                        model.addAttribute("partId", partId);
+                        Long lineId = tp.getPart().getLine().getId();
+                        model.addAttribute("lineId", lineId);
+                        Integer sectionId = tp.getPart().getLine().getSection().getId();
+                        model.addAttribute("sectionId", sectionId);
+                        Integer substationId = tp.getPart().getLine().getSection().getSubstation().getId();
+                        model.addAttribute("substationId", substationId);
+                        List<Substation> substationList = substationService.getAllByRes(((Tp) object).getResId());
+                        model.addAttribute("substationList", substationList);
+                        List<Section> sectionList = sectionService.getAllBySubstation(substationId);
+                        model.addAttribute("sectionList", sectionList);
+                        List<Line> lineList = lineService.getAllBySection(sectionId);
+                        model.addAttribute("lineList", lineList);
+                        List<Part> partList = partService.getAllByLine(lineId);
+                        model.addAttribute("partList", partList);
+                    } else {
+                        model.addAttribute("partId", EMPTY_VALUE);
+                        model.addAttribute("lineId", EMPTY_VALUE);
+                        model.addAttribute("sectionId", EMPTY_VALUE);
+                        model.addAttribute("substationId", EMPTY_VALUE);
+                        model.addAttribute("substationList", EMPTY_LIST);
+                        model.addAttribute("sectionList", EMPTY_LIST);
+                        model.addAttribute("lineList", EMPTY_LIST);
+                        model.addAttribute("partList", EMPTY_LIST);
+                    }
+                    Integer resId = tp.getResId();
+                    model.addAttribute("resId", resId);
                     List<Res> resList = resService.getAllRes();
-                    model.addAttribute("resList",resList);
-                    List<Substation> substationList = substationService.getAllByRes(resId);
-                    model.addAttribute("substationList",substationList);
-                    List<Section> sectionList = sectionService.getAllBySubstation(substationId);
-                    model.addAttribute("sectionList",sectionList);
-                    List<Line> lineList = lineService.getAllBySection(sectionId);
-                    model.addAttribute("lineList",lineList);
-                    List<Part> partList = partService.getAllByLine(lineId);
-                    model.addAttribute("partList",partList);
-                    model.addAttribute("entity",entity);
+                    model.addAttribute("resList", resList);
+
+                    model.addAttribute("entity", entity);
                     model.addAttribute("object", object);
                     return "editNode/edit";
                 } else {

@@ -117,6 +117,7 @@ public class Tp {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", dbfId='" + dbfId + '\'' +
+                ", res=" + resId +
                 ", part=" + part +
                 ", fiders=" + fiders +
                 '}';

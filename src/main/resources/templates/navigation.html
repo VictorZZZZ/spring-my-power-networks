@@ -780,7 +780,7 @@
             </ul>
             <form th:action="@{/search/}" method="get" class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" placeholder="Поиск" aria-label="Search" name="searchLine">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
+                <button class="btn green my-2 my-sm-0" type="submit">Поиск</button>
             </form>
             <ul class="navbar-nav ml-auto" style="margin-left:15px;">
                 <li class="nav-item" sec:authorize="!isAuthenticated()">
@@ -799,7 +799,7 @@
                 <li sec:authorize="isAuthenticated()" class="nav-item">
 
                     <form th:action="@{/logout}" method="post">
-                        <input class="btn btn-outline-success my-2 mr-2 my-sm-0" type="submit" value="Выход"/>
+                        <input class="btn green my-2 mr-2 my-sm-0" type="submit" value="Выход"/>
                     </form>
                 </li>
             </ul>

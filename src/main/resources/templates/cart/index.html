@@ -50,7 +50,7 @@
                                 <small class="form-text text-danger" th:each="err : ${#fields.errors('message')}" th:text="${err}" />
                             </div>
                             <div class="form-group col-md-2">
-                                <a class="btn btn-outline-dark" href="#" data-toggle="modal" data-target="#templateWindow" title="Добавить из шаблона" style="margin-top: 32px;">
+                                <a class="btn blue" href="#" data-toggle="modal" data-target="#templateWindow" title="Добавить из шаблона" style="margin-top: 32px;">
                                     Шаблоны
                                 </a>
                             </div>
@@ -58,7 +58,7 @@
                         <div class="form-group col-md-12">
                             <p>Количество символов в СМС: <span id="count_symbols">0</span></p>
                             <p>Количество СМС: <span id="count_sms">0</span></p>
-                            <input class="btn btn-outline purple-sharp uppercase" type="submit" value="Отправить SMS"/>
+                            <input class="btn purple-sharp uppercase" type="submit" value="Отправить SMS"/>
                         </div>
                         <script>
                             $('#msg_text').bind('input propertychange', function() {
@@ -109,7 +109,7 @@
                                         <span th:text="${#dates.format(item.abonent.modified, 'dd.MM.yyyy HH:mm')}" /><br/>
                                     </td>
                                     <td>
-                                        <a class="btn btn-outline-danger" th:href="@{'/cart/removeFromCart/' + ${item.abonent.accountNumber}}">Удалить из рассылки</a>
+                                        <a class="btn red-mint btn-outline" th:href="@{'/cart/removeFromCart/' + ${item.abonent.accountNumber}}">Удалить из рассылки</a>
                                     </td>
                                 </tr>
                             </tbody>

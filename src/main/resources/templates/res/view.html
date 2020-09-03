@@ -37,9 +37,9 @@
                         <span class="label label-success" th:text="${tp.fiders.size()}"/>
                     </td>
                     <td>
-                        <a class="btn btn-outline-dark" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>
-                        <a class="btn btn-outline-danger" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
-                        <a th:href="@{'/cart/add/tp/'+${tp.id}}" class="btn btn-outline-info btn-sm"> В рассылку</a>
+                        <a class="btn blue" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>
+                        <a class="btn red-mint btn-outline" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
+                        <a th:href="@{'/cart/add/tp/'+${tp.id}}" class="btn green btn-sm"> В рассылку</a>
                     </td>
                 </tr>
             </tbody>

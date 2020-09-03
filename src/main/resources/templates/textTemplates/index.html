@@ -70,12 +70,14 @@
             </div>
         </div>
     </div>
+    <div th:replace="~{footer :: footer}"/>
 </div>
-
-
-
-
-
 <script th:src="@{/css/assets/global/scripts/bootstrap.min.js}" type="text/javascript"></script>
+<script>
+    $(document).ready(function(){
+        var minHeight = $(window).height()-83;
+        $("div.page-content").css("min-height",minHeight+"px");
+    });
+</script>
 </body>
 </html>

@@ -88,7 +88,7 @@
                                             <span class="label label-success" th:text="*{fiders.size()}"/>
                                         </td>
                                         <td>
-                                            <a class="btn blue" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>
+                                            <a class="btn blue" th:href="@{'/edit/tp/' + ${tp.id}}">Изменить</a>
                                             <a class="btn red" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
                                             <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
                                             <a class="btn green" th:href="@{'/cart/add/tp/' + ${tp.id}}">В рассылку</a>
