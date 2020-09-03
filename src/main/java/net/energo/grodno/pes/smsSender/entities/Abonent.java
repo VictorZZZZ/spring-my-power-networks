@@ -13,6 +13,10 @@ import java.util.Date;
 
 @Entity
 @Table(name="abonent")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="abonent_type",
+                     discriminatorType = DiscriminatorType.STRING,
+                     columnDefinition = "varchar(31)")
 public class Abonent {
 //    @Id
 //    @Column(name = "id")
