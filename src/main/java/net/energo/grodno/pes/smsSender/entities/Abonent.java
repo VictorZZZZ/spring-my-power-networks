@@ -193,4 +193,23 @@ public class Abonent {
     public String toShortString() {
         return accountNumber+" "+surname+" "+name+" "+middlename+" "+homePhone+" "+firstPhone+" "+secondPhone;
     }
+
+    @Override
+    public String toString() {
+        return "Abonent{" +
+                "accountNumber=" + accountNumber +
+                ", surname='" + surname + '\'' +
+                ", name='" + name + '\'' +
+                ", middlename='" + middlename + '\'' +
+                ", homePhone='" + homePhone + '\'' +
+                ", firstPhone='" + firstPhone + '\'' +
+                ", secondPhone='" + secondPhone + '\'' +
+                ", opora='" + opora + '\'' +
+                ", notes='" + notes + '\'' +
+                ", inputManually=" + inputManually +
+                ", created=" + created +
+                ", modified=" + modified +
+                ", fider=" + fider +
+                '}';
+    }
 }

@@ -107,8 +107,9 @@
                             <tbody>
                             <tr th:each="item:${order.items}" th:if="${item.abonent != null}">
                                 <td>
+                                    <span th:text="${(item.abonent.fider!=null)?item.abonent.fider.tp.name:''}" />
                                     <a th:href="@{'/abonents/view/'+${item.abonent.accountNumber} }"
-                                       th:text="${item.abonent.fider.tp.name+':'+item.abonent.surname +' '+ item.abonent.name +' '+ item.abonent.middlename}"/>
+                                       th:text="${item.abonent.surname +' '+ item.abonent.name +' '+ item.abonent.middlename}"/>
                                 </td>
                                 <td th:text="${item.recipient}"/>
                                 <td th:text="${item.smsId}"/>

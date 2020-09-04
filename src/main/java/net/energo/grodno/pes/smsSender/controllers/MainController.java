@@ -49,7 +49,7 @@ public class MainController {
     public String showLeaders(Model model, RedirectAttributes resdirectAttributes, HttpServletRequest request){
         List<Lead> leaders = leadService.getAll();
         model.addAttribute("leaders",leaders);
-        return "main/leadersList";
+        return "leaders/leadersList";
     }
 
     @GetMapping(value={"/importPage"})

@@ -23,4 +23,16 @@ public class LeadService {
     public long count() {
         return leadRepository.count();
     }
+
+    public void saveOne(Lead lead) {
+        leadRepository.save(lead);
+    }
+
+    public Lead getOne(Long id) {
+        return leadRepository.getOne(id);
+    }
+
+    public void deleteOne(Long id) {
+        leadRepository.deleteById(id);
+    }
 }

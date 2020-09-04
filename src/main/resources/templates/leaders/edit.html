@@ -42,15 +42,11 @@
                     <h1>Редактировать Абонента</h1>
 
 
-                        <form action="#" th:action="@{/abonent/saveAbonent}" th:object="${abonent}" method="post">
+                        <form action="#" th:action="@{/leaders/save}" th:object="${lead}" method="post">
                             <!-- todo Сделать inputManually=true только при add -->
                             <input type="hidden" name="inputManually" th:value="true" />
+                            <input class="form-control" type="text" th:if="${lead.accountNumber!=null}" th:field="*{accountNumber}" />
 
-                            <div class="form-group">
-                                <label>Лицевой счёт</label>
-                                <input class="form-control" type="text" th:field="*{accountNumber}" />
-                                <small class="form-text text-danger" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}" />
-                            </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                     <label>Фамилия</label>
@@ -86,19 +82,15 @@
                                 </div>
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label>Опора</label>
-                                    <input class="form-control" type="text" th:field="*{opora}" />
-                                    <small class="form-text text-danger" th:each="err : ${#fields.errors('opora')}" th:text="${err}" />
+                                <div class="form-group col-md-12">
+                                    <label>Должность</label>
+                                    <input class="form-control" type="text" th:field="*{position}" placeholder="Начальник" />
+                                    <small class="form-text text-danger" th:each="err : ${#fields.errors('position')}" th:text="${err}" />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label>Информация</label>
-                                <textarea class="form-control" th:field="*{notes}"></textarea>
+                            <div class="form-row">
+                                <input class="btn blue" type="submit" value="Сохранить" />
                             </div>
-                            <!-- todo modified чтобы сам подставлялся -->
-
-                            <input class="btn btn-outline-info" type="submit" value="Сохранить" />
                         </form>
                 </div>
             </div>
