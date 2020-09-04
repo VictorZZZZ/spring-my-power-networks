@@ -38,7 +38,7 @@ public class OrdersController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = {"","/","index"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"","/","index","/listOrders"}, method = RequestMethod.GET)
     public String showAllOrdersPaginated( Model model,
                                          @RequestParam("page") Optional<Integer> page,
                                          @RequestParam("size") Optional<Integer> size,
@@ -52,7 +52,7 @@ public class OrdersController {
             orderPage = orderService.findAllPaginated(PageRequest.of(currentPage - 1, pageSize));
         } else {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            System.out.println("User has authorities: " + userDetails.getAuthorities());
+            //System.out.println("User has authorities: " + userDetails.getAuthorities());
             User user = userService.findByUsername(userDetails.getUsername());
             orderPage = orderService.findPaginatedByUserId(user, PageRequest.of(currentPage - 1, pageSize));
         }

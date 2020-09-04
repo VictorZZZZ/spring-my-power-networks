@@ -65,17 +65,12 @@
                                 </div>
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-md-4">
-                                    <label>Доманий Тел</label>
-                                    <input class="form-control" type="text" th:field="*{homePhone}" />
-                                    <small class="form-text text-danger" th:each="err : ${#fields.errors('homePhone')}" th:text="${err}" />
-                                </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label>Мобильный 1</label>
                                     <input class="form-control" type="text" th:field="*{firstPhone}" />
                                     <small class="form-text text-danger" th:each="err : ${#fields.errors('firstPhone')}" th:text="${err}" />
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label>Мобильный 2</label>
                                     <input class="form-control" type="text" th:field="*{secondPhone}" />
                                     <small class="form-text text-danger" th:each="err : ${#fields.errors('secondPhone')}" th:text="${err}" />
@@ -89,7 +84,9 @@
                                 </div>
                             </div>
                             <div class="form-row">
-                                <input class="btn blue" type="submit" value="Сохранить" />
+                                <div class="form-group col-md-12">
+                                    <input class="btn blue" type="submit" value="Сохранить" />
+                                </div>
                             </div>
                         </form>
                 </div>

@@ -17,6 +17,7 @@ import java.util.Date;
 @DiscriminatorColumn(name="abonent_type",
                      discriminatorType = DiscriminatorType.STRING,
                      columnDefinition = "varchar(31)")
+@DiscriminatorValue("null")
 public class Abonent {
 //    @Id
 //    @Column(name = "id")

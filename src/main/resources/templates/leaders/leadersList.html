@@ -65,7 +65,10 @@
                             <td>
                                 <a class="btn green-dark btn-outline" th:href="@{'/cart/add/abonent/' + ${leader.accountNumber}}">В рассылку</a>
                                 <a class="btn blue btn-outline" th:href="@{'/leaders/edit/' + ${leader.accountNumber}}">Изменить</a>
-                                <a class="btn red-mint btn-outline" th:href="@{'/leaders/delete/' + ${leader.accountNumber}}">Удалить</a>
+                                <form th:object="${leader}" th:action="@{'/leaders/delete'}" th:method="delete">
+                                    <input type="hidden" name="id" th:value="${leader.accountNumber}"/>
+                                    <input class="btn red-mint btn-outline" type="submit" value="Удалить"/>
+                                </form>
                                 <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
                             </td>
                         </tr>
