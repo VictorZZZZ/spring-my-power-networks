@@ -2,6 +2,7 @@ package net.energo.grodno.pes.smsSender.Cart;
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
 import net.energo.grodno.pes.smsSender.utils.ShoppingCart;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,6 +13,7 @@ public class CartTest extends AbstractClass {
     ShoppingCart cart;
 
     @Test
+    @Ignore
     public void testAddingAbonentToCart(){
         cart.addAbonent(12094800121L);
         cart.addAbonent(109481L);
@@ -24,14 +26,16 @@ public class CartTest extends AbstractClass {
     }
 
     @Test
+    @Ignore
     public void testAddingFiderToCart(){
-        cart.addFider(3821);
+        cart.addFider(3821L);
         System.out.println(cart.getItems().size());
     }
 
     @Test
+    @Ignore
     public void testAddingTpToCart(){
-        cart.addTp(8543);
+        cart.addTp(8543L);
         System.out.println(cart.getItems().size());
     }
 }

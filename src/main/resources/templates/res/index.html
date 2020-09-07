@@ -21,11 +21,11 @@
         <tr th:each="res : ${allRes}">
             <td th:object="${res}">
                 <a th:href="@{'/res/view/'+${res.id}}"<span th:text="*{name}" /><br/>
-                <span class="badge badge-light" th:text="${'Количество ТП:'+res.getTps().size()+' Количество абонентов:'+res.cachedAbonentsCount}"/>
+                <span class="badge badge-light" th:text="${'Количество ТП:{нужно посчитать} Количество абонентов:'+res.cachedAbonentsCount}"/>
             </td>
             <td sec:authorize="hasRole('ROLE_ADMIN')">
-                <a class="btn btn-outline-dark" th:href="@{'/res/edit/' + ${res.id}}">Изменить</a>
-                <a class="btn btn-outline-danger" th:href="@{'/res/delete/' + ${res.id}}">Удалить</a>
+                <a class="btn blue" th:href="@{'/res/edit/' + ${res.id}}">Изменить</a>
+                <a class="btn red-mint btn-outline" th:href="@{'/res/delete/' + ${res.id}}">Удалить</a>
             </td>
         </tr>
         </tbody>

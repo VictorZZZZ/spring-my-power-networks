@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,9 +31,13 @@ public class Res {
     @DateTimeFormat(pattern="dd-MMM-YYYY HH:mm")
     private Date modified;
 
-    @OneToMany(mappedBy = "res",fetch = FetchType.EAGER)
+//    @OneToMany(mappedBy = "res",fetch = FetchType.EAGER)
+//    @OnDelete(action= OnDeleteAction.CASCADE)
+//    private List<Tp> tps;
+
+    @OneToMany(mappedBy = "res")
     @OnDelete(action= OnDeleteAction.CASCADE)
-    private List<Tp> tps;
+    private List<Substation> substations;
 
     public Res() {
     }
@@ -54,12 +59,29 @@ public class Res {
     }
 
     public List<Tp> getTps() {
+        List<Tp> tps = new ArrayList<>();
+        List<Section> sections = new ArrayList<>();
+        for (Substation substation: substations) {
+            sections.addAll(substation.getSections());
+            List<Line> lines = new ArrayList<>();
+            for (Section section:sections) {
+                lines.addAll(section.getLines());
+                List<Part> parts = new ArrayList<>();
+                for (Line line: lines) {
+                    parts.addAll(line.getParts());
+                    for (Part part:parts) {
+                        tps.addAll(part.getTps());
+                    }
+                }
+            }
+        }
+
         return tps;
     }
-
-    public void setTps(List<Tp> tps) {
-        this.tps = tps;
-    }
+//
+//    public void setTps(List<Tp> tps) {
+//        this.tps = tps;
+//    }
 
     public Long getCachedAbonentsCount() {
         return cachedAbonentsCount;
@@ -75,5 +97,38 @@ public class Res {
 
     public void setModified(Date modified) {
         this.modified = modified;
+    }
+
+    public List<Substation> getSubstations() {
+        return substations;
+    }
+
+    public void setSubstations(List<Substation> substations) {
+        this.substations = substations;
+    }
+
+    public void addSubstation(Substation substation) {
+        this.substations.add(substation);
+    }
+
+    @Override
+    public String toString() {
+        return "Res{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", cachedAbonentsCount=" + cachedAbonentsCount +
+                ", modified=" + modified +
+                ", substations=" + substations +
+                '}';
+    }
+
+    public void info(){
+        System.out.println("id=" + id +
+                           ", name='" + name + "\'");
+        if(substations != null) {
+            for (Substation subst : substations) {
+                subst.info();
+            }
+        }
     }
 }

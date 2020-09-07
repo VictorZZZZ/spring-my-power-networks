@@ -13,6 +13,11 @@ import java.util.Date;
 
 @Entity
 @Table(name="abonent")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="abonent_type",
+                     discriminatorType = DiscriminatorType.STRING,
+                     columnDefinition = "varchar(31)")
+@DiscriminatorValue("null")
 public class Abonent {
 //    @Id
 //    @Column(name = "id")
@@ -21,7 +26,9 @@ public class Abonent {
 
     @Id
     @Column(name="account_number")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountNumber;
+
     @Column(name="surname")
     private String surname;
     @Column(name="name")
@@ -186,5 +193,24 @@ public class Abonent {
 
     public String toShortString() {
         return accountNumber+" "+surname+" "+name+" "+middlename+" "+homePhone+" "+firstPhone+" "+secondPhone;
+    }
+
+    @Override
+    public String toString() {
+        return "Abonent{" +
+                "accountNumber=" + accountNumber +
+                ", surname='" + surname + '\'' +
+                ", name='" + name + '\'' +
+                ", middlename='" + middlename + '\'' +
+                ", homePhone='" + homePhone + '\'' +
+                ", firstPhone='" + firstPhone + '\'' +
+                ", secondPhone='" + secondPhone + '\'' +
+                ", opora='" + opora + '\'' +
+                ", notes='" + notes + '\'' +
+                ", inputManually=" + inputManually +
+                ", created=" + created +
+                ", modified=" + modified +
+                ", fider=" + fider +
+                '}';
     }
 }

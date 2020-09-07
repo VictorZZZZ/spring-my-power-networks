@@ -19,12 +19,14 @@ public class FiderService {
     private FiderRepository fiderRepository;
     private TpRepository tpRepository;
     private ResRepository resRepository;
+    private AbonentService abonentService;
 
     @Autowired
-    public FiderService(FiderRepository fiderRepository, TpRepository tpRepository, ResRepository resRepository) {
+    public FiderService(FiderRepository fiderRepository, TpRepository tpRepository, ResRepository resRepository, AbonentService abonentService) {
         this.tpRepository = tpRepository;
         this.fiderRepository = fiderRepository;
         this.resRepository = resRepository;
+        this.abonentService = abonentService;
     }
 
     public List<Fider> getAll() {
@@ -40,11 +42,11 @@ public class FiderService {
         fiderRepository.flush();
     }
 
-    public Fider getOne(Integer id) {
+    public Fider getOne(Long id) {
         return fiderRepository.getOne(id);
     }
 
-    public void deleteOne(Integer id) {
+    public void deleteOne(Long id) {
         fiderRepository.deleteById(id);
     }
 
@@ -114,6 +116,7 @@ public class FiderService {
         List<Fider> fidersList =new ArrayList<>();
         List<Abonent> abonentList =new ArrayList<>();
         Res res = resRepository.getOne(id);
+        //todo: переделать
         List<Tp> tpList = tpRepository.findAllByResIdOrderByName(res);
         for(Tp tp:tpList){
             fidersList.addAll(tp.getFiders());
@@ -122,4 +125,26 @@ public class FiderService {
     }
 
 
+    public void deepSave(List<Fider> fiders) {
+        for(Fider fider:fiders){
+            Fider fiderFromBase = fiderRepository.findOneByTpIdAndDbfId(fider.getTp().getId(),fider.getDbfId());
+            if(fiderFromBase!=null){
+                fider.setId(fiderFromBase.getId());
+                fider.setDbfId(fiderFromBase.getDbfId());
+                if(fider.getAbonents().size()>0) {
+                    abonentService.deepSave(fider.getAbonents());
+                }
+            } else {
+                //System.out.printf("В базе нет фидера %s - %s \n",fider.getTp().getName(),fider.getName());
+                if(fider.getAbonents().size()>0) {
+                    saveOne(fider);
+                    abonentService.deepSave(fider.getAbonents());
+                }
+            }
+        }
+    }
+
+    public List<Fider> getAllByTp(Long parentId) {
+        return fiderRepository.findByTpId(parentId);
+    }
 }

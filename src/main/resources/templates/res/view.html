@@ -16,38 +16,14 @@
         <div class="row">
             <h2>РЭС</h2>
             <div class="col-md-12">
-                <div class="portlet green-meadow box">
-                    <div class="portlet-title">
-                        <div class="caption">
-                            <i class="fa fa-cogs"></i><span th:text="${res.name}"/> </div>
-                        <div class="actions">
-                            <a th:href="@{'/res/edit/'+${res.id}}" class="btn btn-default btn-sm">
-                                <i class="fa fa-pencil"></i> Редактировать </a>
-                        </div>
-                    </div>
-                    <div class="portlet-body">
-                        <div class="row static-info">
-                            <div class="col-md-5 name"> Название </div>
-                            <div class="col-md-7 value"> <span th:text="${res.name}"/> </div>
-                        </div>
-                        <div class="row static-info">
-                            <div class="col-md-5 name"> Количество ТП: </div>
-                            <div class="col-md-7 value"> <span th:text="${tps.size()}"> </div>
-                        </div>
-                        <div class="row static-info">
-                            <div class="col-md-5 name"> Количество абонентов:</div>
-                            <div class="col-md-7 value">
-                                <span class="label label-success"> <span th:text="${res.cachedAbonentsCount}"/> </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div th:replace="~{res/view_fragments :: mainInfo}"/>
             </div>
         </div>
         <h2>Cписок ТП</h2>
         <table class="table table-hover">
             <thead class="thead-dark">
                 <th> Название </th>
+                <th> Количество Фидеров </th>
                 <th> Действия </th>
             </thead>
             <tbody>
@@ -58,9 +34,12 @@
                         </a>
                     </td>
                     <td>
-                        <a class="btn btn-outline-dark" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>
-                        <a class="btn btn-outline-danger" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
-                        <a th:href="@{'/cart/add/tp/'+${tp.id}}" class="btn btn-outline-info btn-sm"> В рассылку</a>
+                        <span class="label label-success" th:text="${tp.fiders.size()}"/>
+                    </td>
+                    <td>
+                        <a class="btn blue" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>
+                        <a class="btn red-mint btn-outline" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
+                        <a th:href="@{'/cart/add/tp/'+${tp.id}}" class="btn green btn-sm"> В рассылку</a>
                     </td>
                 </tr>
             </tbody>

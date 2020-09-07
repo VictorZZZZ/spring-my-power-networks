@@ -116,4 +116,19 @@ public class OrderItem {
     public void setRecipient(String recipient) {
         this.recipient = recipient;
     }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "id=" + id +
+                ", order=" + order +
+                ", abonent=" + abonent +
+                ", smsId=" + smsId +
+                ", smsCount=" + smsCount +
+                ", operator=" + operator +
+                ", errorCode=" + errorCode +
+                ", smsStatus='" + smsStatus + '\'' +
+                ", recipient='" + recipient + '\'' +
+                '}';
+    }
 }

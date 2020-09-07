@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8"/>
+
+    <title th:text="${title!=null} ? ${title} :'СМС Оповещение абонентов'">СМС оповещение Абонентов</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+
+    <th:block th:insert="~{mandatory_styles :: link}"></th:block>
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link th:href="@{/css/assets/global/plugins/jstree/dist/themes/default/style.min.css}" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
+    <script th:src="@{/js/jquery.js}"></script>
+
+
+</head>
+<!-- END HEAD -->
+
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-full-width page-md">
+<div class="page-wrapper">
+    <!-- BEGIN HEADER -->
+    <div th:replace="~{nav :: nav(Home)}"/>
+    <!-- END HEADER -->
+    <!-- BEGIN HEADER & CONTENT DIVIDER -->
+    <div class="clearfix"></div>
+    <!-- END HEADER & CONTENT DIVIDER -->
+    <!-- BEGIN CONTAINER -->
+    <div class="page-container">
+        <div class="page-content-wrapper">
+            <!-- BEGIN CONTENT BODY -->
+            <div class="page-content">
+
+                <!-- todo Pagination -->
+
+                <div class="container">
+                    <div th:replace="~{flashMessages :: flash}"/>
+                        <h1>Список ТП (<span th:text="${totalTp}"/>) </h1>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <a class="btn blue" th:href="@{/tp/add}">Добавить новое ТП</a>
+                                </div>
+                            </div>
+
+                            <table class="table table-hover">
+                                <thead class="thead-dark">
+                                        <th> Id </th>
+                                        <th> РЭС </th>
+                                        <th> ПС </th>
+                                        <th> СШ </th>
+                                        <th> Линия </th>
+                                        <th> Участок </th>
+                                        <th> Название </th>
+                                        <th> Количество фидеров </th>
+                                        <th> Действия </th>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="tp : ${tpsPaginated.content}">
+
+                                        <td>
+                                            <span th:text="${tp.id}"/>
+                                        </td>
+                                        <td>
+                                            <span th:if="${tp.part}" th:text="${tp.part.line.section.substation.res.name}"/>
+                                        </td>
+                                        <td>
+                                            <span th:if="${tp.part}" th:text="${tp.part.line.section.substation.name}"/>
+                                        </td>
+                                        <td>
+                                            <span th:if="${tp.part}" th:text="${tp.part.line.section.name}"/>
+                                        </td>
+                                        <td>
+                                            <span th:if="${tp.part}" th:text="${tp.part.line.name}"/>
+                                        </td>
+                                        <td>
+                                            <span th:if="${tp.part}" th:text="${tp.part.name}"/>
+                                        </td>
+
+                                        <td th:object="${tp}">
+                                            <a th:href="@{'/tp/view/'+${tp.id}}" title="Просмотр данных ТП">
+                                                <span th:text="*{name}" />
+                                            </a>
+                                        </td>
+                                        <td th:object="${tp}">
+                                            <span class="label label-success" th:text="*{fiders.size()}"/>
+                                        </td>
+                                        <td>
+                                            <a class="btn blue" th:href="@{'/edit/tp/' + ${tp.id}}">Изменить</a>
+                                            <a class="btn red" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
+                                            <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
+                                            <a class="btn green" th:href="@{'/cart/add/tp/' + ${tp.id}}">В рассылку</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div th:replace="~{tp/pagination_fragment :: pagination}"/>
+
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/css/assets/global/scripts/bootstrap.min.js}" type="text/javascript"></script>
+</body>
+</html>

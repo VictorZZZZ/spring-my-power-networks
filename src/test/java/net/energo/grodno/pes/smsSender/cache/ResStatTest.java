@@ -2,6 +2,7 @@ package net.energo.grodno.pes.smsSender.cache;
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
 import net.energo.grodno.pes.smsSender.Services.ResService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,6 +11,7 @@ public class ResStatTest extends AbstractClass {
     private ResService resService;
 
     @Test
+    @Ignore
     public void getInfo(){
         //проверка времени кеширования результатов res.getInfo()
         System.out.println("Первый раз:");

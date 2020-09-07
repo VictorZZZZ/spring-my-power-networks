@@ -3,8 +3,10 @@ package net.energo.grodno.pes.smsSender.controllers;
 import net.energo.grodno.pes.smsSender.Services.TemplateService;
 import net.energo.grodno.pes.smsSender.entities.Order;
 import net.energo.grodno.pes.smsSender.entities.TextTemplate;
-import net.energo.grodno.pes.smsSender.entities.users.User;
 import net.energo.grodno.pes.smsSender.utils.ShoppingCart;
+import net.energo.grodno.pes.smsSender.utils.smsAPI.SmsAPI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +24,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/cart")
 public class CartController {
+    private static Logger logger = LoggerFactory.getLogger(CartController.class);
     private ShoppingCart cart;
     private TemplateService templateService;
 
@@ -49,7 +52,7 @@ public class CartController {
     }
 
     @GetMapping("/add/tp/{id}")
-    public String addTpToCart(HttpSession session,HttpServletRequest request,Model model, @PathVariable("id") Integer id, RedirectAttributes redirectAttributes){
+    public String addTpToCart(HttpSession session,HttpServletRequest request,Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
         //добавление ТП
         int count = cart.addTp(id);
         if(count>0) {
@@ -63,7 +66,7 @@ public class CartController {
 
     //добавление Фидера
     @GetMapping("/add/fider/{id}")
-    public String addFiderToCart(HttpSession session,HttpServletRequest request,Model model, @PathVariable("id") Integer id, RedirectAttributes redirectAttributes){
+    public String addFiderToCart(HttpSession session,HttpServletRequest request,Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
         int count = cart.addFider(id);
         redirectAttributes.addFlashAttribute("messageInfo","В список рассылки добавлено " + count + " абонентов");
         session.setAttribute("cartItemsCount",cart.getItems().size());
@@ -92,7 +95,8 @@ public class CartController {
             model.addAttribute("cartItems",cart.getItems());
             return "cart/index";
         } else {
-            System.out.println(order);
+            //System.out.println(order);
+            logger.info("Формируем высылку СМС");
             Integer sentSms = cart.createOrderAndSendSms(order,principal);
             if(sentSms>0)
                 redirectAttributes.addAttribute("messageInfo","Отправлено "+ sentSms + " сообщений");
@@ -115,6 +119,12 @@ public class CartController {
             redirectAttributes.addFlashAttribute("messageError", "Абонент с таким Id не найден");
         }
         return "redirect:/cart";
+    }
+
+    @GetMapping("/getCount")
+    @ResponseBody
+    public String getCount(){
+        return String.valueOf(cart.getItems().size());
     }
 
 }

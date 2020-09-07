@@ -28,7 +28,7 @@ public class DBFManager {
     private Map<Integer,Tp> tpMap = new HashMap<>();
     private List<Abonent> abonentList= new ArrayList<>();
     private List<String> errors= new ArrayList<>();
-    private final int EMPTY_FIDER_ID = 0;
+
 
     public DBFManager() {
     }
@@ -152,8 +152,8 @@ public class DBFManager {
             Res res = new Res();
             res.setId(Integer.parseInt(res_id));
             if(!name.equals("") && name!=null && !res_id.equals("") && res_id!=null) {
-
-                Tp tp = new Tp(name, dbfId, res,false);
+                //todo: исправить создание ТП
+                Tp tp = new Tp(name, dbfId, null,false);
                 List<Fider> newFiderListForCurrentTp = new ArrayList<>();
                 for(Fider fider :fiderList){
                     Fider newFider = new Fider();
@@ -190,7 +190,7 @@ public class DBFManager {
             //System.out.printf("%s %s %s \n",dbf_id,name);
             fiderList.add(new Fider(name,dbfId,new Tp(),false));
         }
-        fiderList.add(new Fider("Без номера",EMPTY_FIDER_ID,new Tp(),false));
+        fiderList.add(new Fider(Fider.EMPTY_FIDER_NAME,Fider.EMPTY_FIDER_ID,new Tp(),false));
 
     }
 
@@ -231,7 +231,7 @@ public class DBFManager {
             } else {
                 logger.warn("Абонент не привязан к фидеру(или имеет пустое значение в поле COD_FID) и будет привязан к фидеру \"Без названия\": {} {} {} {} {} {} {} {} {} {}"
                         ,accountNumber,surname,name,middlename,homePhone,firstPhone,secondPhone,tpCode,codFid,opora);
-                fiderCode=EMPTY_FIDER_ID;
+                fiderCode=Fider.EMPTY_FIDER_ID;
                 //continue;
             }
             //System.out.println(fiderCode);

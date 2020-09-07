@@ -47,7 +47,7 @@ public class FiderController{
     }
 
     @GetMapping("/edit/{id}")
-    public String editFider(Model model, @PathVariable("id") Integer id){
+    public String editFider(Model model, @PathVariable("id") Long id){
         Fider fider = fiderService.getOne(id);
         List<Tp> tpList= tpService.getAll();
         model.addAttribute("fider",fider);
@@ -56,7 +56,7 @@ public class FiderController{
     }
 
     @GetMapping("/view/{id}")
-    public String viewFider(Model model, @PathVariable("id") Integer id){
+    public String viewFider(Model model, @PathVariable("id") Long id){
         Fider fider = fiderService.getOne(id);
         model.addAttribute("fider",fider);
         return "fider/view";
@@ -74,7 +74,7 @@ public class FiderController{
     }
 //todo сделать через POST + csrf
     @GetMapping("/delete/{id}")
-    public String deleteFiderById(@PathVariable("id") Integer id){
+    public String deleteFiderById(@PathVariable("id") Long id){
         fiderService.deleteOne(id);
         return "redirect:/fider";
     }
