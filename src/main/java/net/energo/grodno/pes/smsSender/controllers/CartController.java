@@ -4,6 +4,9 @@ import net.energo.grodno.pes.smsSender.Services.TemplateService;
 import net.energo.grodno.pes.smsSender.entities.Order;
 import net.energo.grodno.pes.smsSender.entities.TextTemplate;
 import net.energo.grodno.pes.smsSender.utils.ShoppingCart;
+import net.energo.grodno.pes.smsSender.utils.smsAPI.SmsAPI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +24,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/cart")
 public class CartController {
+    private static Logger logger = LoggerFactory.getLogger(CartController.class);
     private ShoppingCart cart;
     private TemplateService templateService;
 
@@ -91,7 +95,8 @@ public class CartController {
             model.addAttribute("cartItems",cart.getItems());
             return "cart/index";
         } else {
-            System.out.println(order);
+            //System.out.println(order);
+            logger.info("Формируем высылку СМС");
             Integer sentSms = cart.createOrderAndSendSms(order,principal);
             if(sentSms>0)
                 redirectAttributes.addAttribute("messageInfo","Отправлено "+ sentSms + " сообщений");

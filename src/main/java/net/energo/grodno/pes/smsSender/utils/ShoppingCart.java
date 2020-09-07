@@ -183,9 +183,9 @@ public class ShoppingCart {
         for (OrderItem item:items) {
             String firstPhone=item.getAbonent().getFirstPhone();
             String secondPhone=item.getAbonent().getSecondPhone();
-            if(!firstPhone.isEmpty() && !firstPhone.equals("0") && firstPhone.length()==PHONE_LENGTH){
+            if(!firstPhone.isEmpty() && !firstPhone.equals("0") && firstPhone.length()>=PHONE_LENGTH){
                 result.add(firstPhone);
-            } else if(!secondPhone.isEmpty() && !secondPhone.equals("0") && secondPhone.length()==PHONE_LENGTH){
+            } else if(!secondPhone.isEmpty() && !secondPhone.equals("0") && secondPhone.length()>=PHONE_LENGTH){
                 result.add(secondPhone);
             }
         }
