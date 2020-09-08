@@ -14,16 +14,24 @@
                 <div class="row static-info">
                     <div class="col-md-5 name"> РЭС </div>
                     <div class="col-md-7 value">
-                        <a th:href="@{'/res/view/'+${tp.getRes().getId()}}">
+                        <a th:if="${tp.part!=null}" th:href="@{'/res/view/'+${tp.getRes().getId()}}">
                             <span th:text="${tp.getRes().getName()}"/>
                         </a>
+                        <div class="alert alert-block alert-warning fade in" th:if="${tp.part==null}" style="color:black;">
+                            <h4 class="alert-heading">Внимание!</h4>
+                            <p> Эта ТП не привязана ни к одному участку.</p>
+                            <p style="margin-top:15px;">
+                                <a class="btn red" th:href="@{'/edit/tp/'+${tp.id}}"> Привязать </a>
+                            </p>
+                        </div>
+
                     </div>
                 </div>
                 <div class="row static-info">
                     <div class="col-md-5 name"> Подстанция </div>
                     <div class="col-md-7 value">
 
-                            <span th:text="${tp.part.line.section.substation.name}"/>
+                            <span th:if="${tp.part!=null}" th:text="${tp.part.line.section.substation.name}"/>
 
                     </div>
                 </div>
@@ -31,7 +39,7 @@
                     <div class="col-md-5 name"> СШ </div>
                     <div class="col-md-7 value">
 
-                            <span th:text="${tp.part.line.section.name}"/>
+                            <span th:if="${tp.part!=null}" th:text="${tp.part.line.section.name}"/>
 
                     </div>
                 </div>
@@ -39,7 +47,7 @@
                     <div class="col-md-5 name"> Линия </div>
                     <div class="col-md-7 value">
 
-                            <span th:text="${tp.part.line.name}"/>
+                            <span th:if="${tp.part!=null}" th:text="${tp.part.line.name}"/>
 
                     </div>
                 </div>
@@ -47,7 +55,7 @@
                     <div class="col-md-5 name"> Участок </div>
                     <div class="col-md-7 value">
 
-                            <span th:text="${tp.part.name}"/>
+                            <span th:if="${tp.part!=null}" th:text="${tp.part.name}"/>
 
                     </div>
                 </div>

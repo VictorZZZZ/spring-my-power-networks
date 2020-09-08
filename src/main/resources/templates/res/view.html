@@ -37,7 +37,7 @@
                         <span class="label label-success" th:text="${tp.fiders.size()}"/>
                     </td>
                     <td>
-                        <a class="btn blue" th:href="@{'/tp/edit/' + ${tp.id}}">Изменить</a>
+                        <a class="btn blue" th:href="@{'/edit/tp/' + ${tp.id}}">Изменить</a>
                         <a class="btn red-mint btn-outline" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{'/tp/delete/' + ${tp.id}}">Удалить</a>
                         <a th:href="@{'/cart/add/tp/'+${tp.id}}" class="btn green btn-sm"> В рассылку</a>
                     </td>
