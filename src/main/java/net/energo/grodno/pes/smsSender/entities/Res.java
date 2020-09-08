@@ -60,16 +60,10 @@ public class Res {
 
     public List<Tp> getTps() {
         List<Tp> tps = new ArrayList<>();
-        List<Section> sections = new ArrayList<>();
         for (Substation substation: substations) {
-            sections.addAll(substation.getSections());
-            List<Line> lines = new ArrayList<>();
-            for (Section section:sections) {
-                lines.addAll(section.getLines());
-                List<Part> parts = new ArrayList<>();
-                for (Line line: lines) {
-                    parts.addAll(line.getParts());
-                    for (Part part:parts) {
+            for (Section section:substation.getSections()) {
+                for (Line line: section.getLines()) {
+                    for (Part part:line.getParts()) {
                         tps.addAll(part.getTps());
                     }
                 }

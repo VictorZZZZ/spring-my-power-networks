@@ -5,6 +5,8 @@ import net.energo.grodno.pes.smsSender.Services.ResService;
 import net.energo.grodno.pes.smsSender.Services.TpService;
 import net.energo.grodno.pes.smsSender.entities.Lead;
 import net.energo.grodno.pes.smsSender.entities.Res;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import java.util.List;
 
 @Controller
 public class MainController {
+    private static Logger logger = LoggerFactory.getLogger(ResService.class);
     private ResService resService;
     private TpService tpService;
     private LeadService leadService;
@@ -56,5 +59,30 @@ public class MainController {
     public String importPage(Model model){
         return "importPage";
     }
+
+    @GetMapping(value={"/countAbonents/"})
+    public String countAbonentsThread(RedirectAttributes redirectAttributes,HttpServletRequest request){
+        //Запускаем пересчёт в новом потоке, чтобы не мешало работать
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                logger.info("Запущен процесс пересчета пользователей");
+                long startTime=System.currentTimeMillis();
+                resService.countAbonents(1); //22 секунды 11000 абонентов
+                resService.countAbonents(2); // 128 секунд 28000 абонентов
+                resService.countAbonents(3);//133 секунды 28000 абонентов
+                resService.countAbonents(4); // 199 секунд 147000 абонентов
+                long endTime = System.currentTimeMillis();
+                logger.info("Пересчёт пользователей закончен. Время выполнения {} секунд",(endTime-startTime)/1000F);
+                redirectAttributes.addFlashAttribute("Пересчет абонентов закончен");
+            }
+        });
+        t.start();
+
+
+        redirectAttributes.addFlashAttribute("messageInfo","Запущен процесс пересчёта пользователей");
+        return "redirect:"+request.getHeader("Referer");
+    }
+
 
 }

@@ -1,9 +1,12 @@
 package net.energo.grodno.pes.smsSender.Services;
 
+import net.energo.grodno.pes.smsSender.controllers.CartController;
 import net.energo.grodno.pes.smsSender.entities.Fider;
 import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
 import net.energo.grodno.pes.smsSender.repositories.ResRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import java.util.Optional;
 public class ResService {
     private ResRepository resRepository;
     private SubstationService substationService;
+    private static Logger logger = LoggerFactory.getLogger(ResService.class);
 
     @Autowired
     public void setResRepository(ResRepository resRepository,SubstationService substationService) {
@@ -61,8 +65,9 @@ public class ResService {
     @Transactional
     public void countAbonents(Integer id){
         Res res=getOne(id);
+        logger.info("{} старт пересчета пользователей.",res.getName());
         List<Tp> tps = res.getTps();
-        int tpSize = tps.size();
+        logger.info("Количество ТП в РЭСе - {}", tps.size());
         int abonentSize = 0;
         for(Tp tp: tps){
             for(Fider fider:tp.getFiders()){
@@ -71,6 +76,7 @@ public class ResService {
         }
         res.setCachedAbonentsCount((long) abonentSize);
         saveOne(res);
+        logger.info("{} конец пересчета пользователей.",res.getName());
     }
 
     @Transactional

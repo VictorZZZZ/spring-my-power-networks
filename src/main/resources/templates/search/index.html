@@ -57,7 +57,7 @@
                                 <tbody>
                                     <tr th:each="abonent : ${abonentList}">
 
-                                        <td th:if="${abonent.fider.tp.part!=null}" th:text="${abonent.fider.tp.getRes().getName()}"/>
+                                        <td th:text="${(abonent.fider.tp.part!=null) ? abonent.fider.tp.getRes().getName() : ''}"/>
                                         <td th:text="${abonent.fider.tp.name}"/>
                                         <td th:text="${abonent.fider.name}"/>
                                         <td th:text="${abonent.accountNumber}"/>
