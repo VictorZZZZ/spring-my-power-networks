@@ -122,25 +122,60 @@
             "state" : { "key" : "demo3" },
             "plugins" : [ "dnd", "state", "types","contextmenu" ],
             "contextmenu" : {
-                "items":{
-                    "add_to_cart":{
-                        "label" : "В список рассылки",
-                        "action" : function (obj) {
-                            var clickedNodeId = obj.reference["context"].getAttribute("aria-activedescendant");
-                            addToCart(clickedNodeId);
-                            $('body,html').animate({
-                                scrollTop: 0
-                            }, 400);
-                        }
-                    },
-                    "edit":{
-                        "label" : "Редактировать",
-                        "action" : function (obj) {
-                            var clickedNodeId = obj.reference["context"].getAttribute("aria-activedescendant");
-                            locateToEditNode(clickedNodeId);
-
-                        }
+                "items": function (node) {
+                    var clickedObjType = node.id.split("_")[0];
+                    var labelToAddChildren="";
+                    switch (clickedObjType) {
+                        case "res":
+                            labelToAddChildren = "Добавить подстанцию";
+                            break;
+                        case "substation":
+                            labelToAddChildren = "Добавить секцию шин";
+                            break;
+                        case "section":
+                            labelToAddChildren = "Добавить линию";
+                            break;
+                        case "line":
+                            labelToAddChildren = "Добавить участок";
+                            break;
+                        case "part":
+                            labelToAddChildren = "Добавить ТП";
+                            break;
+                        case "tp":
+                            labelToAddChildren = "Добавить фидер";
+                            break;
+                        case "fider":
+                            labelToAddChildren = "Добавить абонента";
+                            break;
                     }
+                    standardActions =  {
+                        "add_to_cart":{
+                            "label" : "В список рассылки",
+                            "action" : function (obj) {
+                                var clickedNodeId = obj.reference["context"].getAttribute("aria-activedescendant");
+                                addToCart(clickedNodeId);
+                                $('body,html').animate({
+                                    scrollTop: 0
+                                }, 400);
+                            }
+                        },
+                        "edit":{
+                            "label" : "Редактировать",
+                            "action" : function (obj) {
+                                var clickedNodeId = obj.reference["context"].getAttribute("aria-activedescendant");
+                                locateToEditNode(clickedNodeId);
+                            }
+                        },
+                        "add_child":{
+                            "label" : labelToAddChildren,
+                            "action" : function (obj) {
+                                var clickedNodeId = obj.reference["context"].getAttribute("aria-activedescendant");
+                                locateToAddChildren(clickedNodeId);
+                            }
+                        }
+                    };
+
+                    return standardActions;
                 }
             }
         });
@@ -217,6 +252,12 @@
         var locationString ="/app/edit/"+obj+"/"+id;
         window.location.href = locationString;
     }
+    var locateToAddChildren = function(nodeId){
+        var obj = nodeId.split('_')[0];
+        var id= nodeId.split('_')[1];
+        var locationString ="/app/edit/"+obj+"/"+id+"/addChildren";
+        window.location.href = locationString;
+    };
 
 
     $(document).ready(function () {

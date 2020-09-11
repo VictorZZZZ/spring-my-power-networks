@@ -198,12 +198,127 @@ public class EditController {
 
     }
 
+    @RequestMapping(value = {"/res/{id}/addChildren"},method = RequestMethod.GET)
+    public String addSubstation(Model model,@PathVariable("id") Integer id){
+        Substation substation = new Substation();
+        Integer resId = id;
+        model.addAttribute("resId",resId);
+        List<Res> resList = resService.getAllRes();
+        model.addAttribute("resList",resList);
+        model.addAttribute("entity","substation");
+        model.addAttribute("object", substation);
+        return "editNode/edit";
+    }
+
+    @RequestMapping(value = {"/substation/{id}/addChildren"},method = RequestMethod.GET)
+    public String addSection(Model model,@PathVariable("id") Integer id){
+        Integer substationId = id;
+        model.addAttribute("substationId",substationId);
+        Integer resId = substationService.getOne(substationId).getRes().getId();
+        model.addAttribute("resId",resId);
+        List<Res> resList = resService.getAllRes();
+        model.addAttribute("resList",resList);
+        List<Substation> substationList = substationService.getAllByRes(resId);
+        model.addAttribute("substationList",substationList);
+        model.addAttribute("entity","section");
+        Section section = new Section();
+        model.addAttribute("object", section);
+        return "editNode/edit";
+    }
+
+    @RequestMapping(value = {"/section/{id}/addChildren"},method = RequestMethod.GET)
+    public String addLine(Model model,@PathVariable("id") Integer id){
+        Integer sectionId = id;
+        model.addAttribute("sectionId",sectionId);
+        Section section = sectionService.getOne(id);
+        Integer substationId = section.getSubstation().getId();
+        model.addAttribute("substationId",substationId);
+        Integer resId = section.getSubstation().getRes().getId();
+        model.addAttribute("resId",resId);
+        List<Res> resList = resService.getAllRes();
+        model.addAttribute("resList",resList);
+        List<Substation> substationList = substationService.getAllByRes(resId);
+        model.addAttribute("substationList",substationList);
+        List<Section> sectionList = sectionService.getAllBySubstation(substationId);
+        model.addAttribute("sectionList",sectionList);
+        model.addAttribute("entity","line");
+        Line line = new Line();
+        model.addAttribute("object", line);
+        return "editNode/edit";
+    }
+
+    @RequestMapping(value = {"/line/{id}/addChildren"},method = RequestMethod.GET)
+    public String addPart(Model model,@PathVariable("id") Long id){
+        Long lineId = id;
+        Line line = lineService.getOne(lineId);
+        model.addAttribute("lineId", lineId);
+
+        Integer sectionId = line.getSection().getId();
+        model.addAttribute("sectionId", sectionId);
+
+        Integer substationId = line.getSection().getSubstation().getId();
+        model.addAttribute("substationId", substationId);
+
+        Integer resId = line.getSection().getSubstation().getRes().getId();
+        List<Res> resList = resService.getAllRes();
+        model.addAttribute("resList",resList);
+
+        List<Substation> substationList = substationService.getAllByRes(resId);
+        model.addAttribute("substationList", substationList);
+
+        List<Section> sectionList = sectionService.getAllBySubstation(substationId);
+        model.addAttribute("sectionList", sectionList);
+
+        List<Line> lineList = lineService.getAllBySection(sectionId);
+        model.addAttribute("lineList", lineList);
+
+        model.addAttribute("entity","part");
+        Part part = new Part();
+        model.addAttribute("object", part);
+        return "editNode/edit";
+    }
+
+    @RequestMapping(value = {"/part/{id}/addChildren"},method = RequestMethod.GET)
+    public String addTp(Model model,@PathVariable("id") Long id){
+        Long partId = id;
+        Part part = partService.getOne(partId);
+
+        Line line = part.getLine();
+        model.addAttribute("lineId", line.getId());
+
+        Integer sectionId = line.getSection().getId();
+        model.addAttribute("sectionId", sectionId);
+
+        Integer substationId = line.getSection().getSubstation().getId();
+        model.addAttribute("substationId", substationId);
+
+        Integer resId = line.getSection().getSubstation().getRes().getId();
+        List<Res> resList = resService.getAllRes();
+        model.addAttribute("resList",resList);
+
+        List<Substation> substationList = substationService.getAllByRes(resId);
+        model.addAttribute("substationList", substationList);
+
+        List<Section> sectionList = sectionService.getAllBySubstation(substationId);
+        model.addAttribute("sectionList", sectionList);
+
+        List<Line> lineList = lineService.getAllBySection(sectionId);
+        model.addAttribute("lineList", lineList);
+
+        List<Part> partList = partService.getAllByLine(line.getId());
+        model.addAttribute("partList",partList);
+
+        model.addAttribute("entity","tp");
+        Tp tp = new Tp();
+        model.addAttribute("object", tp);
+        return "editNode/edit";
+    }
+
     @RequestMapping(value = {"/save/{entity}"},method = RequestMethod.POST)
     public String editEntityPost(@PathVariable("entity") String entity,
                                  @RequestParam() MultiValueMap<String, String> dataMap,
                                  RedirectAttributes redirectAttributes,
                                  HttpServletRequest request){
-
         logger.info("Редактирование объекта {}:{}",entity,dataMap.getFirst("object[id]"));
         Integer id = Integer.valueOf(dataMap.getFirst("object[id]"));
         switch(entity){
@@ -228,25 +343,40 @@ public class EditController {
                     String name = dataMap.getFirst("object[name]");
                     Integer resId = Integer.valueOf(dataMap.getFirst("object[res]"));
                     Res res = resService.getOne(resId);
-                    if(name!=null && res!=null) {
+                    if(id==0){
+                        //Если получили id==0, о считаем, что это новый объект
+                        Substation substation = new Substation();
+                        substation.setName(name);
+                        substation.setRes(res);
+                        substation.setVoltage("");
+                        substationService.saveOne(substation);
+                        redirectAttributes.addFlashAttribute("messageInfo", "Объект "+name+" cоздан!");
+                    } else if(name!=null && res!=null) {
                         Substation substation = substationService.getOne(id);
                         substation.setName(name);
                         substation.setRes(res);
                         substationService.saveOne(substation);
-                        redirectAttributes.addFlashAttribute("messageInfo", "Объект отредактирован!");
+                        redirectAttributes.addFlashAttribute("messageInfo", "Объект" + name + " отредактирован!");
                     } else {
                         redirectAttributes.addFlashAttribute("messageError", "Ошибка!!! У объекта нет поля name");
                     }
                 } else {
                     redirectAttributes.addFlashAttribute("messageError", "Ошибка!!! У объекта нет поля id");
                 }
-                return "redirect:"+request.getHeader("Referer");
+                return "redirect:/";
             case "section":
                 if(id!=null) {
                     String name = dataMap.getFirst("object[name]");
                     Integer substationId = Integer.valueOf(dataMap.getFirst("object[substation]"));
                     Substation substation = substationService.getOne(substationId);
-                    if(name!=null && substation!=null) {
+                    if(id==0){
+                        //Если получили id==0, о считаем, что это новый объект
+                        Section section = new Section();
+                        section.setName(name);
+                        section.setSubstation(substation);
+                        sectionService.saveOne(section);
+                        redirectAttributes.addFlashAttribute("messageInfo", "Объект "+name+" cоздан!");
+                    } else if(name!=null && substation!=null) {
                         Section section = sectionService.getOne(id);
                         section.setName(name);
                         section.setSubstation(substation);
@@ -258,13 +388,20 @@ public class EditController {
                 } else {
                     redirectAttributes.addFlashAttribute("messageError", "Ошибка!!! У объекта нет поля id");
                 }
-                return "redirect:"+request.getHeader("Referer");
+                return "redirect:/";
             case "line":
                 if(id!=null){
                     String name = dataMap.getFirst("object[name]");
                     Integer sectionId = Integer.valueOf(dataMap.getFirst("object[section]"));
                     Section section = sectionService.getOne(sectionId);
-                    if(name!=null && section!=null){
+                    if(id==0){
+                        //Если получили id==0, о считаем, что это новый объект
+                        Line line = new Line();
+                        line.setName(name);
+                        line.setSection(section);
+                        lineService.saveOne(line);
+                        redirectAttributes.addFlashAttribute("messageInfo", "Объект "+name+" cоздан c id=" + line.getId() + "!");
+                    } else if(name!=null && section!=null){
                         Line line = lineService.getOne(id.longValue());
                         line.setName(name);
                         line.setSection(section);
@@ -274,13 +411,20 @@ public class EditController {
                         redirectAttributes.addFlashAttribute("messageError", "Ошибка!!! У объекта заполнены не все поля");
                     }
                 }
-                return "redirect:"+request.getHeader("Referer");
+                return "redirect:/";
             case "part":
                 if(id!=null){
                     String name = dataMap.getFirst("object[name]");
                     Long lineId = Long.valueOf(dataMap.getFirst("object[line]"));
                     Line line = lineService.getOne(lineId);
-                    if(name!=null && line!=null){
+                    if(id==0){
+                        //Если получили id==0, о считаем, что это новый объект
+                        Part part = new Part();
+                        part.setName(name);
+                        part.setLine(line);
+                        partService.saveOne(part);
+                        redirectAttributes.addFlashAttribute("messageInfo", "Объект "+name+" cоздан c id=" + part.getId() + "!");
+                    } else if(name!=null && line!=null){
                         Part part = partService.getOne(id.longValue());
                         part.setName(name);
                         part.setLine(line);
@@ -290,13 +434,21 @@ public class EditController {
                         redirectAttributes.addFlashAttribute("messageError", "Ошибка!!! У объекта заполнены не все поля");
                     }
                 }
-                return "redirect:"+request.getHeader("Referer");
+                return "redirect:/";
             case "tp":
                 if(id!=null){
                     String name = dataMap.getFirst("object[name]");
                     Long partId = Long.valueOf(dataMap.getFirst("object[part]"));
                     Part part = partService.getOne(partId);
-                    if(name!=null && part!=null){
+                    if(id==0){
+                        //Если получили id==0, о считаем, что это новый объект
+                        Tp tp = new Tp();
+                        tp.setName(name);
+                        tp.setPart(part);
+                        tp.setResId( part.getLine().getSection().getSubstation().getRes().getId() );
+                        tpService.saveOne(tp);
+                        redirectAttributes.addFlashAttribute("messageInfo", "Объект "+name+" cоздан c id=" + tp.getId() + "!");
+                    } else if(name!=null && part!=null){
                         Tp tp = tpService.getOne(id.longValue());
                         tp.setName(name);
                         tp.setPart(part);
@@ -306,7 +458,7 @@ public class EditController {
                         redirectAttributes.addFlashAttribute("messageError", "Ошибка!!! У объекта заполнены не все поля");
                     }
                 }
-                return "redirect:"+request.getHeader("Referer");
+                return "redirect:/";
             default:
                 logger.warn("Попытка сделать неверный POST запрос для {}",entity);
                 redirectAttributes.addFlashAttribute("messageError","Ошибка запроса");

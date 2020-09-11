@@ -106,6 +106,10 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>net.energo.grodno.pes.smsSender.SmsSenderApplication</mainClass>
+					<finalName>sms-sender-app</finalName>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

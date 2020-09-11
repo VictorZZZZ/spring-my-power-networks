@@ -35,11 +35,11 @@
             <div class="page-content">
                 <div class="container">
                     <div th:replace="~{flashMessages :: flash}"/>
-                    <h2 th:text="'Редатирование объкета '+${entity}"/>
+                    <h2 th:text="${(#request.requestURI.contains('addChildren')) ? 'Создание объекта '+entity : 'Редатирование объкета '+entity}"/>
                     <div class="row">
                         <div class="col-md-6">
                             <form th:action="@{'/edit/save/'+${entity}}" method="post">
-                                <input th:value="${object.id}" th:if="${object.id!=null}" th:name="object[id]" type="hidden"/>
+                                <input th:value="${(object.id!=null)? object.id : '0'}" th:name="object[id]" type="hidden"/>
                                 <div class="form-group" th:if="${entity.equals('substation') || entity.equals('section') || entity.equals('line') || entity.equals('part') || entity.equals('tp')}">
                                     <label>РЭС</label>
                                     <select id="resSelect" class="form-control" th:name="object[res]" th:attr="data-last=${(entity.equals('res')) ? true : false}">
