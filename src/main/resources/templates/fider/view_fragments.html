@@ -11,16 +11,16 @@
         <div class="row static-info">
             <div class="col-md-5 name"> РЭС </div>
             <div class="col-md-7 value">
-                <a th:href="@{'/res/view/'+${fider.tp.getRes().getId()}}">
-                    <span th:text="${fider.tp.getRes().getName()}"/>
-                </a>
+
+                    <span th:text="${(fider.tp.part!=null) ? fider.tp.getRes().getName() : ''}"/>
+
             </div>
         </div>
         <div class="row static-info">
             <div class="col-md-5 name"> Подстанция </div>
             <div class="col-md-7 value">
 
-                <span th:text="${fider.tp.part.line.section.substation.name}"/>
+                <span th:text="${(fider.tp.part!=null) ? fider.tp.part.line.section.substation.name : ''}"/>
 
             </div>
         </div>
@@ -28,7 +28,7 @@
             <div class="col-md-5 name"> СШ </div>
             <div class="col-md-7 value">
 
-                <span th:text="${fider.tp.part.line.section.name}"/>
+                <span th:text="${(fider.tp.part!=null) ? fider.tp.part.line.section.name : ''}"/>
 
             </div>
         </div>
@@ -36,7 +36,7 @@
             <div class="col-md-5 name"> Линия </div>
             <div class="col-md-7 value">
 
-                <span th:text="${fider.tp.part.line.name}"/>
+                <span th:text="${(fider.tp.part!=null) ? fider.tp.part.line.name : ''}"/>
 
             </div>
         </div>
@@ -44,7 +44,7 @@
             <div class="col-md-5 name"> Участок </div>
             <div class="col-md-7 value">
 
-                <span th:text="${fider.tp.part.name}"/>
+                <span th:text="${(fider.tp.part!=null) ? fider.tp.part.name : 'ТП не привязано к участку'}"/>
 
             </div>
         </div>

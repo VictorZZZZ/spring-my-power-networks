@@ -21,7 +21,7 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "abonent_id")
-    @Cascade(CascadeType.REFRESH)
+    @Cascade(CascadeType.DELETE)
     private Abonent abonent;
 
     @Column(name = "sms_id")
