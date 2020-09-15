@@ -1,0 +1,28 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="
+                    http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
+>
+
+    <preConditions>
+        <dbms type="postgresql" />
+    </preConditions>
+
+    <changeSet author="zvv" id="create_function">
+        <createProcedure>
+            CREATE OR REPLACE FUNCTION resId_of_abonent(in aN bigint) returns int AS
+                'SELECT res.id from abonent
+                inner join fider on abonent.fider_id=fider.id
+                inner join tp on tp.id = fider.tp_id
+                inner join part on part.id=tp.part_id
+                inner join line on line.id=part.line_id
+                inner join section on section.id=line.section_id
+                inner join substation on substation.id=section.substation_id
+                inner join res on res.id=substation.res_id
+                WHERE abonent.account_number=$1'
+            LANGUAGE SQL;
+        </createProcedure>
+    </changeSet>
+</databaseChangeLog>

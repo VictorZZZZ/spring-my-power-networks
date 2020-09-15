@@ -37,36 +37,41 @@
 
                 <div class="container">
                     <div th:replace="~{flashMessages :: flash}"/>
-                    <h1>Список руководителей</h1>
+                    <h1>Список Работников</h1>
                     <div class="row">
                         <div class="col-md-2" style="margin-right:10px;">
-                            <a class="btn blue" th:href="@{/leaders/add}">Добавить руководителя</a>
+                            <a class="btn blue" th:href="@{/masters/add}">Добавить работника</a>
                         </div>
                         <div class="col-md-2">
-                            <a class="btn purple" th:href="@{/leaders/broadcast}">Отправить СМС Руководству</a>
+                            <a class="btn purple" th:href="@{/masters/broadcast}">Отправить СМС Работникам</a>
                         </div>
                     </div>
                     <table class="table table-hover">
                         <thead class="thead-dark">
                             <th> ID</th>
                             <th > ФИО</th>
+                            <th> Должность </th>
                             <th> Номера тел. </th>
+
                             <th> Действия </th>
                         </thead>
                         <tbody>
-                        <tr th:each="leader : ${leaders}">
-                            <td th:text="${leader.accountNumber}"/>
-                            <td th:object="${leader}">
-                                <span th:text="*{surname+' ' + name + ' ' + middlename}" /><br/>
+                        <tr th:each="master : ${masters}">
+                            <td th:text="${master.accountNumber}"/>
+                            <td th:object="${master}">
+                                <span th:text="*{surname+' ' + name + ' ' + middlename}" />
                             </td>
-                            <td th:object="${leader}">
+                            <td>
+                                <span th:text="${master.position}"/>
+                            </td>
+                            <td th:object="${master}">
                                 <span th:text="*{(homePhone!=null) ? homePhone:''+ ' ' + firstPhone + ' ' + secondPhone }" /><br/>
                             </td>
                             <td>
-                                <a class="btn green-dark btn-outline" th:href="@{'/cart/add/abonent/' + ${leader.accountNumber}}">В рассылку</a>
-                                <a class="btn blue btn-outline" th:href="@{'/leaders/edit/' + ${leader.accountNumber}}">Изменить</a>
-                                <form th:object="${leader}" th:action="@{'/leaders/delete'}" th:method="delete">
-                                    <input type="hidden" name="id" th:value="${leader.accountNumber}"/>
+                                <a class="btn green-dark btn-outline" th:href="@{'/cart/add/abonent/' + ${master.accountNumber}}">В рассылку</a>
+                                <a class="btn blue btn-outline" th:href="@{'/masters/edit/' + ${master.accountNumber}}">Изменить</a>
+                                <form th:object="${master}" th:action="@{'/masters/delete'}" th:method="delete">
+                                    <input type="hidden" name="id" th:value="${master.accountNumber}"/>
                                     <input class="btn red-mint btn-outline" type="submit" value="Удалить"/>
                                 </form>
                                 <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->

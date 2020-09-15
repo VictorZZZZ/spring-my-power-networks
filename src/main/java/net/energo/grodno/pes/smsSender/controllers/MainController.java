@@ -1,13 +1,15 @@
 package net.energo.grodno.pes.smsSender.controllers;
 
-import net.energo.grodno.pes.smsSender.Services.LeadService;
-import net.energo.grodno.pes.smsSender.Services.ResService;
-import net.energo.grodno.pes.smsSender.Services.TpService;
+import net.energo.grodno.pes.smsSender.Services.*;
 import net.energo.grodno.pes.smsSender.entities.Lead;
+import net.energo.grodno.pes.smsSender.entities.Master;
 import net.energo.grodno.pes.smsSender.entities.Res;
+import net.energo.grodno.pes.smsSender.entities.users.User;
+import net.energo.grodno.pes.smsSender.security.AuthDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,12 +27,16 @@ public class MainController {
     private ResService resService;
     private TpService tpService;
     private LeadService leadService;
+    private MasterService masterService;
+    private UserService userService;
 
     @Autowired
-    public MainController(ResService resService, TpService tpService, LeadService leadService) {
+    public MainController(ResService resService, TpService tpService, LeadService leadService, MasterService masterService, UserService userService) {
         this.resService = resService;
         this.tpService = tpService;
         this.leadService = leadService;
+        this.masterService = masterService;
+        this.userService = userService;
     }
 
     @GetMapping(value={"", "/", "/index"})
@@ -49,10 +56,36 @@ public class MainController {
     }
 
     @GetMapping(value={"/leadersList"})
-    public String showLeaders(Model model, RedirectAttributes resdirectAttributes, HttpServletRequest request){
+    public String showLeaders(Model model){
         List<Lead> leaders = leadService.getAll();
         model.addAttribute("leaders",leaders);
         return "leaders/leadersList";
+    }
+
+    @GetMapping(value={"/mastersList"})
+    public String showMasters(Model model, RedirectAttributes resdirectAttributes, HttpServletRequest request,
+                              Principal principal,
+                              Authentication authentication){
+        try {
+
+            List<Master> masters= new ArrayList<>();
+            if(AuthDetails.listRoles(authentication).contains("ROLE_ADMIN")) {
+                //Если Admin, то показывать заказы всех пользователей
+                masters = masterService.getAll();
+            } else {
+                User user = userService.findByUsername(principal.getName());
+                Res res = user.getRes();
+                masters = masterService.getAllByRes(res);
+            }
+            model.addAttribute("masters",masters);
+            //оставляем leaders/leadersList потому что он такой же
+            return "masters/mastersList";
+        } catch (Exception e) {
+            e.printStackTrace();
+            resdirectAttributes.addFlashAttribute("messageError","");
+            return "redirect:/";
+        }
+
     }
 
     @GetMapping(value={"/importPage"})

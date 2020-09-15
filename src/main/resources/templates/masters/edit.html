@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8"/>
+
+    <title th:text="${title!=null} ? ${title} :'СМС Оповещение абонентов'">СМС оповещение Абонентов</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+
+    <th:block th:insert="~{mandatory_styles :: link}"></th:block>
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link th:href="@{/css/assets/global/plugins/jstree/dist/themes/default/style.min.css}" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
+    <script th:src="@{/js/jquery.js}"></script>
+
+
+</head>
+<!-- END HEAD -->
+
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-full-width page-md">
+<div class="page-wrapper">
+    <!-- BEGIN HEADER -->
+    <div th:replace="~{nav :: nav(Home)}"/>
+    <!-- END HEADER -->
+    <!-- BEGIN HEADER & CONTENT DIVIDER -->
+    <div class="clearfix"></div>
+    <!-- END HEADER & CONTENT DIVIDER -->
+    <!-- BEGIN CONTAINER -->
+    <div class="page-container">
+        <div class="page-content-wrapper">
+            <!-- BEGIN CONTENT BODY -->
+            <div class="page-content">
+
+                <!-- todo Pagination -->
+
+                <div class="container">
+                    <div th:replace="~{flashMessages :: flash}"/>
+
+                    <!-- todo найти как обращаться к URL из thymeleaf -->
+                    <h1>Редактировать Работника</h1>
+
+
+                        <form action="#" th:action="@{/masters/save}" th:object="${master}" method="post">
+                            <!-- todo Сделать inputManually=true только при add -->
+                            <input type="hidden" name="inputManually" th:value="true" />
+                            <input type="hidden" th:field="*{res}"/>
+                            <input class="form-control" type="text" th:if="${master.accountNumber!=null}" th:field="*{accountNumber}" />
+
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label>Фамилия</label>
+                                    <input class="form-control" type="text" th:field="*{surname}" />
+                                    <small class="form-text text-danger" th:each="err : ${#fields.errors('surname')}" th:text="${err}" />
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Имя</label>
+                                    <input class="form-control" type="text" th:field="*{name}" />
+                                    <small class="form-text text-danger" th:each="err : ${#fields.errors('name')}" th:text="${err}" />
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Отчество</label>
+                                    <input class="form-control" type="text" th:field="*{middlename}" />
+                                    <small class="form-text text-danger" th:each="err : ${#fields.errors('middlename')}" th:text="${err}" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label>Мобильный 1</label>
+                                    <input class="form-control" type="text" th:field="*{firstPhone}" />
+                                    <small class="form-text text-danger" th:each="err : ${#fields.errors('firstPhone')}" th:text="${err}" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Мобильный 2</label>
+                                    <input class="form-control" type="text" th:field="*{secondPhone}" />
+                                    <small class="form-text text-danger" th:each="err : ${#fields.errors('secondPhone')}" th:text="${err}" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Должность</label>
+                                    <input class="form-control" type="text" th:field="*{position}" placeholder="Мастер" />
+                                    <small class="form-text text-danger" th:each="err : ${#fields.errors('position')}" th:text="${err}" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <i sec:authorize="hasRole('ROLE_ADMIN')">* В этой форме есть hidden res_id значение</i>
+                                <div class="form-group col-md-12">
+                                    <input class="btn blue" type="submit" value="Сохранить" />
+                                </div>
+                            </div>
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:insert="~{mandatory_styles :: script}"></th:block>
+</body>
+</html>

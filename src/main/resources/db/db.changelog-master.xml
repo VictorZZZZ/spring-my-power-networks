@@ -6,8 +6,10 @@
                     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
    <!-- <include file="src\main\resources\db\db.changelog-roles_create.xml"/>
     <include file="src\main\resources\db\db.changelog-res_create.xml"/>
-    <include file="src\main\resources\db\db.changelog-adminAccount_create.xml"/> -->
-    <include file="src\main\resources\db\db.changelog-alter_abonents.xml"/>
+    <include file="src\main\resources\db\db.changelog-adminAccount_create.xml"/>
+    <include file="src\main\resources\db\db.changelog-alter_abonents.xml"/> -->
+    <include file="src\main\resources\db\db.changelog-create_function_resId_of_abonent.xml"/>
+
 
 
 </databaseChangeLog>
