@@ -13,3 +13,7 @@
 .flexbox {
     display: flex;
 }
+
+.page-content {
+    background-color: ghostwhite;
+}
