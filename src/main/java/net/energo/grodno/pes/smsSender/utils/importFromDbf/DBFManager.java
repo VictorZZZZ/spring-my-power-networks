@@ -146,14 +146,12 @@ public class DBFManager {
             if(!cod.isEmpty())
                 cod = cod.replaceAll("\\s+",""); //убирает пробелы из строки
             int dbfId = Integer.parseInt(cod);
-            String res_id = row.getString("RES");
+            String resId = row.getString("RES");
             String name = row.getString("TP");
-            //System.out.printf("%s %s %s:%d  \n",dbf_id,res_id,name,name.length());
             Res res = new Res();
-            res.setId(Integer.parseInt(res_id));
-            if(!name.equals("") && name!=null && !res_id.equals("") && res_id!=null) {
-                //todo: исправить создание ТП
-                Tp tp = new Tp(name, dbfId, null,false);
+            res.setId(Integer.parseInt(resId));
+            if(!name.equals("") && name!=null && !resId.equals("") && resId!=null) {
+                Tp tp = new Tp(name, dbfId, null,false, res.getId());
                 List<Fider> newFiderListForCurrentTp = new ArrayList<>();
                 for(Fider fider :fiderList){
                     Fider newFider = new Fider();
@@ -167,7 +165,7 @@ public class DBFManager {
                 tpMap.put(dbfId,tp);
 
             } else {
-                logger.warn("ТП с панраметрами [COD:{} TP:{} RES:{}] - этот объект нельзя записать в базу данных.", dbfId, name, res_id);
+                logger.warn("ТП с панраметрами [COD:{} TP:{} RES:{}] - этот объект нельзя записать в базу данных.", dbfId, name, resId);
             }
 
         }

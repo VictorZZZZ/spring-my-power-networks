@@ -1,110 +1,132 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<!-- BEGIN HEAD -->
 <head>
-    <meta charset="UTF-8">
-    <title>Application</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
-    <link th:href="@{/css/assets/global/css/components-md.min.css}" rel="stylesheet" id="style_components" type="text/css" />
+    <meta charset="utf-8"/>
+
+    <title th:text="${title!=null} ? ${title} :'СМС Оповещение абонентов'">СМС оповещение Абонентов</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+
+    <th:block th:insert="~{mandatory_styles :: link}"></th:block>
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link th:href="@{/css/assets/global/plugins/jstree/dist/themes/default/style.min.css}" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
     <script th:src="@{/js/jquery.js}"></script>
-    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
+
+
 </head>
-<body>
-<style>
-    .input-group-text{line-height: 1;}
-</style>
+<!-- END HEAD -->
 
-<div class="container">
-    <div th:replace="~{navigation :: navigation(file)}" />
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-full-width page-md">
+<div class="page-wrapper">
+    <!-- BEGIN HEADER -->
+    <div th:replace="~{nav :: nav(Home)}"/>
+    <!-- END HEADER -->
+    <!-- BEGIN HEADER & CONTENT DIVIDER -->
+    <div class="clearfix"></div>
+    <!-- END HEADER & CONTENT DIVIDER -->
+    <!-- BEGIN CONTAINER -->
+    <div class="page-container">
+        <div class="page-content-wrapper">
+            <!-- BEGIN CONTENT BODY -->
+            <div class="page-content">
 
-    <div th:fragment="steps(activeStep)">
-        <div class="mt-element-step">
-            <div class="row step-thin">
-                <div class="col-md-4 bg-grey mt-step-col done">
-                    <div class="mt-step-number bg-white font-grey">1</div>
-                    <div class="mt-step-title uppercase font-grey-cascade">Загрузка файлов из DBF</div>
-                    <div class="mt-step-content font-grey-cascade">Загрузите файлы KARTTP.DBF, KARTFID.DBF, RES.DBF</div>
-                </div>
-                <div class="col-md-4 bg-grey mt-step-col" th:classappend="${(activeStep == 'step_2' ? 'active' : '') + (activeStep == 'step_3' ? 'done' : '')}">
-                    <div class="mt-step-number bg-white font-grey">2</div>
-                    <div class="mt-step-title uppercase font-grey-cascade">Импорт в Базу данных</div>
-                    <div class="mt-step-content font-grey-cascade">Проверьте ошибки и запустите импорт</div>
-                </div>
-                <div class="col-md-4 bg-grey mt-step-col" th:classappend="${activeStep == 'step_3' ? 'active' : ''}">
-                    <div class="mt-step-number bg-white font-grey">3</div>
-                    <div class="mt-step-title uppercase font-grey-cascade">Результаты загрузки</div>
-                    <div class="mt-step-content font-grey-cascade">Просмотр процесса загрузки</div>
-                </div>
+                <!-- todo Pagination -->
+
+                <div class="container">
+                        <div th:fragment="steps(activeStep)">
+                            <div class="mt-element-step">
+                                <div class="row step-thin">
+                                    <div class="col-md-4 bg-grey mt-step-col done">
+                                        <div class="mt-step-number bg-white font-grey">1</div>
+                                        <div class="mt-step-title uppercase font-grey-cascade">Загрузка файлов из DBF</div>
+                                        <div class="mt-step-content font-grey-cascade">Загрузите файлы KARTTP.DBF, KARTFID.DBF, RES.DBF</div>
+                                    </div>
+                                    <div class="col-md-4 bg-grey mt-step-col" th:classappend="${(activeStep == 'step_2' ? 'active' : '') + (activeStep == 'step_3' ? 'done' : '')}">
+                                        <div class="mt-step-number bg-white font-grey">2</div>
+                                        <div class="mt-step-title uppercase font-grey-cascade">Импорт в Базу данных</div>
+                                        <div class="mt-step-content font-grey-cascade">Проверьте ошибки и запустите импорт</div>
+                                    </div>
+                                    <div class="col-md-4 bg-grey mt-step-col" th:classappend="${activeStep == 'step_3' ? 'active' : ''}">
+                                        <div class="mt-step-number bg-white font-grey">3</div>
+                                        <div class="mt-step-title uppercase font-grey-cascade">Результаты загрузки</div>
+                                        <div class="mt-step-content font-grey-cascade">Просмотр процесса загрузки</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:replace="~{flashMessages :: flash}" />
+
+
+
+
+
+                        <h1>Загрузка файлов</h1>
+                        <div class="container">
+                            <div class="row">
+
+                                <form action="#" method="POST" enctype="multipart/form-data" th:action="@{/importFromDbf/}">
+                                    <h3>ТП</h3>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">{KARTTP.DBF}</span>
+                                            </div>
+                                            <div class="custom-file">
+                                                <input type="file" name="tpFile" class="custom-file-input" id="tpFileField">
+                                                <label class="custom-file-label" for="tpFileField">Выберите файл</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h3>Фидера</h3>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">{KARTFID.DBF}</span>
+                                            </div>
+                                            <div class="custom-file">
+                                                <input type="file" name="fiderFile" class="custom-file-input" id="fiderFileField">
+                                                <label class="custom-file-label" for="fiderFileField">Выберите файл</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h3>Абоненты</h3>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">{RES.DBF}</span>
+                                            </div>
+                                            <div class="custom-file">
+                                                <input type="file" name="abonentFile" class="custom-file-input" id="abonentFileField">
+                                                <label class="custom-file-label" for="abonentFileField">Выберите файл</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input class="btn btn-outline-info" type="submit" value="Загрузить файлы" />
+                                </form>
+
+                            </div>
+
+                            <div>
+                                <ul th:if="${files}">
+
+                                    <li th:each="file : ${files}">
+                                        <a th:href="${file}" th:text="${file}" />
+                                    </li>
+
+                                </ul>
+                            </div>
+                            </div>
+                        </div>
             </div>
         </div>
     </div>
-
-    <div th:replace="~{flashMessages :: flash}" />
-
-
-
-
-
-    <h1>Загрузка файлов</h1>
-    <div class="container">
-        <div class="row">
-
-            <form action="#" method="POST" enctype="multipart/form-data" th:action="@{/importFromDbf/}">
-                <h3>ТП</h3>
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">{KARTTP.DBF}</span>
-                        </div>
-                        <div class="custom-file">
-                            <input type="file" name="tpFile" class="custom-file-input" id="tpFileField">
-                            <label class="custom-file-label" for="tpFileField">Выберите файл</label>
-                        </div>
-                    </div>
-                </div>
-                <h3>Фидера</h3>
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">{KARTFID.DBF}</span>
-                        </div>
-                        <div class="custom-file">
-                            <input type="file" name="fiderFile" class="custom-file-input" id="fiderFileField">
-                            <label class="custom-file-label" for="fiderFileField">Выберите файл</label>
-                        </div>
-                    </div>
-                </div>
-                <h3>Абоненты</h3>
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">{RES.DBF}</span>
-                        </div>
-                        <div class="custom-file">
-                            <input type="file" name="abonentFile" class="custom-file-input" id="abonentFileField">
-                            <label class="custom-file-label" for="abonentFileField">Выберите файл</label>
-                        </div>
-                    </div>
-                </div>
-                <input class="btn btn-outline-info" type="submit" value="Загрузить файлы" />
-            </form>
-
-        </div>
-
-        <div>
-            <ul th:if="${files}">
-
-                <li th:each="file : ${files}">
-                    <a th:href="${file}" th:text="${file}" />
-                </li>
-
-            </ul>
-        </div>
-        </div>
-    </div>
-
-
-
 </div>
+
+
 
 <script type="application/javascript">
     $('input[type="file"]').change(function(e){
@@ -115,7 +137,6 @@
     });
 
 </script>
-
-<script th:src="@{/js/bootstrap.bundle.js}"></script>
+<th:block th:insert="~{mandatory_styles :: script}"></th:block>
 </body>
 </html>

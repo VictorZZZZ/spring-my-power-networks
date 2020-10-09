@@ -73,6 +73,7 @@ public class TpService {
             Tp bufferTp = tpRepository.findTopByDbfId(tp.getDbfId());
             if(bufferTp!=null) {
                 tp.setId(bufferTp.getId());
+                tp.setPart(bufferTp.getPart());
             } else {
                 listToSave.add(tp);
             }
@@ -90,7 +91,7 @@ public class TpService {
     @Transactional
     public List<String> updateBackCouples(List<Tp> tpList) {
         List<String> resultList = new ArrayList<>();
-        resultList.add("Синхронизация базы Базы данных ТП...");
+        resultList.add("Синхронизация обрытных пар ТП...");
         logger.info("Проверка обратных пар...");
         List<Tp> listFromBase = tpRepository.findAllByResIdOrderByName(tpList.get(0).getRes());
         List<Tp> listToDelete = new ArrayList<>();

@@ -44,11 +44,12 @@ public class Tp {
     public Tp() {
     }
 
-    public Tp(String name, int dbfId, Part part,boolean inputManually) {
+    public Tp(String name, int dbfId, Part part,boolean inputManually, Integer resId) {
         this.name = name;
         this.dbfId = dbfId;
         this.part = part;
         this.inputManually = inputManually;
+        this.resId = resId;
     }
 
     public Long getId() {

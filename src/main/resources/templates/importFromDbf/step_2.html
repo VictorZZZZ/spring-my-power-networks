@@ -1,65 +1,85 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<!-- BEGIN HEAD -->
 <head>
-    <meta charset="UTF-8">
-    <title>Application</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
-    <link th:href="@{/css/assets/global/css/components-md.min.css}" rel="stylesheet" id="style_components" type="text/css" />
+    <meta charset="utf-8"/>
+
+    <title th:text="${title!=null} ? ${title} :'СМС Оповещение абонентов'">СМС оповещение Абонентов</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+
+    <th:block th:insert="~{mandatory_styles :: link}"></th:block>
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link th:href="@{/css/assets/global/plugins/jstree/dist/themes/default/style.min.css}" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
     <script th:src="@{/js/jquery.js}"></script>
-    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
+
+
 </head>
-<body>
-<style>
-    .input-group-text{line-height: 1;}
-</style>
+<!-- END HEAD -->
 
-<div class="container">
-    <div th:replace="~{navigation :: navigation(file)}" />
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-full-width page-md">
+<div class="page-wrapper">
+    <!-- BEGIN HEADER -->
+    <div th:replace="~{nav :: nav(Home)}"/>
+    <!-- END HEADER -->
+    <!-- BEGIN HEADER & CONTENT DIVIDER -->
+    <div class="clearfix"></div>
+    <!-- END HEADER & CONTENT DIVIDER -->
+    <!-- BEGIN CONTAINER -->
+    <div class="page-container">
+        <div class="page-content-wrapper">
+            <!-- BEGIN CONTENT BODY -->
+            <div class="page-content">
 
-    <div th:replace="~{importFromDbf/step_1 :: steps(step_2)}" />
+                <!-- todo Pagination -->
 
-    <div th:replace="~{flashMessages :: flash}" />
+                <div class="container">
+                    <div th:replace="~{importFromDbf/step_1 :: steps(step_2)}" />
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h4>Загружены Файлы</h4>
-                <ul class="list-group" th:if="${files}">
+                    <div th:replace="~{flashMessages :: flash}"/>
 
-                    <li class="list-group-item" th:each="file : ${files}">
-                        <a th:href="${file}" th:text="${file}" />
-                    </li>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>Загружены Файлы</h4>
+                                    <ul class="list-group" th:if="${files}">
 
-                </ul>
+                                        <li class="list-group-item" th:each="file : ${files}">
+                                            <a th:href="${file}" th:text="${file}" />
+                                        </li>
+
+                                    </ul>
+                                </div>
+                                <div class="col-md-12">
+                                    <p>
+                                        В файлах найдено:</br>
+                                        <span th:text="${countTp}"/> ТП;<br/>
+                                        <span th:text="${countFid}"/> Фидеров;<br/>
+                                        <span th:text="${countAbonents}"/> Абонентов;<br/>
+                                    </p>
+                                    <a class="btn btn-outline-info" th:href="@{/importFromDbf/step_3}">Импортировать в базу данных</a>
+                                </div>
+
+                            </div>
+                            <hr/>
+                            <div class="row" th:if="${logs}">
+                                <h4>Ошибки в файлах .DBF(Передать в Абонентский отдел для исправления)</h4>
+                                <br/>
+                                <ul class="list-group">
+                                    <li class="list-group-item" th:each="log : ${logs}">
+                                        <span th:text="${log}"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                </div>
             </div>
-            <div class="col-md-12">
-                <p>
-                    В файлах найдено:</br>
-                    <span th:text="${countTp}"/> ТП;<br/>
-                    <span th:text="${countFid}"/> Фидеров;<br/>
-                    <span th:text="${countAbonents}"/> Абонентов;<br/>
-                </p>
-                <a class="btn btn-outline-info" th:href="@{/importFromDbf/step_3}">Импортировать в базу данных</a>
-            </div>
-
-        </div>
-        <hr/>
-        <div class="row" th:if="${logs}">
-            <h4>Ошибки в файлах .DBF(Передать в Абонентский отдел для исправления)</h4>
-            <br/>
-            <ul class="list-group">
-                <li class="list-group-item" th:each="log : ${logs}">
-                    <span th:text="${log}"/>
-                </li>
-            </ul>
         </div>
     </div>
-
-
-
-
 </div>
 
-<script th:src="@{/js/bootstrap.bundle.js}"></script>
+<th:block th:insert="~{mandatory_styles :: script}"></th:block>
 </body>
 </html>
