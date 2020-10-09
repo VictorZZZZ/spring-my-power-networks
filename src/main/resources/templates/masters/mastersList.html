@@ -67,7 +67,7 @@
                             <td th:object="${master}">
                                 <span th:text="*{(homePhone!=null) ? homePhone:''+ ' ' + firstPhone + ' ' + secondPhone }" /><br/>
                             </td>
-                            <td>
+                            <td class="flexbox">
                                 <a class="btn green-dark btn-outline" th:href="@{'/cart/add/abonent/' + ${master.accountNumber}}">В рассылку</a>
                                 <a class="btn blue btn-outline" th:href="@{'/masters/edit/' + ${master.accountNumber}}">Изменить</a>
                                 <form th:object="${master}" th:action="@{'/masters/delete'}" th:method="delete">

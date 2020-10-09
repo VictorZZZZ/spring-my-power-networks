@@ -39,37 +39,37 @@ public class MainController {
         this.userService = userService;
     }
 
-    @GetMapping(value={"", "/", "/index"})
-    public String homePage(Model model, HttpSession session, Principal principal){
-        List<Res> allRes=resService.getAllRes();
-        if(principal != null) {
+    @GetMapping(value = {"", "/", "/index"})
+    public String homePage(Model model, HttpSession session, Principal principal) {
+        List<Res> allRes = resService.getAllRes();
+        if (principal != null) {
             long notLinkedTps;
             try {
                 notLinkedTps = tpService.countNotLinkedTpsByUser(principal.getName());
-                if(notLinkedTps>0) session.setAttribute("notLinkedTpsCount",notLinkedTps);
+                if (notLinkedTps > 0) session.setAttribute("notLinkedTpsCount", notLinkedTps);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        model.addAttribute("allRes",allRes);
+        model.addAttribute("allRes", allRes);
         return "index";
     }
 
-    @GetMapping(value={"/leadersList"})
-    public String showLeaders(Model model){
+    @GetMapping(value = {"/leadersList"})
+    public String showLeaders(Model model) {
         List<Lead> leaders = leadService.getAll();
-        model.addAttribute("leaders",leaders);
+        model.addAttribute("leaders", leaders);
         return "leaders/leadersList";
     }
 
-    @GetMapping(value={"/mastersList"})
+    @GetMapping(value = {"/mastersList"})
     public String showMasters(Model model, RedirectAttributes resdirectAttributes, HttpServletRequest request,
                               Principal principal,
-                              Authentication authentication){
+                              Authentication authentication) {
         try {
 
-            List<Master> masters= new ArrayList<>();
-            if(AuthDetails.listRoles(authentication).contains("ROLE_ADMIN")) {
+            List<Master> masters = new ArrayList<>();
+            if (AuthDetails.listRoles(authentication).contains("ROLE_ADMIN")) {
                 //Если Admin, то показывать заказы всех пользователей
                 masters = masterService.getAll();
             } else {
@@ -77,44 +77,44 @@ public class MainController {
                 Res res = user.getRes();
                 masters = masterService.getAllByRes(res);
             }
-            model.addAttribute("masters",masters);
+            model.addAttribute("masters", masters);
             //оставляем leaders/leadersList потому что он такой же
             return "masters/mastersList";
         } catch (Exception e) {
             e.printStackTrace();
-            resdirectAttributes.addFlashAttribute("messageError","");
+            resdirectAttributes.addFlashAttribute("messageError", "");
             return "redirect:/";
         }
 
     }
 
-    @GetMapping(value={"/importPage"})
-    public String importPage(Model model){
+    @GetMapping(value = {"/importPage"})
+    public String importPage(Model model) {
         return "importPage";
     }
 
-    @GetMapping(value={"/countAbonents/"})
-    public String countAbonentsThread(RedirectAttributes redirectAttributes,HttpServletRequest request){
+    @GetMapping(value = {"/countAbonents/"})
+    public String countAbonentsThread(RedirectAttributes redirectAttributes, HttpServletRequest request) {
         //Запускаем пересчёт в новом потоке, чтобы не мешало работать
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 logger.info("Запущен процесс пересчета пользователей");
-                long startTime=System.currentTimeMillis();
+                long startTime = System.currentTimeMillis();
                 resService.countAbonents(1); //22 секунды 11000 абонентов
                 resService.countAbonents(2); // 128 секунд 28000 абонентов
                 resService.countAbonents(3);//133 секунды 28000 абонентов
                 resService.countAbonents(4); // 199 секунд 147000 абонентов
                 long endTime = System.currentTimeMillis();
-                logger.info("Пересчёт пользователей закончен. Время выполнения {} секунд",(endTime-startTime)/1000F);
+                logger.info("Пересчёт пользователей закончен. Время выполнения {} секунд", (endTime - startTime) / 1000F);
                 redirectAttributes.addFlashAttribute("Пересчет абонентов закончен");
             }
         });
         t.start();
 
 
-        redirectAttributes.addFlashAttribute("messageInfo","Запущен процесс пересчёта пользователей");
-        return "redirect:"+request.getHeader("Referer");
+        redirectAttributes.addFlashAttribute("messageInfo", "Запущен процесс пересчёта пользователей");
+        return "redirect:" + request.getHeader("Referer");
     }
 
 

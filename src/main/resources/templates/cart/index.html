@@ -17,6 +17,7 @@
 
     <style>
         .insert_template{cursor:pointer;}
+        .cart-button{width:100%;margin-top: 32px;}
     </style>
 </head>
 <!-- END HEAD -->
@@ -44,14 +45,20 @@
                         <form action="#" th:action="@{/cart/createOrder}" th:object="${order}" method="post" th:if="${cartItems.size()>0}"
                           onsubmit="return confirm('Вы действительно хотите отправить эту рассылку СМС?');">
                         <div class="form-row">
-                            <div class="form-group col-md-10">
+                            <div class="form-group col-md-9">
                                 <label>Сообщение СМС</label>
                                 <textarea rows="10" id="msg_text" class="form-control" th:field="*{message}" replace="Текст сообщения"></textarea>
                                 <small class="form-text text-danger" th:each="err : ${#fields.errors('message')}" th:text="${err}" />
                             </div>
-                            <div class="form-group col-md-2">
-                                <a class="btn blue" href="#" data-toggle="modal" data-target="#templateWindow" title="Добавить из шаблона" style="margin-top: 32px;">
+                            <div class="form-group col-md-3">
+                                <a class="btn blue cart-button" href="#" data-toggle="modal" data-target="#templateWindow" title="Добавить из шаблона">
                                     Шаблоны
+                                </a>
+                                <a class="btn blue cart-button" th:href="@{/leaders/broadcast}" title="Добавить к рассылке номера руководства">
+                                    Добавить номера руководства
+                                </a>
+                                <a class="btn blue cart-button" th:href="@{/cart/addMasters}" title="Добавить к рассылке мастеров">
+                                    Добавить мастеров <span th:text="${res.name}">РЭС</span>
                                 </a>
                             </div>
                         </div>

@@ -1,10 +1,10 @@
 package net.energo.grodno.pes.smsSender.utils.smsAPI;
 
-import net.energo.grodno.pes.smsSender.utils.importFromDbf.DBFManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -14,16 +14,19 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class SmsAPI {
     private static Logger logger = LoggerFactory.getLogger(SmsAPI.class);
 
+    @Value("${smsApi.user:Grodnoenergo}")
     private static final String smsUser = "Grodnoenergo";
+    @Value("${smsApi.password:r9359538}")
     private static final String smsPassword = "r9359538";
-    private static String smsFrom = "Elektroseti";
+    @Value("${smsApi.from:Elektroseti}")
+    private static final String smsFrom = "Elektroseti";
     private int smsValid = 86400;
     private static String checkBalanceURL = "https://userarea.sms-assistent.by/api/v1/credits/plain";
     private static String smsSendURL = "https://userarea.sms-assistent.by/api/v1/json";
@@ -33,12 +36,8 @@ public class SmsAPI {
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
-    public static void main(String[] args) throws InterruptedException, SmsSenderErrorException, IOException {
-        //
-    }
-
     //отправка СМС
-    public static List<SmsResponse> sendSms(List<String> numbers,String message) throws IOException, InterruptedException, SmsSenderErrorException {
+    public static List<SmsResponse> sendSms(List<String> numbers, String message) throws IOException, InterruptedException, SmsSenderErrorException {
         //готовим JSON
         JSONObject jsonBody = prepareJSON(numbers, message);
 
@@ -51,10 +50,10 @@ public class SmsAPI {
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        logger.info("Адрес запроса {}",smsSendURL);
+        logger.info("Адрес запроса {}", smsSendURL);
 
-        logger.info("Статус:{},Ответ:{}",response.statusCode(),response.body());
-        if(response.statusCode()==200) {
+        logger.info("Статус:{},Ответ:{}", response.statusCode(), response.body());
+        if (response.statusCode() == 200) {
             //Если всё ОК
             return parseResponse(response.body());
         } else {
@@ -79,25 +78,24 @@ public class SmsAPI {
 
 
         JSONObject respJson = new JSONObject(response);
-        if(!respJson.isNull("error")) {
+        if (!respJson.isNull("error")) {
             throw new SmsSenderErrorException(respJson.getInt("error"));
         }
 
         JSONArray jsonArray = respJson.getJSONObject("message").getJSONArray("msg");
-        List<SmsResponse> smsResponses=new ArrayList<>();
-        for(int i = 0; i < jsonArray.length() ; i++){
+        List<SmsResponse> smsResponses = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
             SmsResponse smsResp = new SmsResponse(
                     jsonArray.getJSONObject(i).getLong("sms_id"),
                     jsonArray.getJSONObject(i).getInt("sms_count"),
                     jsonArray.getJSONObject(i).getInt("operator"),
                     jsonArray.getJSONObject(i).getInt("error_code"),
-                    ((Long)jsonArray.getJSONObject(i).getLong("recipient")).toString());
+                    ((Long) jsonArray.getJSONObject(i).getLong("recipient")).toString());
             smsResponses.add(smsResp);
         }
 
         return smsResponses;
     }
-
 
 
     //Проверка статуса СМС
@@ -116,7 +114,7 @@ public class SmsAPI {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         logger.info("Ответ:" + response.body());
-        if(response.statusCode()==200) {
+        if (response.statusCode() == 200) {
             //Если всё ОК
             return parseStatusResponse(response.body());
         } else {
@@ -133,13 +131,13 @@ public class SmsAPI {
 //                          {"sms_id":886146114,"sms_count":"1","operator":"2","sms_status":"Delivered","recipient":"+375292589344"}]}}
 
         JSONObject respJson = new JSONObject(response);
-        if(!respJson.isNull("error")) {
+        if (!respJson.isNull("error")) {
             throw new SmsSenderErrorException(respJson.getInt("error"));
         }
 
         JSONArray jsonArray = respJson.getJSONObject("status").getJSONArray("msg");
-        List<StatusResponse> statusResponses=new ArrayList<>();
-        for(int i = 0; i < jsonArray.length() ; i++){
+        List<StatusResponse> statusResponses = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
             StatusResponse smsResp = new StatusResponse(
                     jsonArray.getJSONObject(i).getLong("sms_id"),
                     jsonArray.getJSONObject(i).getInt("sms_count"),
@@ -155,23 +153,24 @@ public class SmsAPI {
 
     private static JSONObject prepareJSON(List<String> numbers, String message) {
         JSONObject jsonBody = new JSONObject();
-        jsonBody.put("login",smsUser);
-        jsonBody.put("password",smsPassword);
-        jsonBody.put("command","sms_send");
+        jsonBody.put("login", smsUser);
+        jsonBody.put("password", smsPassword);
+        jsonBody.put("command", "sms_send");
 
         JSONObject jsonDefault = new JSONObject();
-        jsonDefault.put("sender",smsFrom);
-        jsonDefault.put("sms_text",message);
+        jsonDefault.put("sender", smsFrom);
+        jsonDefault.put("sms_text", message);
 
         JSONArray jsonMsg = new JSONArray();
-        for (String number: numbers) {
-            jsonMsg.put((new JSONObject()).put("recipient",number));
+        List<String> nonDuplicatedNumbers = numbers.stream().distinct().collect(Collectors.toList());
+        for (String number : nonDuplicatedNumbers) {
+            jsonMsg.put((new JSONObject()).put("recipient", number));
         }
 
         JSONObject jsonMessage = new JSONObject();
-        jsonMessage.put("default",jsonDefault);
-        jsonMessage.put("msg",jsonMsg);
-        jsonBody.put("message",jsonMessage);
+        jsonMessage.put("default", jsonDefault);
+        jsonMessage.put("msg", jsonMsg);
+        jsonBody.put("message", jsonMessage);
 
         logger.info(jsonBody.toString());
 
@@ -180,21 +179,21 @@ public class SmsAPI {
 
     private static JSONObject prepareJSON4Statuses(List<Long> longList) {
         JSONObject jsonBody = new JSONObject();
-        jsonBody.put("login",smsUser);
-        jsonBody.put("password",smsPassword);
-        jsonBody.put("command","statuses");
+        jsonBody.put("login", smsUser);
+        jsonBody.put("password", smsPassword);
+        jsonBody.put("command", "statuses");
 
         JSONArray smsIdArray = new JSONArray();
-        for(Long smsId:longList){
-            if(smsId instanceof Long) {
+        for (Long smsId : longList) {
+            if (smsId instanceof Long) {
                 smsIdArray.put((new JSONObject()).put("sms_id", smsId.toString()));
             }
         }
 
         JSONObject msg = new JSONObject();
-        msg.put("msg",smsIdArray);
+        msg.put("msg", smsIdArray);
 
-        jsonBody.put("status",msg);
+        jsonBody.put("status", msg);
 
         logger.info(jsonBody.toString());
 
@@ -204,8 +203,8 @@ public class SmsAPI {
 
     public static String checkBalance() throws IOException, InterruptedException {
         //https://userarea.sms-assistent.by/api/v1/credits/plain?user=Grodnoenergo&password=r9359538
-        String requestURL = checkBalanceURL+"?user="+smsUser+"&password="+smsPassword;
-        logger.info("Request Balance:{}",requestURL);
+        String requestURL = checkBalanceURL + "?user=" + smsUser + "&password=" + smsPassword;
+        logger.info("Request Balance:{}", requestURL);
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create(requestURL))
@@ -213,10 +212,22 @@ public class SmsAPI {
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        logger.info("Response.statusCode():{}",response.statusCode());
-        logger.info("Response.body:{}",response.body());
+        logger.info("Response.statusCode():{}", response.statusCode());
+        logger.info("Response.body:{}", response.body());
 
         return response.body();
 
+    }
+
+    public String getSmsUser() {
+        return smsUser;
+    }
+
+    public String getSmsPassword() {
+        return smsPassword;
+    }
+
+    public String getSmsFrom() {
+        return smsFrom;
     }
 }

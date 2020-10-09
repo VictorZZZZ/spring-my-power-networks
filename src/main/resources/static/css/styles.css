@@ -1,3 +1,15 @@
-.row{margin-bottom:15px;}
-.modal-dialog{max-width:900px;}
-.insert_template{cursor:pointer}
+.row {
+    margin-bottom: 15px;
+}
+
+.modal-dialog {
+    max-width: 900px;
+}
+
+.insert_template {
+    cursor: pointer
+}
+
+.flexbox {
+    display: flex;
+}
