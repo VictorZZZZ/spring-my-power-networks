@@ -120,7 +120,7 @@ public class AbonentService {
         List<Abonent> listToDelete = new ArrayList<>();
         List<String> resultList = new ArrayList<>();
         resultList.add("Синхронизация базы Базы данных Абонентов.....");
-        List<Abonent> listFromBase = findAllByResId(abonentList.get(0).getFider().getTp().getRes().getId());
+        List<Abonent> listFromBase = findAllByResId(abonentList.get(0).getFider().getTp().getResId());
         int counter = 0;
         for (Abonent abonentFromBase: listFromBase) {
             boolean found=false;

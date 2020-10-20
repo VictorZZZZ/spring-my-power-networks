@@ -1,5 +1,5 @@
 /**
-  Количество СМС за период
+  Количество СМС за период в РЭСе
   */
 
 create or replace function sms_count(date_from timestamptz, date_to timestamptz, resId int)

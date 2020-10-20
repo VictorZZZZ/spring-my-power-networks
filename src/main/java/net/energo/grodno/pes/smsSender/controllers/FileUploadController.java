@@ -141,7 +141,6 @@ public class FileUploadController {
         }
         resultOfImport.addAll(fiderService.updateAll(fidersList));
         resultOfImport.addAll(abonentService.updateAll(abonentList));
-        //System.out.printf("%d абонентов \n", counter);
         long endTime = System.currentTimeMillis(); //Get the end Time
         float processTime = (endTime-startTime)/(1000F);
         resultOfImport.add("Время обработки "+processTime+" секунд");

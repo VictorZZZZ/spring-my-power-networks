@@ -1,9 +1,9 @@
 package net.energo.grodno.pes.smsSender.Services;
 
-import net.energo.grodno.pes.smsSender.entities.Abonent;
 import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
 import net.energo.grodno.pes.smsSender.entities.users.User;
+import net.energo.grodno.pes.smsSender.repositories.ResRepository;
 import net.energo.grodno.pes.smsSender.repositories.TpRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,12 +24,14 @@ import java.util.regex.Pattern;
 @Service
 public class TpService {
     Logger logger = LoggerFactory.getLogger(TpService.class);
+    private ResRepository resRepository;
     private TpRepository tpRepository;
     private FiderService fiderService;
     private UserService userService;
 
     @Autowired
-    public TpService(TpRepository tpRepository, FiderService fiderService, UserService userService) {
+    public TpService(ResRepository resRepository, TpRepository tpRepository, FiderService fiderService, UserService userService) {
+        this.resRepository = resRepository;
         this.tpRepository = tpRepository;
         this.fiderService = fiderService;
         this.userService = userService;
@@ -93,9 +95,13 @@ public class TpService {
         List<String> resultList = new ArrayList<>();
         resultList.add("Синхронизация обрытных пар ТП...");
         logger.info("Проверка обратных пар...");
-        List<Tp> listFromBase = tpRepository.findAllByResIdOrderByName(tpList.get(0).getRes());
+        Res res = resRepository.getOne(tpList.get(0).getResId());
+        List<Tp> listFromBase = tpRepository.findAllByResIdOrderByName(res);
         List<Tp> listToDelete = new ArrayList<>();
         for (Tp tp: listFromBase) {
+            if(tp.getId()==686){
+                System.out.println("После этого может быть ошибка");
+            }
             boolean foundTp=false;
             for(Tp compareTp:tpList){
                 if(tp.getId()==compareTp.getId()){

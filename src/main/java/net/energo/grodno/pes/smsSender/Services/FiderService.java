@@ -7,6 +7,8 @@ import net.energo.grodno.pes.smsSender.entities.Tp;
 import net.energo.grodno.pes.smsSender.repositories.FiderRepository;
 import net.energo.grodno.pes.smsSender.repositories.ResRepository;
 import net.energo.grodno.pes.smsSender.repositories.TpRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.List;
 
 @Service
 public class FiderService {
+    Logger logger = LoggerFactory.getLogger(FiderService.class);
     private FiderRepository fiderRepository;
     private TpRepository tpRepository;
     private ResRepository resRepository;
@@ -73,12 +76,12 @@ public class FiderService {
     }
 
     @Transactional
-    private List<String> updateBackCouples(List<Fider> fidersList) {
+    public List<String> updateBackCouples(List<Fider> fidersList) {
         //Обратное сравнение базы со списком фидеров
         List<Fider> listToDelete = new ArrayList<>();
         List<String> resultList = new ArrayList<>();
         resultList.add("Синхронизация базы Базы данных Фидеров.....");
-        List<Fider> listFromBase = findAllByResId(fidersList.get(0).getTp().getRes().getId());
+        List<Fider> listFromBase = findAllByResId(fidersList.get(0).getTp().getResId());
         for (Fider fiderFromBase: listFromBase) {
             boolean found=false;
             for(Fider fiderFromList:fidersList){
@@ -112,7 +115,8 @@ public class FiderService {
         return resultList;
     }
 
-    private List<Fider> findAllByResId(Integer id) {
+    @Transactional
+    public List<Fider> findAllByResId(Integer id) {
         List<Fider> fidersList =new ArrayList<>();
         List<Abonent> abonentList =new ArrayList<>();
         Res res = resRepository.getOne(id);

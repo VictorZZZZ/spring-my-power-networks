@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,4 +40,6 @@ public interface TpRepository extends JpaRepository<Tp,Long> {
     Page<Tp> findAllByResIdAndPartIdOrderByName(Integer resId, Long partId, Pageable pageable);
 
     Long countByResIdAndPartIdOrderByName(Integer id,Long partId);
+
+    List<Tp> findAllByResId(Integer resId);
 }

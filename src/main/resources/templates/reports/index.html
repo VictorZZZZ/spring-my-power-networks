@@ -44,7 +44,7 @@
                                 <span class="caption-helper">ГРОДНЕНСКИЕ ЭЛЕКТРОСЕТИ</span>
                             </div>
                             <div class="inputs">
-                                Стоимость одного смс сообщения <span th:text="${smsPrice}руб." class="badge badge-primary">0,1 руб.</span>
+                                Стоимость одного смс сообщения <span th:text="${smsPrice + ' руб.'}" class="badge badge-primary">0,1 руб.</span>
                             </div>
                         </div>
                         <div class="portlet-body">
@@ -53,8 +53,8 @@
                                     <div class="display">
                                         <div class="number">
                                             <h3 class="font-green-sharp">
-                                                <span data-counter="counterup" data-value="7800">7800</span>
-                                                <small class="font-green-sharp">$</small>
+                                                <span data-counter="counterup" th:attr="data-value=${totalSms}">7800</span>
+                                                <small class="font-green-sharp">смс</small>
                                             </h3>
                                             <small>ОТПРАВЛЕНО В ЭТОМ МЕСЯЦЕ</small>
                                         </div>
@@ -80,7 +80,7 @@
                                     <div class="display">
                                         <div class="number">
                                             <h3 class="font-red-haze">
-                                                <span data-counter="counterup" data-value="1349">1349</span>
+                                                <span data-counter="counterup" th:attr="data-value=${totalMoney}">1349</span>
                                             </h3>
                                             <small>Потрачено денег</small>
                                         </div>
@@ -106,7 +106,7 @@
                                     <div class="display">
                                         <div class="number">
                                             <h3 class="font-blue-sharp">
-                                                <span data-counter="counterup" data-value="567">567</span>
+                                                <span data-counter="counterup" th:attr="data-value=${totalAbonents}">567</span>
                                             </h3>
                                             <small>КОЛИЧЕСТВО АБОНЕНТОВ</small>
                                         </div>
@@ -130,375 +130,102 @@
                         </div>
 
                     </div>
-                    <div class="row portlet light">
-                        <!-- ГГРЭС -->
-                        <div class="portlet-title">
-                            <div class="caption">
-                                <i class="icon-paper-plane font-blue-chambray"></i>
-                                <span class="caption-subject bold font-blue-chambray uppercase"> Городский РЭС </span>
-                            </div>
-                            <div class="inputs">
-                                <div class="btn-group">
-                                    <a class="btn btn-circle btn-default " th:href="@{/reports/}">
-                                        <i class="fa fa-file-text-o"></i> Подробный отчёт по ГГРЭС
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="portlet-body">
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="dashboard-stat2 ">
-                                    <div class="display">
-                                        <div class="number">
-                                            <h3 class="font-green-sharp">
-                                                <span data-counter="counterup" data-value="7800">7800</span>
-                                                <small class="font-green-sharp">$</small>
-                                            </h3>
-                                            <small>ОТПРАВЛЕНО В ЭТОМ МЕСЯЦЕ</small>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="icon-pie-chart"></i>
-                                        </div>
-                                    </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
-                                                <span style="width: 76%;" class="progress-bar progress-bar-success green-sharp">
-                                                    <span class="sr-only">76% progress</span>
-                                                </span>
-                                        </div>
-                                        <div class="status">
-                                            <div class="status-title"> progress </div>
-                                            <div class="status-number"> 76% </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="dashboard-stat2 ">
-                                    <div class="display">
-                                        <div class="number">
-                                            <h3 class="font-red-haze">
-                                                <span data-counter="counterup" data-value="1349">1349</span>
-                                            </h3>
-                                            <small>Потрачено денег</small>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="icon-like"></i>
-                                        </div>
-                                    </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
-                                                <span style="width: 85%;" class="progress-bar progress-bar-success red-haze">
-                                                    <span class="sr-only">85% change</span>
-                                                </span>
-                                        </div>
-                                        <div class="status">
-                                            <div class="status-title"> change </div>
-                                            <div class="status-number"> 85% </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="dashboard-stat2 ">
-                                    <div class="display">
-                                        <div class="number">
-                                            <h3 class="font-blue-sharp">
-                                                <span data-counter="counterup" data-value="567">567</span>
-                                            </h3>
-                                            <small>КОЛИЧЕСТВО АБОНЕНТОВ</small>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="icon-basket"></i>
-                                        </div>
-                                    </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
-                                                <span style="width: 45%;" class="progress-bar progress-bar-success blue-sharp">
-                                                    <span class="sr-only">45% grow</span>
-                                                </span>
-                                        </div>
-                                        <div class="status">
-                                            <div class="status-title"> grow </div>
-                                            <div class="status-number"> 45% </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- СРЭС -->
-                        <div class="portlet-title">
-                            <div class="caption">
-                                <i class="icon-paper-plane font-blue-chambray"></i>
-                                <span class="caption-subject bold font-blue-chambray uppercase"> Сельский РЭС </span>
-                            </div>
-                            <div class="inputs">
-                                <div class="btn-group">
-                                    <a class="btn btn-circle btn-default " th:href="@{/reports/}">
-                                        <i class="fa fa-file-text-o"></i> Подробный отчёт по ГГРЭС
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="portlet-body">
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="dashboard-stat2 ">
-                                    <div class="display">
-                                        <div class="number">
-                                            <h3 class="font-green-sharp">
-                                                <span data-counter="counterup" data-value="7800">7800</span>
-                                                <small class="font-green-sharp">$</small>
-                                            </h3>
-                                            <small>ОТПРАВЛЕНО В ЭТОМ МЕСЯЦЕ</small>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="icon-pie-chart"></i>
-                                        </div>
-                                    </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
-                                                <span style="width: 76%;" class="progress-bar progress-bar-success green-sharp">
-                                                    <span class="sr-only">76% progress</span>
-                                                </span>
-                                        </div>
-                                        <div class="status">
-                                            <div class="status-title"> progress </div>
-                                            <div class="status-number"> 76% </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="dashboard-stat2 ">
-                                    <div class="display">
-                                        <div class="number">
-                                            <h3 class="font-red-haze">
-                                                <span data-counter="counterup" data-value="1349">1349</span>
-                                            </h3>
-                                            <small>Потрачено денег</small>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="icon-like"></i>
-                                        </div>
-                                    </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
-                                                <span style="width: 85%;" class="progress-bar progress-bar-success red-haze">
-                                                    <span class="sr-only">85% change</span>
-                                                </span>
-                                        </div>
-                                        <div class="status">
-                                            <div class="status-title"> change </div>
-                                            <div class="status-number"> 85% </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="dashboard-stat2 ">
-                                    <div class="display">
-                                        <div class="number">
-                                            <h3 class="font-blue-sharp">
-                                                <span data-counter="counterup" data-value="567">567</span>
-                                            </h3>
-                                            <small>КОЛИЧЕСТВО АБОНЕНТОВ</small>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="icon-basket"></i>
-                                        </div>
-                                    </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
-                                                <span style="width: 45%;" class="progress-bar progress-bar-success blue-sharp">
-                                                    <span class="sr-only">45% grow</span>
-                                                </span>
-                                        </div>
-                                        <div class="status">
-                                            <div class="status-title"> grow </div>
-                                            <div class="status-number"> 45% </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="row portlet light" th:each="resReport : ${report}">
 
-                        <!-- ЩРЭС -->
-                        <div class="portlet-title">
-                            <div class="caption">
-                                <i class="icon-paper-plane font-blue-chambray"></i>
-                                <span class="caption-subject bold font-blue-chambray uppercase"> Городский РЭС </span>
-                            </div>
-                        </div>
-                        <div class="portlet-body">
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="dashboard-stat2 ">
-                                    <div class="display">
-                                        <div class="number">
-                                            <h3 class="font-green-sharp">
-                                                <span data-counter="counterup" data-value="7800">7800</span>
-                                                <small class="font-green-sharp">$</small>
-                                            </h3>
-                                            <small>ОТПРАВЛЕНО В ЭТОМ МЕСЯЦЕ</small>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="icon-pie-chart"></i>
-                                        </div>
+                            <!-- ГГРЭС -->
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="icon-paper-plane font-blue-chambray"></i>
+                                    <span class="caption-subject bold font-blue-chambray uppercase" th:text="${resReport.key.name}"> Городский РЭС </span>
+                                </div>
+                                <div class="inputs">
+                                    <div class="btn-group">
+                                        <a class="btn btn-circle btn-default " th:href="@{/reports/}">
+                                            <i class="fa fa-file-text-o"></i> Подробный отчёт по <span th:text="${resReport.key.name}">ГГРЭС</span>
+                                        </a>
                                     </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                    <div class="dashboard-stat2 ">
+                                        <div class="display">
+                                            <div class="number">
+                                                <h3 class="font-green-sharp">
+                                                    <span data-counter="counterup"
+                                                          th:attr="data-value=${resReport.value.thisMonthSmsCount}"
+                                                          data-value="7800">7800
+                                                    </span>
+                                                </h3>
+                                                <small>ОТПРАВЛЕНО СМС В ЭТОМ МЕСЯЦЕ</small>
+                                            </div>
+                                            <div class="icon">
+                                                <i class="icon-pie-chart"></i>
+                                            </div>
+                                        </div>
+                                        <div class="progress-info">
+                                            <div class="progress">
                                                 <span style="width: 76%;" class="progress-bar progress-bar-success green-sharp">
                                                     <span class="sr-only">76% progress</span>
                                                 </span>
-                                        </div>
-                                        <div class="status">
-                                            <div class="status-title"> progress </div>
-                                            <div class="status-number"> 76% </div>
+                                            </div>
+                                            <div class="status">
+                                                <div class="status-title"> progress </div>
+                                                <div class="status-number"> 76% </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="dashboard-stat2 ">
-                                    <div class="display">
-                                        <div class="number">
-                                            <h3 class="font-red-haze">
-                                                <span data-counter="counterup" data-value="1349">1349</span>
-                                            </h3>
-                                            <small>Потрачено денег</small>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                    <div class="dashboard-stat2 ">
+                                        <div class="display">
+                                            <div class="number">
+                                                <h3 class="font-red-haze">
+                                                    <span data-counter="counterup"
+                                                          data-value="1349"
+                                                          th:attr="data-value=
+                                                          ${#numbers.formatDecimal(resReport.value.spentMoneyThisMonth,1,2)}">
+                                                        1349
+                                                    </span>
+                                                    <small class="font-green-sharp">руб.</small>
+                                                </h3>
+                                                <small>Потрачено денег</small>
+                                            </div>
+                                            <div class="icon">
+                                                <i class="fa fa-money" aria-hidden="true"></i>
+                                            </div>
                                         </div>
-                                        <div class="icon">
-                                            <i class="icon-like"></i>
-                                        </div>
-                                    </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
+                                        <div class="progress-info">
+                                            <div class="progress">
                                                 <span style="width: 85%;" class="progress-bar progress-bar-success red-haze">
-                                                    <span class="sr-only">85% change</span>
+                                                    <span class="sr-only">-85% change</span>
                                                 </span>
+                                            </div>
+                                            <div class="status">
+                                                <div class="status-title"> change </div>
+                                                <div class="status-number"> -85% </div>
+                                            </div>
                                         </div>
-                                        <div class="status">
-                                            <div class="status-title"> change </div>
-                                            <div class="status-number"> 85% </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                    <div class="dashboard-stat2 ">
+                                        <div class="display">
+                                            <div class="number">
+                                                <h3 class="font-blue-sharp">
+                                                    <span data-counter="counterup"
+                                                          th:attr="data-value=${resReport.value.abonentsCount}">567</span>
+                                                </h3>
+                                                <small>КОЛИЧЕСТВО АБОНЕНТОВ <span th:text="${resReport.key.name}">ГГРЭС</span></small>
+                                            </div>
+                                            <div class="icon">
+                                                <i class="fa fa-users" aria-hidden="true"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="dashboard-stat2 ">
-                                    <div class="display">
-                                        <div class="number">
-                                            <h3 class="font-blue-sharp">
-                                                <span data-counter="counterup" data-value="567">567</span>
-                                            </h3>
-                                            <small>КОЛИЧЕСТВО АБОНЕНТОВ</small>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="icon-basket"></i>
-                                        </div>
-                                    </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
-                                                <span style="width: 45%;" class="progress-bar progress-bar-success blue-sharp">
-                                                    <span class="sr-only">45% grow</span>
-                                                </span>
-                                        </div>
-                                        <div class="status">
-                                            <div class="status-title"> grow </div>
-                                            <div class="status-number"> 45% </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- БРЭС -->
-                        <div class="portlet-title">
-                            <div class="caption">
-                                <i class="icon-paper-plane font-blue-chambray"></i>
-                                <span class="caption-subject bold font-blue-chambray uppercase"> Городский РЭС </span>
-                            </div>
-                        </div>
-                        <div class="portlet-body">
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="dashboard-stat2 ">
-                                    <div class="display">
-                                        <div class="number">
-                                            <h3 class="font-green-sharp">
-                                                <span data-counter="counterup" data-value="7800">7800</span>
-                                                <small class="font-green-sharp">$</small>
-                                            </h3>
-                                            <small>ОТПРАВЛЕНО В ЭТОМ МЕСЯЦЕ</small>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="icon-pie-chart"></i>
-                                        </div>
-                                    </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
-                                                <span style="width: 76%;" class="progress-bar progress-bar-success green-sharp">
-                                                    <span class="sr-only">76% progress</span>
-                                                </span>
-                                        </div>
-                                        <div class="status">
-                                            <div class="status-title"> progress </div>
-                                            <div class="status-number"> 76% </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="dashboard-stat2 ">
-                                    <div class="display">
-                                        <div class="number">
-                                            <h3 class="font-red-haze">
-                                                <span data-counter="counterup" data-value="1349">1349</span>
-                                            </h3>
-                                            <small>Потрачено денег</small>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="icon-like"></i>
-                                        </div>
-                                    </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
-                                                <span style="width: 85%;" class="progress-bar progress-bar-success red-haze">
-                                                    <span class="sr-only">85% change</span>
-                                                </span>
-                                        </div>
-                                        <div class="status">
-                                            <div class="status-title"> change </div>
-                                            <div class="status-number"> 85% </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="dashboard-stat2 ">
-                                    <div class="display">
-                                        <div class="number">
-                                            <h3 class="font-blue-sharp">
-                                                <span data-counter="counterup" data-value="567">567</span>
-                                            </h3>
-                                            <small>КОЛИЧЕСТВО АБОНЕНТОВ</small>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="icon-basket"></i>
-                                        </div>
-                                    </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
-                                                <span style="width: 45%;" class="progress-bar progress-bar-success blue-sharp">
-                                                    <span class="sr-only">45% grow</span>
-                                                </span>
-                                        </div>
-                                        <div class="status">
-                                            <div class="status-title"> grow </div>
-                                            <div class="status-number"> 45% </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                 </div>

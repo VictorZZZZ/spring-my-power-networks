@@ -2,12 +2,28 @@ package net.energo.grodno.pes.smsSender.entities;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 
 @Entity
 @Table(name="order_items")
+@NamedStoredProcedureQuery(
+        name = "OrderItem.smsCount",
+        procedureName = "sms_count",
+        resultClasses = { Integer.class },
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Timestamp.class, name = "date_from"),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Timestamp.class, name = "date_to"),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "resid"),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, type = Integer.class, name = "report")
+        }
+)
+
 public class OrderItem {
 
     @Id
@@ -21,7 +37,7 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "abonent_id")
-    @Cascade(CascadeType.DELETE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Abonent abonent;
 
     @Column(name = "sms_id")
