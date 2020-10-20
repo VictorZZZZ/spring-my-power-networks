@@ -29,6 +29,7 @@ public class ResStatTest extends AbstractClass {
     }
 
     @Test
+    @Ignore
     public void countStat(){
         System.out.println("Старт:");
         long startTime=System.currentTimeMillis();

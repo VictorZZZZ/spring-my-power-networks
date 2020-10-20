@@ -5,6 +5,7 @@ import net.energo.grodno.pes.smsSender.entities.Res;
 import net.energo.grodno.pes.smsSender.entities.Tp;
 import net.energo.grodno.pes.smsSender.repositories.ResRepository;
 import net.energo.grodno.pes.smsSender.repositories.TpRepository;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -27,6 +28,7 @@ public class RemoveEmptyTp extends AbstractClass {
     @Test
     @Rollback(false) // Чтобы не откатывало изменения в базе
     @Transactional
+    @Ignore
     public void removeEmptyTp(){
         List<Tp> tpList = tpRepository.findAllByResId(4); //id res
         List<Tp> deleteList = new ArrayList<>();

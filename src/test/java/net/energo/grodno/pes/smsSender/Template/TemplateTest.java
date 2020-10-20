@@ -50,6 +50,7 @@ public class TemplateTest extends AbstractClass {
     }
 
     @Test
+    @Ignore
     public void getTemplates(){
         try {
             List<TextTemplate> templates = templateService.getAllByUser("user");

@@ -35,7 +35,11 @@
 
                 <div class="container">
                     <div th:replace="~{flashMessages :: flash}"/>
-                    <h2 class="page-title">Отчет на период с по </h2>
+                    <h2 class="page-title">
+                        Отчет на период
+                        с <span th:text="${#dates.format(firstDayOfThisMonth,'dd.MM.yyyy')}"/>
+                        по <span th:text="${#dates.format(today,'dd.MM.yyyy')}"/>
+                    </h2>
                     <div class="row portlet light">
                         <div class="portlet-title">
                             <div class="caption">
@@ -62,17 +66,6 @@
                                             <i class="icon-pie-chart"></i>
                                         </div>
                                     </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
-                                                <span style="width: 76%;" class="progress-bar progress-bar-success green-sharp">
-                                                    <span class="sr-only">76% progress</span>
-                                                </span>
-                                        </div>
-                                        <div class="status">
-                                            <div class="status-title"> progress </div>
-                                            <div class="status-number"> 76% </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
@@ -80,23 +73,15 @@
                                     <div class="display">
                                         <div class="number">
                                             <h3 class="font-red-haze">
-                                                <span data-counter="counterup" th:attr="data-value=${totalMoney}">1349</span>
+                                                <span data-counter="counterup"
+                                                      th:attr="data-value=${#numbers.formatDecimal(totalMoney,1,2)}">1349</span>
+                                                <small class="font-green-sharp">руб.</small>
+
                                             </h3>
                                             <small>Потрачено денег</small>
                                         </div>
                                         <div class="icon">
-                                            <i class="icon-like"></i>
-                                        </div>
-                                    </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
-                                                <span style="width: 85%;" class="progress-bar progress-bar-success red-haze">
-                                                    <span class="sr-only">85% change</span>
-                                                </span>
-                                        </div>
-                                        <div class="status">
-                                            <div class="status-title"> change </div>
-                                            <div class="status-number"> 85% </div>
+                                            <i class="fa fa-money" aria-hidden="true"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -111,18 +96,7 @@
                                             <small>КОЛИЧЕСТВО АБОНЕНТОВ</small>
                                         </div>
                                         <div class="icon">
-                                            <i class="icon-basket"></i>
-                                        </div>
-                                    </div>
-                                    <div class="progress-info">
-                                        <div class="progress">
-                                                <span style="width: 45%;" class="progress-bar progress-bar-success blue-sharp">
-                                                    <span class="sr-only">45% grow</span>
-                                                </span>
-                                        </div>
-                                        <div class="status">
-                                            <div class="status-title"> grow </div>
-                                            <div class="status-number"> 45% </div>
+                                            <i class="fa fa-users" aria-hidden="true"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -163,17 +137,6 @@
                                                 <i class="icon-pie-chart"></i>
                                             </div>
                                         </div>
-                                        <div class="progress-info">
-                                            <div class="progress">
-                                                <span style="width: 76%;" class="progress-bar progress-bar-success green-sharp">
-                                                    <span class="sr-only">76% progress</span>
-                                                </span>
-                                            </div>
-                                            <div class="status">
-                                                <div class="status-title"> progress </div>
-                                                <div class="status-number"> 76% </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
@@ -193,17 +156,6 @@
                                             </div>
                                             <div class="icon">
                                                 <i class="fa fa-money" aria-hidden="true"></i>
-                                            </div>
-                                        </div>
-                                        <div class="progress-info">
-                                            <div class="progress">
-                                                <span style="width: 85%;" class="progress-bar progress-bar-success red-haze">
-                                                    <span class="sr-only">-85% change</span>
-                                                </span>
-                                            </div>
-                                            <div class="status">
-                                                <div class="status-title"> change </div>
-                                                <div class="status-number"> -85% </div>
                                             </div>
                                         </div>
                                     </div>

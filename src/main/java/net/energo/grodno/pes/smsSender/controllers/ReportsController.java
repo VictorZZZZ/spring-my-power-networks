@@ -12,11 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Controller
 @RequestMapping("/reports")
@@ -37,10 +35,10 @@ public class ReportsController {
     public String index(Model model) {
         List<Res> resList = resService.getAllRes();
         HashMap<Res, ResStatistics> report = new HashMap<>();
-        AtomicInteger totalSms = new AtomicInteger();
-        AtomicReference<Double> totalMoney = new AtomicReference<>((double) 0);
-        AtomicLong totalAbonents = new AtomicLong();
-        resList.stream().forEach(res -> {
+        int totalSms = 0;
+        double totalMoney = 0.0;
+        long totalAbonents = 0;
+        for (Res res : resList) {
             ResStatistics resStatistics = new ResStatistics();
             resStatistics.setRes(res);
             int smsCount = reportService.getSmsCountForPeriodAndResId(
@@ -49,18 +47,21 @@ public class ReportsController {
                     res.getId()
             );
             resStatistics.setThisMonthSmsCount(smsCount);
-            totalSms.set(smsCount);
-            double spentMoney = resStatistics.getThisMonthSmsCount()*Double.valueOf(smsPrice);
+            totalSms += smsCount;
+            double spentMoney = resStatistics.getThisMonthSmsCount() * Double.valueOf(smsPrice);
             resStatistics.setSpentMoneyThisMonth(spentMoney);
-            totalMoney.set(spentMoney);
-            totalAbonents.addAndGet(res.getCachedAbonentsCount());
-            report.put(res,resStatistics);
-        });
-        model.addAttribute("totalSms",totalSms);
-        model.addAttribute("totalMoney",totalMoney);
-        model.addAttribute("totalAbonents",totalAbonents);
-        model.addAttribute("report",report);
+            totalMoney = totalMoney + spentMoney;
+            totalAbonents += res.getCachedAbonentsCount();
+            report.put(res, resStatistics);
+        }
+        ;
+        model.addAttribute("totalSms", totalSms);
+        model.addAttribute("totalMoney", totalMoney);
+        model.addAttribute("totalAbonents", totalAbonents);
+        model.addAttribute("report", report);
         model.addAttribute("smsPrice", smsPrice);
+        model.addAttribute("firstDayOfThisMonth",ZvvDates.firstDayofThisMonth());
+        model.addAttribute("today", new Date());
         return "reports/index";
     }
 }
