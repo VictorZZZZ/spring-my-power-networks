@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:v-on="http://www.w3.org/1999/xhtml">
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8"/>
+
+    <title th:text="${title!=null} ? ${title} :'СМС Оповещение абонентов'">СМС оповещение Абонентов</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+
+    <th:block th:insert="~{mandatory_styles :: link}"></th:block>
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link th:href="@{/css/assets/global/plugins/jstree/dist/themes/default/style.min.css}" rel="stylesheet"
+          type="text/css"/>
+    <!-- END PAGE LEVEL PLUGINS -->
+    <script th:src="@{/js/jquery.js}"></script>
+
+    <script th:src="@{/js/vue.js}"></script>
+    <script th:src="@{/js/axios.min.js}"></script>
+    <script th:src="@{/js/vue-router.js}"></script>
+
+</head>
+<!-- END HEAD -->
+
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-full-width page-md">
+<div class="page-wrapper">
+    <!-- BEGIN HEADER -->
+    <div th:replace="~{nav :: nav(Home)}"/>
+    <!-- END HEADER -->
+    <!-- BEGIN HEADER & CONTENT DIVIDER -->
+    <div class="clearfix"></div>
+    <!-- END HEADER & CONTENT DIVIDER -->
+    <!-- BEGIN CONTAINER -->
+    <div class="page-container">
+        <div class="page-content-wrapper">
+            <!-- BEGIN CONTENT BODY -->
+            <div class="page-content">
+
+                <div class="container">
+                    <div th:replace="~{flashMessages :: flash}"/>
+
+                    <div id="buttons_container" class="row">
+                        <div class="col-md-3" th:each="res : ${resList}">
+                            <button type="button" class="btn yellow-casablanca btn-lg width_100"
+                                    th:text="${res.name}" th:attr="'v-on:click'=${'getAndShowData('+res.id+')'}">
+                                th:attr="data-value=${resReport.value.thisMonthSmsCount}"
+
+                                ГГРЭС
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="portlet light portlet-fit bordered">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="icon-bubble font-dark"></i>
+                                <span id="title_info" class="caption-subject font-dark bold uppercase">
+                                    Отчет для {{ res.name }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="table-scrollable">
+                                <table class="table table-bordered table-hover" >
+                                    <thead>
+                                    <tr>
+                                        <th> #</th>
+                                        <th> Месяц</th>
+                                        <th> Отправлено СМС</th>
+                                        <th> Потрачено денег</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tblBody">
+                                        <tr v-for="line in lineList">
+                                            <td>{{line.id}}</td>
+
+                                            <td>{{line.monthName}}</td>
+                                            <td>{{line.smsCount}}</td>
+                                            <td>{{line.spentMoney}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:insert="~{mandatory_styles :: script}"></th:block>
+
+<!-- BEGIN THEME GLOBAL SCRIPTS -->
+<script th:src="@{/css/assets/global/scripts/app.min.js}" type="text/javascript"></script>
+<!-- END THEME GLOBAL SCRIPTS -->
+
+<!-- COUNTERUP -->
+<script type="text/javascript" th:src="@{/js/plugins/counterup/jquery.waypoints.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/plugins/counterup/jquery.counterup.min.js}"></script>
+
+<!-- !COUNTERUP -->
+
+
+<script>
+
+    var titleInfo = new Vue({
+        el: '#title_info',
+        data: {
+            res: {
+                id: 1,
+                name: 'ГГРЭС'
+            },
+        },
+        computed: {
+            today() {
+                return (new Date(Date.now())).toLocaleDateString();
+            }
+        }
+    });
+    const router = new VueRouter({
+        mode: 'history',
+        routes: []
+    })
+
+    var buttons = new Vue({
+        el: '#buttons_container',
+        methods: {
+            getAndShowData(newResId){
+                tblBody.resId = newResId;
+                const uri = 'http://localhost:8189/app/reports/detailed/getResStat?resId=' + tblBody.resId + '&lastMonth=' + tblBody.monthCount;
+
+                axios
+                    .get(uri)
+                    .then(response => (tblBody.lineList = response.data))
+                    .catch(error => console.log(error))
+            },
+            setMonthCount(newMontCount){
+                tblBody.monthCount=newMontCount;
+                this.getAndShowData(tblBody.resId);
+            }
+        }
+    });
+
+    var tblBody = new Vue({
+        router,
+        el: '#tblBody',
+        data() {
+            return {
+                lineList: null,
+                monthCount: 6,
+                resId: 1
+            }
+        },
+        mounted() {
+            this.resId = this.$route.query.resId;
+            const uri = 'http://localhost:8189/app/reports/detailed/getResStat?resId=' + this.resId + '&lastMonth=' + this.monthCount;
+            axios
+                .get(uri)
+                .then(response => (tblBody.lineList = response.data))
+                .catch(error => console.log(error));
+
+        },
+        updated() {
+            titleInfo.res.id = this.lineList[0].resId;
+            titleInfo.res.name = this.lineList[0].resName;
+        }
+    });
+
+</script>
+</body>
+</html>

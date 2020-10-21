@@ -106,7 +106,6 @@
                     </div>
                     <div class="row portlet light" th:each="resReport : ${report}">
 
-                            <!-- ГГРЭС -->
                             <div class="portlet-title">
                                 <div class="caption">
                                     <i class="icon-paper-plane font-blue-chambray"></i>
@@ -114,7 +113,7 @@
                                 </div>
                                 <div class="inputs">
                                     <div class="btn-group">
-                                        <a class="btn btn-circle btn-default " th:href="@{/reports/}">
+                                        <a class="btn btn-circle btn-default " th:href="@{'/reports/detailed?resId='+${resReport.key.id}}">
                                             <i class="fa fa-file-text-o"></i> Подробный отчёт по <span th:text="${resReport.key.name}">ГГРЭС</span>
                                         </a>
                                     </div>

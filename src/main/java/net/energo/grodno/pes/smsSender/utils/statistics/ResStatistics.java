@@ -16,9 +16,9 @@ public class ResStatistics {
 
     public Res res;
 
-    public int previousMonthSmsCount;
+    public Integer previousMonthSmsCount;
 
-    public int thisMonthSmsCount;
+    public Integer thisMonthSmsCount;
 
     public double spentMoneyThisMonth;
 
