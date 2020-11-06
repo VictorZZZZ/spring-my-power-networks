@@ -28,7 +28,6 @@ public class RemoveEmptyTp extends AbstractClass {
     @Test
     @Rollback(false) // Чтобы не откатывало изменения в базе
     @Transactional
-    @Ignore
     public void removeEmptyTp(){
         List<Tp> tpList = tpRepository.findAllByResId(4); //id res
         List<Tp> deleteList = new ArrayList<>();

@@ -130,7 +130,7 @@
         methods: {
             getAndShowData(newResId){
                 tblBody.resId = newResId;
-                const uri = 'http://localhost:8189/app/reports/detailed/getResStat?resId=' + tblBody.resId + '&lastMonth=' + tblBody.monthCount;
+                const uri = '/app/reports/detailed/getResStat?resId=' + tblBody.resId + '&lastMonth=' + tblBody.monthCount;
 
                 axios
                     .get(uri)
@@ -156,7 +156,7 @@
         },
         mounted() {
             this.resId = this.$route.query.resId;
-            const uri = 'http://localhost:8189/app/reports/detailed/getResStat?resId=' + this.resId + '&lastMonth=' + this.monthCount;
+            const uri = '/app/reports/detailed/getResStat?resId=' + this.resId + '&lastMonth=' + this.monthCount;
             axios
                 .get(uri)
                 .then(response => (tblBody.lineList = response.data))
