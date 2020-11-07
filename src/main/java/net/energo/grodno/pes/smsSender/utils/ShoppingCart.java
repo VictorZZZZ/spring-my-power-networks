@@ -147,8 +147,6 @@ public class ShoppingCart {
             User user = userService.findByUsername(principal.getName());
             order.setUser(user);
             List<SmsResponse> smsResponse = SmsAPI.sendSms(getNumbersForSms(),order.getMessage());
-//            List<SmsResponse> smsResponse = new ArrayList<SmsResponse>(Arrays.asList(new SmsResponse[]{new SmsResponse(1l, 2, 3, 4, "321321"),
-//                    new SmsResponse(2l, 2, 3, -5, "297819778")}));
             parseSmsResponse(smsResponse);
             orderService.saveOrderWithItems(order,items);
             items.clear();
@@ -161,21 +159,23 @@ public class ShoppingCart {
     }
 
     private void parseSmsResponse(List<SmsResponse> smsResponseList) {
+        List<OrderItem> newItemList = new ArrayList<>();
             for(SmsResponse smsResponse:smsResponseList){
-                for (int i = 0; i < items.size(); i++) {
-                    if(items.get(i).getAbonent().getFirstPhone().equals(smsResponse.getRecipientWithoutPrefix())
-                            || items.get(i).getAbonent().getSecondPhone().equals(smsResponse.getRecipientWithoutPrefix())){
-                        items.get(i).setSmsId(smsResponse.getSmsId());
-                        items.get(i).setSmsCount(smsResponse.getSmsCount());
-                        items.get(i).setOperator(smsResponse.getOperator());
-                        items.get(i).setRecipient(smsResponse.getRecipientWithoutPrefix());
-                        items.get(i).setErrorCode(smsResponse.getErrorCode());
-                        items.get(i).setSmsStatus(ErrorsTable.ERRORS.get(smsResponse.getErrorCode()));
-                        continue;
+                for (OrderItem item : items) {
+                    if (item.getAbonent().getFirstPhone().equals(smsResponse.getRecipientWithoutPrefix())
+                            || item.getAbonent().getSecondPhone().equals(smsResponse.getRecipientWithoutPrefix())) {
+                        item.setSmsId(smsResponse.getSmsId());
+                        item.setSmsCount(smsResponse.getSmsCount());
+                        item.setOperator(smsResponse.getOperator());
+                        item.setRecipient(smsResponse.getRecipientWithoutPrefix());
+                        item.setErrorCode(smsResponse.getErrorCode());
+                        item.setSmsStatus(ErrorsTable.ERRORS.get(smsResponse.getErrorCode()));
+                        newItemList.add(item);
+                        break;
                     }
                 }
             }
-        System.out.println(items);
+        items = newItemList;
     }
 
     private List<String> getNumbersForSms() {

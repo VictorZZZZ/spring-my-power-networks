@@ -163,6 +163,7 @@ public class SmsAPI {
 
         JSONArray jsonMsg = new JSONArray();
         List<String> nonDuplicatedNumbers = numbers.stream().distinct().collect(Collectors.toList());
+        logger.warn("Из {} номеров выбрано {} все дублированные очищены.", numbers.size(),nonDuplicatedNumbers.size());
         for (String number : nonDuplicatedNumbers) {
             jsonMsg.put((new JSONObject()).put("recipient", number));
         }
