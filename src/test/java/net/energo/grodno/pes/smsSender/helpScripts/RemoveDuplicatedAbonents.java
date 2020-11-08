@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RemoveDuplicated extends AbstractClass {
+public class RemoveDuplicatedAbonents extends AbstractClass {
 
     @Autowired
     private FiderService fiderService;
@@ -20,20 +20,26 @@ public class RemoveDuplicated extends AbstractClass {
     @Test
     @Transactional
     public void removeDuplicatedAbonents(){
-        Fider fider= fiderService.getOne(6697L);
+        Fider fider= fiderService.getOne(705L);
         List<Abonent> abonentList = fider.getAbonents();
         List<String> numbersToClean = new ArrayList<>();
         System.out.printf("\n\n\n\n %d - abonents in List",fider.getAbonents().size());
 
-        for(Abonent abonent:abonentList){
-            for(Abonent compareAbonent: abonentList){
+
+        for(int i=0;i<abonentList.size();i++){
+            Abonent abonent = abonentList.get(i);
+            for(Abonent compareAbonent: abonentList.subList(i+1,abonentList.size())){
                 if(abonent.getFirstPhone().equals(compareAbonent.getFirstPhone())
-                        && abonent.getAccountNumber()!=compareAbonent.getAccountNumber()){
+                        && abonent.getAccountNumber()!=compareAbonent.getAccountNumber()
+                        && !abonent.getFirstPhone().equals("0")){
                     numbersToClean.add(abonent.getFirstPhone());
+                    break;
                 }
             }
         }
+        System.out.printf("\n list to clean \n %s", numbersToClean);
         numbersToClean = numbersToClean.stream().distinct().collect(Collectors.toList());
+        System.out.printf("\n list to clean \n %s", numbersToClean);
         System.out.printf("\n %d - abonents to Remove \n\n\n\n",numbersToClean.size());
         System.out.printf("\n %d - abonents left \n\n\n\n",abonentList.size());
     }
