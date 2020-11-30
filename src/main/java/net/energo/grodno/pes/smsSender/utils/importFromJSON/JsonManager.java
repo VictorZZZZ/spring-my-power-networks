@@ -1,13 +1,11 @@
 package net.energo.grodno.pes.smsSender.utils.importFromJSON;
 
 import net.energo.grodno.pes.smsSender.entities.*;
-import net.energo.grodno.pes.smsSender.utils.smsAPI.SmsResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,7 +13,7 @@ import java.util.List;
 
 @Component
 public class JsonManager {
-    private static final String jsonFile = "spravochniki.json";
+    private static final String JSON_FILE = "spravochniki.json";
 
     public static void main(String[] args) {
         try {
@@ -27,7 +25,7 @@ public class JsonManager {
     }
 
     public static List<Res> readJson() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(jsonFile));
+        BufferedReader reader = new BufferedReader(new FileReader(JSON_FILE));
         StringBuilder stringBuilder = new StringBuilder();
         String str;
         while ((str = reader.readLine()) != null) {

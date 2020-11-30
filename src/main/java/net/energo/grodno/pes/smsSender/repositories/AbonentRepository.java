@@ -2,10 +2,8 @@ package net.energo.grodno.pes.smsSender.repositories;
 
 import net.energo.grodno.pes.smsSender.entities.Abonent;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
 
 @Repository

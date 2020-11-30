@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RemoveEmptyTp extends AbstractClass {
+    private static final Integer GSRES_ID = 2;
+    private static final Integer GGRES_ID = 4;
     @Autowired
     private TpRepository tpRepository;
     @Autowired
@@ -29,7 +31,7 @@ public class RemoveEmptyTp extends AbstractClass {
     @Rollback(false) // Чтобы не откатывало изменения в базе
     @Transactional
     public void removeEmptyTp(){
-        List<Tp> tpList = tpRepository.findAllByResId(4); //id res
+        List<Tp> tpList = tpRepository.findAllByResId(GGRES_ID); //id res
         List<Tp> deleteList = new ArrayList<>();
         for(Tp tp: tpList){
             if(tp.getFiders().size()==0){

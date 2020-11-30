@@ -28,6 +28,7 @@ public class DBFManager {
     private Map<Integer,Tp> tpMap = new HashMap<>();
     private List<Abonent> abonentList= new ArrayList<>();
     private List<String> errors= new ArrayList<>();
+    private String resIdForDBF="";
 
 
     public DBFManager() {
@@ -142,11 +143,12 @@ public class DBFManager {
         DBFRow row;
 
         while ((row = tpReader.nextRow()) != null) {
+            String resId = row.getString("RES");
+            if(resIdForDBF.isEmpty()) resIdForDBF=resId;
             String cod = row.getString("COD");
             if(!cod.isEmpty())
                 cod = cod.replaceAll("\\s+",""); //убирает пробелы из строки
-            int dbfId = Integer.parseInt(cod);
-            String resId = row.getString("RES");
+            int dbfId = Integer.parseInt(resIdForDBF+cod);
             String name = row.getString("TP");
             Res res = new Res();
             res.setId(Integer.parseInt(resId));
@@ -215,7 +217,7 @@ public class DBFManager {
             int tpCode=0;
             if(!codTp.isEmpty()) {
                 codTp = codTp.replaceAll("\\s+","");//убирает пробелы из строки
-                tpCode =Integer.parseInt(codTp);
+                tpCode =Integer.parseInt(resIdForDBF+codTp);
             } else {
                 logger.warn("Абонент не привязан к ТП(или имеет пустое значение в поле COD_TP: {} {} {} {} {} {} {} {} {}"
                         ,accountNumber,surname,name,middlename,homePhone,firstPhone,secondPhone,tpCode,opora);
