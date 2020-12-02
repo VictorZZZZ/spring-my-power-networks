@@ -7,7 +7,6 @@ import net.energo.grodno.pes.smsSender.entities.Tp;
 import net.energo.grodno.pes.smsSender.repositories.AbonentRepository;
 import net.energo.grodno.pes.smsSender.repositories.ResRepository;
 import net.energo.grodno.pes.smsSender.repositories.TpRepository;
-import net.energo.grodno.pes.smsSender.utils.importFromDbf.DBFManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class AbonentService {
@@ -98,7 +98,6 @@ public class AbonentService {
     public List<String> updateAll(List<Abonent> abonentList) {
         List<String> resultList = new ArrayList<>();
         resultList.add("Обработка абонентов...");
-        List<Abonent> listToSave = new ArrayList<>();
         for(Abonent abonent:abonentList){
             //поиск абонентов для присвоения поля notes из Базы(Остальные данные считаем верными из DBF)
             Abonent bufferAbonent = abonentRepository.findOneByAccountNumber(abonent.getAccountNumber());
@@ -121,7 +120,6 @@ public class AbonentService {
         List<String> resultList = new ArrayList<>();
         resultList.add("Синхронизация базы Базы данных Абонентов.....");
         List<Abonent> listFromBase = findAllByResId(abonentList.get(0).getFider().getTp().getResId());
-        int counter = 0;
         for (Abonent abonentFromBase: listFromBase) {
             boolean found=false;
             for(Abonent abonentFromList:abonentList){
@@ -134,7 +132,7 @@ public class AbonentService {
                 if(!abonentFromBase.getInputManually()) {
                     //Если абонент не введён вручную, то можно его удалить
                     listToDelete.add(abonentFromBase);
-                    logger.info("Будет удален абоент {}",abonentFromBase.toShortString());
+                    logger.info("Будет удален абонент {}",abonentFromBase.toShortString());
                     resultList.add("Удален Абонент: " + abonentFromBase.toShortString());
                 } else {
                     //Сообщить о том, что найдены абоненты введённые вручную
