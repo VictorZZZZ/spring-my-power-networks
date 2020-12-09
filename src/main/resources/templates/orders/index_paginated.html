@@ -57,7 +57,7 @@
 
                                 <td th:text="${order.id}"/>
                                 <td sec:authorize="hasRole('ROLE_ADMIN')" th:text="${order.user.username}"/>
-                                <td th:text="${order.message}"/>
+                                <td style="word-wrap: anywhere;" th:text="${order.message}"/>
                                 <td>
                                     <span th:text="${#dates.format(order.created, 'dd.MM.yyyy HH:mm')}"/><br/>
                                 </td>

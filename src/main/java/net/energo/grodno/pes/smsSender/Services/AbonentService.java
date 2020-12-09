@@ -120,6 +120,7 @@ public class AbonentService {
         List<String> resultList = new ArrayList<>();
         resultList.add("Синхронизация базы Базы данных Абонентов.....");
         List<Abonent> listFromBase = findAllByResId(abonentList.get(0).getFider().getTp().getResId());
+        logger.info("В Базе Данного РЭСа {} абонентов. В списке для сравнения {}",listFromBase.size(),abonentList.size());
         for (Abonent abonentFromBase: listFromBase) {
             boolean found=false;
             for(Abonent abonentFromList:abonentList){
@@ -128,7 +129,7 @@ public class AbonentService {
                     break;
                 }
             }
-            if(found==false) {
+            if(!found) {
                 if(!abonentFromBase.getInputManually()) {
                     //Если абонент не введён вручную, то можно его удалить
                     listToDelete.add(abonentFromBase);
@@ -142,6 +143,7 @@ public class AbonentService {
                 }
             }
         }
+        logger.info("Из Базы будет удалено {} Абонентов т.к. они не соответствовали списку из ДБФ файла",listToDelete.size());
         if(listToDelete.size()>0) {
             abonentRepository.deleteAll(listToDelete);
             //abonentRepository.deleteInBatch(listToDelete);
@@ -155,7 +157,7 @@ public class AbonentService {
     }
 
 
-    private List<Abonent> findAllByResId(Integer id) {
+    public List<Abonent> findAllByResId(Integer id) {
         List<Abonent> abonentList =new ArrayList<>();
         Res res = resRepository.getOne(id);
         List<Tp> tpList = tpRepository.findAllByResIdOrderByName(res);

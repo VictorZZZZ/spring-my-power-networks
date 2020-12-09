@@ -84,6 +84,10 @@ public class TpService {
             tpRepository.saveAll(listToSave);
             resultList.add("В базу добавлено "+listToSave.size()+" новых ТП");
             logger.info("В базу добавлено {} новых ТП",listToSave.size());
+        } else {
+            String msg = "В базу не добавлено новых ТП";
+            resultList.add(msg);
+            logger.info(msg);
         }
         resultList.add("Обработано "+tpList.size()+" ТП");
         resultList.addAll(updateBackCouples(tpList));
@@ -117,8 +121,6 @@ public class TpService {
                     resultList.add("Удалено ТП: " + tp.toShortString());
                 } else {
                     //Сообщить о том, что найдены ТП введённые вручную
-                    logger.warn("ТП: "
-                            + tp.toShortString()+"было введено(или изменено) вручную, и может быть удалено только вручную.");
                     resultList.add("ТП: "
                             + tp.toShortString()+"было введено(или изменено) вручную, и может быть удалено только вручную.");
                 }
@@ -148,13 +150,14 @@ public class TpService {
             if(tpList.size()==1) {
                 Tp tpFromBase = tpList.get(0);
                 tp.setId(tpFromBase.getId());
+                tp.setDbfId(tpFromBase.getDbfId());
                 tpRepository.save(tp);
                 fiderService.deepSave(tp.getFiders());
                 continue;
             }
 
             //Берестовица
-            if(tp.getResId()==1){
+            /*if(tp.getResId()==1){
                 //System.out.printf("%s \n",tp.getName());
                 Pattern pattern = Pattern.compile("[а-яА-Я]{1,2}\\-\\d{1,3}:");//от 1 до 2 русских букв  + знак "тире" + 1 или 3 цифры+ :
                 Matcher matcher = pattern.matcher(tp.getName());
@@ -187,9 +190,11 @@ public class TpService {
                 }
 
             }
-
+*/
             //Cельский РЭС и Щучинский РЭС
-            if(tp.getResId()==2 || tp.getResId()==3){
+            /*
+            if(tp.getResId()==2
+                    || tp.getResId()==3){
                 Pattern pattern = Pattern.compile("[а-яА-Я]{1,2}\\-\\d{1,3}");//от 1 до 2 русских букв  + знак "тире" + 1 или 3 цифры
                 Matcher matcher = pattern.matcher(tp.getName());
                 if(matcher.find()){
@@ -221,6 +226,8 @@ public class TpService {
                     }
                 }
             }
+            */
+
 
             //ГГРЭС
             if(tp.getResId()==4){
@@ -238,6 +245,7 @@ public class TpService {
                     }
                 }
             }
+
 
         }
     }
