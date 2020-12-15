@@ -45,8 +45,9 @@ public class OrdersController {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(50);
         Page<Order> orderPage;
-        if (AuthDetails.listRoles(authentication).contains("ROLE_ADMIN")) {
-            //Если Admin, то показывать заказы всех пользователей
+        if (AuthDetails.listRoles(authentication).contains("ROLE_ADMIN")
+                || AuthDetails.listRoles(authentication).contains("ROLE_SHOWALLSMS")) {
+            //Если Admin или ROLE_SHOWALLSMS, то показывать заказы всех пользователей
             orderPage = orderService.findAllPaginated(PageRequest.of(currentPage - 1, pageSize));
         } else {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();

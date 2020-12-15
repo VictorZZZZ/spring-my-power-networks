@@ -18,6 +18,10 @@ import java.util.Optional;
 
 @Service
 public class ResService {
+    public static final Integer GSRES_ID = 2;
+    public static final Integer GGRES_ID = 4;
+    public static final Integer SCHRES_ID = 3;
+
     private ResRepository resRepository;
     private SubstationService substationService;
     private static Logger logger = LoggerFactory.getLogger(ResService.class);
@@ -88,8 +92,10 @@ public class ResService {
         System.out.println("Res:Deep Save");
         for (Res res : resList) {
             if (getOne(res.getId()) != null) {
-                System.out.println(res.getName() + " найден.");
-                substationService.deepSave(res.getSubstations());
+                if (res.getId().equals(GSRES_ID)){
+                    logger.info("{} найден.",res.getName());
+                    substationService.deepSave(res.getSubstations());
+                }
             }
         }
     }

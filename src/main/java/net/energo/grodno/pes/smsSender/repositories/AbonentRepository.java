@@ -2,6 +2,7 @@ package net.energo.grodno.pes.smsSender.repositories;
 
 import net.energo.grodno.pes.smsSender.entities.Abonent;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,4 +23,7 @@ public interface AbonentRepository extends JpaRepository<Abonent,Long> {
     List<Abonent> findAllByAccountNumber(Long search);
 
     Abonent findByFiderIdAndSurname(Long fiderId, String surname);
+
+    @Query("SELECT a from Abonent a WHERE a.firstPhone like '% %' OR a.secondPhone like '% %'")
+    List<Abonent> findWithSpacesInNumbers();
 }

@@ -184,9 +184,9 @@ public class ShoppingCart {
             String firstPhone=item.getAbonent().getFirstPhone();
             String secondPhone=item.getAbonent().getSecondPhone();
             if(!firstPhone.isEmpty() && !firstPhone.equals("0") && firstPhone.length()>=PHONE_LENGTH){
-                result.add(firstPhone);
+                result.add(firstPhone.replaceAll("\\s+",""));//Удалить лишние пробелы
             } else if(!secondPhone.isEmpty() && !secondPhone.equals("0") && secondPhone.length()>=PHONE_LENGTH){
-                result.add(secondPhone);
+                result.add(secondPhone.replaceAll("\\s+",""));//Удалить лишние пробелы
             }
         }
         return result;

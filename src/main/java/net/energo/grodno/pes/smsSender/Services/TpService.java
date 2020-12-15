@@ -192,9 +192,9 @@ public class TpService {
             }
 */
             //Cельский РЭС и Щучинский РЭС
-            /*
-            if(tp.getResId()==2
-                    || tp.getResId()==3){
+
+            if(tp.getResId().equals(ResService.GSRES_ID)
+                    /*|| tp.getResId()==3*/){
                 Pattern pattern = Pattern.compile("[а-яА-Я]{1,2}\\-\\d{1,3}");//от 1 до 2 русских букв  + знак "тире" + 1 или 3 цифры
                 Matcher matcher = pattern.matcher(tp.getName());
                 if(matcher.find()){
@@ -207,11 +207,9 @@ public class TpService {
                         tpRepository.save(tp);
                         fiderService.deepSave(tp.getFiders());
                     }
-                    if(tpList.size()==0){
-                        if(tp.getFiders().get(0).getAbonents().size()>0){
+                    if(tpList.isEmpty() && (tp.getFiders().get(0).getAbonents().isEmpty())){
                             tpRepository.save(tp);
                             fiderService.deepSave(tp.getFiders());
-                        }
                     }
                     if(tpList.size()>1){
                         System.out.printf("%5s - %40s\t%d\n",matcher.group(),tp.getName(),tpList.size());
@@ -226,10 +224,11 @@ public class TpService {
                     }
                 }
             }
-            */
+
 
 
             //ГГРЭС
+            /*
             if(tp.getResId()==4){
                 tpList = tpRepository.findByNameAndResId(tp.getName(),tp.getRes().getId());
                 if(tpList.size()==1){
@@ -244,7 +243,7 @@ public class TpService {
                         fiderService.deepSave(tp.getFiders());
                     }
                 }
-            }
+            }*/
 
 
         }

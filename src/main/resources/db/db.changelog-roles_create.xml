@@ -15,5 +15,9 @@
             <column name="id">2</column>
             <column name="name">ROLE_USER</column>
         </insert>
+        <insert tableName="roles">
+            <column name="id">3</column>
+            <column name="name">ROLE_SHOWALLSMS</column>
+        </insert>
     </changeSet>
 </databaseChangeLog>
