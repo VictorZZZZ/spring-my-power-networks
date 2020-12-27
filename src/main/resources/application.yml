@@ -1,0 +1,53 @@
+#настройки сервера
+server:
+  port : 8189
+  servlet:
+    context-path: /app
+
+#настройки JPA
+spring:
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        ddl-auto: update
+        dialect: org.hibernate.dialect.PostgreSQL94Dialect
+        temp:
+          use_jdbc_metadata_defaults : false
+        jdbc:
+          batch_size: 1000
+          format_sql: true
+
+  #База данных
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    #url=jdbc:postgresql://10.182.128.188:5432/smsSender_base?currentSchema=public
+    url: jdbc:postgresql://localhost:5432/smsSender_base?currentSchema=public
+    username: postgres
+    password: root
+  #Загрузка файлов
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+#Logging
+logging:
+  level:
+    jdbc:
+      sqlonly: info
+      resultsettable: info
+      sqltiming: fatal
+      audit: fatal
+      resultset: fatal
+      connection: fatal
+
+#SmsAPI settings
+smsApi:
+  user: xxx
+  password: xxx
+  from : xxx
+
+  #Стоимость смс
+sms:
+  price: 0.0145
