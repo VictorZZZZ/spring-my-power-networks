@@ -1,5 +1,6 @@
 package net.energo.grodno.pes.smsSender.utils.smsAPI;
 
+import lombok.Getter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -18,18 +19,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Getter
 public class SmsAPI {
     private static Logger logger = LoggerFactory.getLogger(SmsAPI.class);
 
-    @Value("${smsApi.user:Grodnoenergo}")
-    private static final String smsUser = "Grodnoenergo";
-    @Value("${smsApi.password:r9359538}")
-    private static final String smsPassword = "r9359538";
-    @Value("${smsApi.from:Elektroseti}")
-    private static final String smsFrom = "Elektroseti";
+    @Value("${smsApi.user}")
+    private String smsUser;
+    @Value("${smsApi.password}")
+    private String smsPassword;
+    @Value("${smsApi.from}")
+    private String smsFrom;
     private int smsValid = 86400;
-    private static String checkBalanceURL = "https://userarea.sms-assistent.by/api/v1/credits/plain";
-    private static String smsSendURL = "https://userarea.sms-assistent.by/api/v1/json";
+    private static final String CHECK_BALANCE_URL = "https://userarea.sms-assistent.by/api/v1/credits/plain";
+    private static final String SMS_SEND_URL = "https://userarea.sms-assistent.by/api/v1/json";
 
     private static final HttpClient httpClient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_1_1)
@@ -37,20 +39,20 @@ public class SmsAPI {
             .build();
 
     //отправка СМС
-    public static List<SmsResponse> sendSms(List<String> numbers, String message) throws IOException, InterruptedException, SmsSenderErrorException {
+    public List<SmsResponse> sendSms(List<String> numbers, String message) throws IOException, InterruptedException, SmsSenderErrorException {
         //готовим JSON
         JSONObject jsonBody = prepareJSON(numbers, message);
 
         // add json header
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody.toString()))
-                .uri(URI.create(smsSendURL))
+                .uri(URI.create(SMS_SEND_URL))
                 .setHeader("User-Agent", "ELEKTROSETI HttpClient Bot") // add request header
                 .header("Content-Type", "application/json")
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        logger.info("Адрес запроса {}", smsSendURL);
+        logger.info("Адрес запроса {}", SMS_SEND_URL);
 
         logger.info("Статус:{},Ответ:{}", response.statusCode(), response.body());
         if (response.statusCode() == 200) {
@@ -99,21 +101,21 @@ public class SmsAPI {
 
 
     //Проверка статуса СМС
-    public static List<StatusResponse> checkStatuses(List<Long> strList) throws SmsSenderErrorException, IOException, InterruptedException {
+    public List<StatusResponse> checkStatuses(List<Long> strList) throws SmsSenderErrorException, IOException, InterruptedException {
         //готовим JSON
         JSONObject jsonBody = prepareJSON4Statuses(strList);
 
         // add json header
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody.toString()))
-                .uri(URI.create(smsSendURL))
+                .uri(URI.create(SMS_SEND_URL))
                 .setHeader("User-Agent", "ELEKTROSETI HttpClient Bot") // add request header
                 .header("Content-Type", "application/json")
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-        logger.info("Ответ:" + response.body());
+        logger.info("Ответ: {}", response.body());
         if (response.statusCode() == 200) {
             //Если всё ОК
             return parseStatusResponse(response.body());
@@ -151,7 +153,7 @@ public class SmsAPI {
         return statusResponses;
     }
 
-    private static JSONObject prepareJSON(List<String> numbers, String message) {
+    private JSONObject prepareJSON(List<String> numbers, String message) {
         JSONObject jsonBody = new JSONObject();
         jsonBody.put("login", smsUser);
         jsonBody.put("password", smsPassword);
@@ -178,7 +180,7 @@ public class SmsAPI {
         return jsonBody;
     }
 
-    private static JSONObject prepareJSON4Statuses(List<Long> longList) {
+    private JSONObject prepareJSON4Statuses(List<Long> longList) {
         JSONObject jsonBody = new JSONObject();
         jsonBody.put("login", smsUser);
         jsonBody.put("password", smsPassword);
@@ -202,9 +204,9 @@ public class SmsAPI {
         return jsonBody;
     }
 
-    public static String checkBalance() throws IOException, InterruptedException {
+    public String checkBalance() throws IOException, InterruptedException {
         //https://userarea.sms-assistent.by/api/v1/credits/plain?user=Grodnoenergo&password=r9359538
-        String requestURL = checkBalanceURL + "?user=" + smsUser + "&password=" + smsPassword;
+        String requestURL = CHECK_BALANCE_URL + "?user=" + smsUser + "&password=" + smsPassword;
         logger.info("Request Balance:{}", requestURL);
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -218,17 +220,5 @@ public class SmsAPI {
 
         return response.body();
 
-    }
-
-    public String getSmsUser() {
-        return smsUser;
-    }
-
-    public String getSmsPassword() {
-        return smsPassword;
-    }
-
-    public String getSmsFrom() {
-        return smsFrom;
     }
 }

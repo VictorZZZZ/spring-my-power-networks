@@ -9,7 +9,7 @@ import net.energo.grodno.pes.smsSender.utils.smsAPI.SmsSenderErrorException;
 import net.energo.grodno.pes.smsSender.utils.smsAPI.StatusResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,17 +24,19 @@ import java.util.List;
 @Controller
 @RequestMapping("/sms")
 public class SmsController {
-    OrderService orderService;
+    private final OrderService orderService;
+    private final SmsAPI smsAPI;
 
     @Autowired
-    public SmsController(OrderService orderService) {
+    public SmsController(OrderService orderService, SmsAPI smsAPI) {
         this.orderService = orderService;
+        this.smsAPI = smsAPI;
     }
 
-    @RequestMapping(value = {"/checkBalance"}, method = RequestMethod.GET)
+    @GetMapping(value = {"/checkBalance"})
     public String checkBalance(HttpServletRequest request,RedirectAttributes redirectAttributes){
         try {
-            String balance = SmsAPI.checkBalance();
+            String balance = smsAPI.checkBalance();
             redirectAttributes.addFlashAttribute("messageInfo","Текущий баланс: "+balance+"руб.");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -44,7 +46,7 @@ public class SmsController {
         return "redirect:"+request.getHeader("Referer");
     }
 
-    @RequestMapping(value = {"/checkStatuses/order/{id}"}, method = RequestMethod.GET)
+    @GetMapping(value = {"/checkStatuses/order/{id}"})
     public String checkStatuses(HttpServletRequest request, RedirectAttributes redirectAttributes,
                                 @PathVariable("id") Long id){
         try {
@@ -54,7 +56,7 @@ public class SmsController {
             for (OrderItem item:orderItems) {
                 smsIds.add(item.getSmsId());
             }
-            List<StatusResponse> statusResponses = SmsAPI.checkStatuses(smsIds);
+            List<StatusResponse> statusResponses = smsAPI.checkStatuses(smsIds);
             int count = parseStatusResponses(orderItems, statusResponses);
             orderService.saveOrderWithItems(order,orderItems);
             redirectAttributes.addFlashAttribute("messageInfo","Обновлено " + count+ " статусов смс.");

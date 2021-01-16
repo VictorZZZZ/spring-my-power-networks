@@ -33,9 +33,10 @@ public class ShoppingCart {
     private LineService lineService;
     private SectionService sectionService;
     private SubstationService substationService;
+    private final SmsAPI smsAPI;
 
     @Autowired
-    public ShoppingCart(TpService tpService, FiderService fiderService, AbonentService abonentService, OrderService orderService, UserService userService, PartService partService, LineService lineService, SectionService sectionService, SubstationService substationService) {
+    public ShoppingCart(TpService tpService, FiderService fiderService, AbonentService abonentService, OrderService orderService, UserService userService, PartService partService, LineService lineService, SectionService sectionService, SubstationService substationService, SmsAPI smsAPI) {
         this.tpService = tpService;
         this.fiderService = fiderService;
         this.abonentService = abonentService;
@@ -45,6 +46,7 @@ public class ShoppingCart {
         this.lineService = lineService;
         this.sectionService = sectionService;
         this.substationService = substationService;
+        this.smsAPI = smsAPI;
         this.items=new ArrayList<>();
 
     }
@@ -67,7 +69,7 @@ public class ShoppingCart {
         try {
             //проверка на абонента в корзине
             Optional<OrderItem> optOrderItem = items.stream()
-                    .filter(orderItem -> {return orderItem.getAbonent().getAccountNumber().equals(id);})
+                    .filter(orderItem -> orderItem.getAbonent().getAccountNumber().equals(id))
                     .findFirst();
             if(!optOrderItem.isPresent()){
                 //если абонент существует
@@ -146,7 +148,7 @@ public class ShoppingCart {
         try {
             User user = userService.findByUsername(principal.getName());
             order.setUser(user);
-            List<SmsResponse> smsResponse = SmsAPI.sendSms(getNumbersForSms(),order.getMessage());
+            List<SmsResponse> smsResponse = smsAPI.sendSms(getNumbersForSms(),order.getMessage());
             parseSmsResponse(smsResponse);
             orderService.saveOrderWithItems(order,items);
             items.clear();
@@ -198,7 +200,7 @@ public class ShoppingCart {
 
     public boolean removeFromCart(Long accountNumber) {
         Optional<OrderItem> optOrderItem = items.stream()
-                                                .filter(orderItem -> {return orderItem.getAbonent().getAccountNumber().equals(accountNumber);})
+                                                .filter(orderItem -> orderItem.getAbonent().getAccountNumber().equals(accountNumber))
                                                 .findFirst();
         if(optOrderItem.isPresent()){
             items.remove(optOrderItem.get());
