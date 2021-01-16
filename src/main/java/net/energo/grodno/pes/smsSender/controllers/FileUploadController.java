@@ -125,22 +125,22 @@ public class FileUploadController {
         List<String> resultOfImport = new ArrayList<>();
         System.out.println("Начало процесса Импорта");
         long startTime = System.currentTimeMillis(); // Get the start Time
-        Map<Integer, Tp> tpMap = dbfManager.getTpMap();
-        List<Tp> tpList = new ArrayList<Tp>(tpMap.values());
+        Map<Integer, Tp> tpsFromDbf = dbfManager.getTpMap();
+        List<Tp> tps = new ArrayList<Tp>(tpsFromDbf.values());
 
-        resultOfImport.addAll(tpService.updateAll(tpList));
+        resultOfImport.addAll(tpService.updateAll(tps));
 
-        List<Fider> fidersList = new ArrayList<>();
-        List<Abonent> abonentList = new ArrayList<>();
+        List<Fider> fiders = new ArrayList<>();
+        List<Abonent> abonents = new ArrayList<>();
         long counter=0;
-        for (Tp tp:tpList) {
-            fidersList.addAll(tp.getFiders());
+        for (Tp tp:tps) {
+            fiders.addAll(tp.getFiders());
             for (Fider fider : tp.getFiders() ) {
-                abonentList.addAll(fider.getAbonents());
+                abonents.addAll(fider.getAbonents());
             }
         }
-        resultOfImport.addAll(fiderService.updateAll(fidersList));
-        resultOfImport.addAll(abonentService.updateAll(abonentList));
+        resultOfImport.addAll(fiderService.updateAll(fiders));
+        resultOfImport.addAll(abonentService.updateAll(abonents));
         long endTime = System.currentTimeMillis(); //Get the end Time
         float processTime = (endTime-startTime)/(1000F);
         resultOfImport.add("Время обработки "+processTime+" секунд");

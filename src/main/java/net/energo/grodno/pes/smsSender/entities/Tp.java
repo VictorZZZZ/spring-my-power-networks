@@ -1,15 +1,22 @@
 package net.energo.grodno.pes.smsSender.entities;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.Mapping;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name="tp")
+@Getter
+@Setter
 public class Tp {
     @Id
     @Column(name = "id")
@@ -41,6 +48,11 @@ public class Tp {
     @OnDelete(action= OnDeleteAction.CASCADE)
     private List<Fider> fiders;
 
+    @Column(name="created")
+    @CreationTimestamp
+    @DateTimeFormat(pattern="dd-MMM-YYYY HH:mm")
+    private Date created;
+
     public Tp() {
     }
 
@@ -52,65 +64,11 @@ public class Tp {
         this.resId = resId;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getDbfId() {
-        return dbfId;
-    }
-
-    public void setDbfId(int dbfId) {
-        this.dbfId = dbfId;
-    }
-
-    public boolean isInputManually() {
-        return inputManually;
-    }
-
-    public void setInputManually(boolean inputManually) {
-        this.inputManually = inputManually;
-    }
-
     public Res getRes() {
         return part.getLine().getSection().getSubstation().getRes();
     }
 
-    public List<Fider> getFiders() {
-        return fiders;
-    }
 
-    public void setFiders(List<Fider> fiders) {
-        this.fiders = fiders;
-    }
-
-    public Part getPart() {
-        return part;
-    }
-
-    public void setPart(Part part) {
-        this.part = part;
-    }
-
-    public Integer getResId() {
-        return resId;
-    }
-
-    public void setResId(Integer resId) {
-        this.resId = resId;
-    }
 
     @Override
     public String toString() {

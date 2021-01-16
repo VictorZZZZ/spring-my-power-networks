@@ -68,8 +68,8 @@ public class TpService {
 
     public List<String> updateAll(List<Tp> tpList) {
         List<Tp> listToSave = new ArrayList<>();
-        List<String> resultList = new ArrayList<>();
-        resultList.add("Обработка ТП...");
+        List<String> messages = new ArrayList<>();
+        messages.add("Обработка ТП...");
         for (Tp tp : tpList) {
             //поиск уже имеющихся в базе ТП, чтобы лишний раз не сохранять. И присвоить ID для дальнейшей работы
             Tp bufferTp = tpRepository.findTopByDbfId(tp.getDbfId());
@@ -82,16 +82,16 @@ public class TpService {
         }
         if(listToSave.size()>0) {
             tpRepository.saveAll(listToSave);
-            resultList.add("В базу добавлено "+listToSave.size()+" новых ТП");
+            messages.add("В базу добавлено "+listToSave.size()+" новых ТП");
             logger.info("В базу добавлено {} новых ТП",listToSave.size());
         } else {
             String msg = "В базу не добавлено новых ТП";
-            resultList.add(msg);
+            messages.add(msg);
             logger.info(msg);
         }
-        resultList.add("Обработано "+tpList.size()+" ТП");
-        resultList.addAll(updateBackCouples(tpList));
-        return resultList;
+        messages.add("Обработано "+tpList.size()+" ТП");
+        messages.addAll(updateBackCouples(tpList));
+        return messages;
     }
 
     @Transactional
