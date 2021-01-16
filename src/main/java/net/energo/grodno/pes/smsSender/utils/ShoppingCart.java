@@ -7,21 +7,26 @@ import net.energo.grodno.pes.smsSender.utils.smsAPI.ErrorsTable;
 import net.energo.grodno.pes.smsSender.utils.smsAPI.SmsAPI;
 import net.energo.grodno.pes.smsSender.utils.smsAPI.SmsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Component
-@Scope(value="session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ShoppingCart {
     private static final int PHONE_LENGTH = 9;
+    @Value("${sms.price}")
+    private String smsPrice;
     private List<OrderItem> items;
 
     private TpService tpService;
@@ -47,10 +52,9 @@ public class ShoppingCart {
         this.sectionService = sectionService;
         this.substationService = substationService;
         this.smsAPI = smsAPI;
-        this.items=new ArrayList<>();
+        this.items = new ArrayList<>();
 
     }
-
 
 
     @Transactional
@@ -71,7 +75,7 @@ public class ShoppingCart {
             Optional<OrderItem> optOrderItem = items.stream()
                     .filter(orderItem -> orderItem.getAbonent().getAccountNumber().equals(id))
                     .findFirst();
-            if(!optOrderItem.isPresent()){
+            if (!optOrderItem.isPresent()) {
                 //если абонент существует
                 Abonent abonent = abonentService.getOne(id);
                 OrderItem newItem = new OrderItem();
@@ -79,7 +83,7 @@ public class ShoppingCart {
                 items.add(newItem);
                 return 1;
             } else return 0;
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             System.out.println(e.getMessage());
         }
         return 0;
@@ -88,10 +92,10 @@ public class ShoppingCart {
     //добавить по Фидеру, или одного Абонента)
     @Transactional
     public Integer addFider(Long id) {
-        Fider fider=fiderService.getOne(id);
-        int count=0;
-        for(Abonent abonent:fider.getAbonents()){
-            count+=this.addAbonent(abonent.getAccountNumber());
+        Fider fider = fiderService.getOne(id);
+        int count = 0;
+        for (Abonent abonent : fider.getAbonents()) {
+            count += this.addAbonent(abonent.getAccountNumber());
         }
         return count;
     }
@@ -100,46 +104,50 @@ public class ShoppingCart {
     public Integer addTp(Long id) {
         //добавить в корзину Товар("получателей") по ТП
         Tp tp = tpService.getOne(id);
-        int count=0;
-        for(Fider fider:tp.getFiders()){
-            count+=this.addFider(fider.getId());
+        int count = 0;
+        for (Fider fider : tp.getFiders()) {
+            count += this.addFider(fider.getId());
         }
         return count;
     }
 
+    @Transactional
     public int addPart(Long id) {
         //добавить в корзину получателей по Участку
         Part part = partService.getOne(id);
-        int count=0;
-        for(Tp tp:part.getTps()){
-            count+=this.addTp(tp.getId());
+        int count = 0;
+        for (Tp tp : part.getTps()) {
+            count += this.addTp(tp.getId());
         }
         return count;
     }
 
+    @Transactional
     public int addLine(Long id) {
         Line line = lineService.getOne(id);
-        int count=0;
-        for(Part part:line.getParts()){
-            count+=this.addPart(part.getId());
+        int count = 0;
+        for (Part part : line.getParts()) {
+            count += this.addPart(part.getId());
         }
         return count;
     }
 
+    @Transactional
     public int addSection(Integer id) {
         Section section = sectionService.getOne(id);
-        int count=0;
-        for(Line line:section.getLines()){
-            count+=this.addLine(line.getId());
+        int count = 0;
+        for (Line line : section.getLines()) {
+            count += this.addLine(line.getId());
         }
         return count;
     }
 
+    @Transactional
     public int addSubstation(Integer id) {
         Substation substation = substationService.getOne(id);
-        int count=0;
-        for(Section section:substation.getSections()){
-            count+=this.addSection(section.getId());
+        int count = 0;
+        for (Section section : substation.getSections()) {
+            count += this.addSection(section.getId());
         }
         return count;
     }
@@ -148,9 +156,14 @@ public class ShoppingCart {
         try {
             User user = userService.findByUsername(principal.getName());
             order.setUser(user);
-            List<SmsResponse> smsResponse = smsAPI.sendSms(getNumbersForSms(),order.getMessage());
+            order.setPrice(new BigDecimal(Double.valueOf(smsPrice)).setScale(4, RoundingMode.DOWN));
+            Integer smsCountInOrder = countSmsInMessage(order) * items.size();
+            order.setSmsCount(smsCountInOrder);
+            order.setAmount(new BigDecimal(Double.valueOf(smsPrice)).multiply(new BigDecimal(smsCountInOrder))
+                    .setScale(4, RoundingMode.DOWN));
+            List<SmsResponse> smsResponse = smsAPI.sendSms(getNumbersForSms(), order.getMessage());
             parseSmsResponse(smsResponse);
-            orderService.saveOrderWithItems(order,items);
+            orderService.saveOrderWithItems(order, items);
             items.clear();
             return items.size();
         } catch (Exception e) {
@@ -160,49 +173,57 @@ public class ShoppingCart {
 
     }
 
+    private Integer countSmsInMessage(Order order) {
+        Integer length = order.getMessage().length();
+        if (length <= 70) return 1;
+        if (length > 70 && length <= 134) return 2;
+        if (length > 134) return length / 67;
+        return 1;
+    }
+
     private void parseSmsResponse(List<SmsResponse> smsResponseList) {
         List<OrderItem> newItemList = new ArrayList<>();
-            for(SmsResponse smsResponse:smsResponseList){
-                for (OrderItem item : items) {
-                    if (item.getAbonent().getFirstPhone().equals(smsResponse.getRecipientWithoutPrefix())
-                            || item.getAbonent().getSecondPhone().equals(smsResponse.getRecipientWithoutPrefix())) {
-                        item.setSmsId(smsResponse.getSmsId());
-                        item.setSmsCount(smsResponse.getSmsCount());
-                        item.setOperator(smsResponse.getOperator());
-                        item.setRecipient(smsResponse.getRecipientWithoutPrefix());
-                        item.setErrorCode(smsResponse.getErrorCode());
-                        item.setSmsStatus(ErrorsTable.ERRORS.get(smsResponse.getErrorCode()));
-                        newItemList.add(item);
-                        break;
-                    }
+        for (SmsResponse smsResponse : smsResponseList) {
+            for (OrderItem item : items) {
+                if (item.getAbonent().getFirstPhone().equals(smsResponse.getRecipientWithoutPrefix())
+                        || item.getAbonent().getSecondPhone().equals(smsResponse.getRecipientWithoutPrefix())) {
+                    item.setSmsId(smsResponse.getSmsId());
+                    item.setSmsCount(smsResponse.getSmsCount());
+                    item.setOperator(smsResponse.getOperator());
+                    item.setRecipient(smsResponse.getRecipientWithoutPrefix());
+                    item.setErrorCode(smsResponse.getErrorCode());
+                    item.setSmsStatus(ErrorsTable.ERRORS.get(smsResponse.getErrorCode()));
+                    newItemList.add(item);
+                    break;
                 }
             }
+        }
         items = newItemList;
     }
 
     private List<String> getNumbersForSms() {
         List<String> result = new ArrayList<>();
-        for (OrderItem item:items) {
-            String firstPhone=item.getAbonent().getFirstPhone();
-            String secondPhone=item.getAbonent().getSecondPhone();
-            if(!firstPhone.isEmpty() && !firstPhone.equals("0") && firstPhone.length()>=PHONE_LENGTH){
-                result.add(firstPhone.replaceAll("\\s+",""));//Удалить лишние пробелы
-            } else if(!secondPhone.isEmpty() && !secondPhone.equals("0") && secondPhone.length()>=PHONE_LENGTH){
-                result.add(secondPhone.replaceAll("\\s+",""));//Удалить лишние пробелы
+        for (OrderItem item : items) {
+            String firstPhone = item.getAbonent().getFirstPhone();
+            String secondPhone = item.getAbonent().getSecondPhone();
+            if (!firstPhone.isEmpty() && !firstPhone.equals("0") && firstPhone.length() >= PHONE_LENGTH) {
+                result.add(firstPhone.replaceAll("\\s+", ""));//Удалить лишние пробелы
+            } else if (!secondPhone.isEmpty() && !secondPhone.equals("0") && secondPhone.length() >= PHONE_LENGTH) {
+                result.add(secondPhone.replaceAll("\\s+", ""));//Удалить лишние пробелы
             }
         }
         return result;
     }
 
-    public void clear(){
+    public void clear() {
         this.items.clear();
     }
 
     public boolean removeFromCart(Long accountNumber) {
         Optional<OrderItem> optOrderItem = items.stream()
-                                                .filter(orderItem -> orderItem.getAbonent().getAccountNumber().equals(accountNumber))
-                                                .findFirst();
-        if(optOrderItem.isPresent()){
+                .filter(orderItem -> orderItem.getAbonent().getAccountNumber().equals(accountNumber))
+                .findFirst();
+        if (optOrderItem.isPresent()) {
             items.remove(optOrderItem.get());
             return true;
         } else return false;

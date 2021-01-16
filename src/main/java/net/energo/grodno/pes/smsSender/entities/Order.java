@@ -1,16 +1,21 @@
 package net.energo.grodno.pes.smsSender.entities;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.energo.grodno.pes.smsSender.entities.users.User;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name="orders")
+@Getter
+@Setter
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +25,24 @@ public class Order {
     @Column(name = "message")
     @NotBlank
     private String message;
+
+    /**
+     * Цена одного смс
+     */
+    @Column(name = "price", precision = 5, scale = 4)
+    private BigDecimal price;
+
+    /**
+     * Стоимость рассылки
+     */
+    @Column(name = "amount", precision = 5, scale = 4)
+    private BigDecimal amount;
+
+    /**
+     * Количество смс в Рассылке
+     */
+    @Column(name = "sms_count")
+    private Integer smsCount;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items;
@@ -32,44 +55,4 @@ public class Order {
     @CreationTimestamp
     @DateTimeFormat(pattern="dd-MMM-YYYY HH:mm")
     private Date created;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public List<OrderItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<OrderItem> items) {
-        this.items = items;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
 }

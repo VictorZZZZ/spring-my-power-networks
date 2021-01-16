@@ -8,15 +8,15 @@ server:
 spring:
   jpa:
     show-sql: false
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
-        ddl-auto: update
         dialect: org.hibernate.dialect.PostgreSQL94Dialect
-        temp:
-          use_jdbc_metadata_defaults : false
         jdbc:
           batch_size: 1000
           format_sql: true
+
 
   #База данных
   datasource:

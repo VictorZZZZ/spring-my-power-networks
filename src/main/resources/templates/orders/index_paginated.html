@@ -48,8 +48,11 @@
                             <thead class="thead-dark">
                             <th> ID</th>
                             <th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SHOWALLSMS')"> Пользователь</th>
-                            <th> Сообщение</th>
                             <th> Дата</th>
+                            <th> Сообщение</th>
+                            <th> Количество смс в рассылке</th>
+                            <th> Цена одного СМС</th>
+                            <th> Стоимость рассылки</th>
                             <th> Действия</th>
                             </thead>
                             <tbody>
@@ -61,6 +64,9 @@
                                 <td>
                                     <span th:text="${#dates.format(order.created, 'dd.MM.yyyy HH:mm')}"/><br/>
                                 </td>
+                                <td th:text="${order.smsCount}"/>
+                                <td th:text="${order.price}"/>
+                                <td th:text="${order.amount}"/>
                                 <td>
                                     <!-- todo Сделать Error на невозможность удаления Через Constrains или запрос на удаление каскадом-->
                                     <a class="btn blue" th:href="@{'/orders/view/' + ${order.id}}">Посмотреть</a>
