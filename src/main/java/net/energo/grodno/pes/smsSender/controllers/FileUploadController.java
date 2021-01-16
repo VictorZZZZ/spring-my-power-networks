@@ -16,6 +16,8 @@ import net.energo.grodno.pes.smsSender.entities.Tp;
 import net.energo.grodno.pes.smsSender.storage.StorageFileNotFoundException;
 import net.energo.grodno.pes.smsSender.storage.StorageService;
 import net.energo.grodno.pes.smsSender.utils.importFromDbf.DBFManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -31,6 +33,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/importFromDbf")
 public class FileUploadController {
+    Logger logger = LoggerFactory.getLogger(FileUploadController.class);
 
     private final StorageService storageService;
     private final TpService tpService;
@@ -123,10 +126,12 @@ public class FileUploadController {
     @GetMapping("/step_3")
     public String showResultsOfImport(Model model)  {
         List<String> resultOfImport = new ArrayList<>();
-        System.out.println("Начало процесса Импорта");
         long startTime = System.currentTimeMillis(); // Get the start Time
         Map<Integer, Tp> tpsFromDbf = dbfManager.getTpMap();
         List<Tp> tps = new ArrayList<Tp>(tpsFromDbf.values());
+        Integer resId = tps.get(0).getResId();
+
+        logger.info("Начало процесса Импорта");
 
         resultOfImport.addAll(tpService.updateAll(tps));
 
@@ -141,12 +146,13 @@ public class FileUploadController {
         }
         resultOfImport.addAll(fiderService.updateAll(fiders));
         resultOfImport.addAll(abonentService.updateAll(abonents));
+        tpService.removeDuplicatedAndEmpty(resId);
         long endTime = System.currentTimeMillis(); //Get the end Time
         float processTime = (endTime-startTime)/(1000F);
         resultOfImport.add("Время обработки "+processTime+" секунд");
 
         model.addAttribute("resultOfImport",resultOfImport);
-        System.out.printf("Процесс импорта занял %.2f секунд",processTime); // Print the difference in seconds
+        logger.info("Процесс импорта занял {} секунд",processTime); // Print the difference in seconds
         return "importFromDbf/step_3";
     }
 

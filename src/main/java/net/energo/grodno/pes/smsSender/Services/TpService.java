@@ -143,6 +143,41 @@ public class TpService {
     }
 
 
+    /**
+     * Для конкретного РЭСа
+     * Удаляет все ТП у которых нет в подчинении Фидеров
+     * Удаляет все ТП у которых совпадает название
+     * @param resId
+     */
+    public void removeDuplicatedAndEmpty(Integer resId){
+        logger.info("Поиск пустых и дубликатов ТП!");
+        List<Tp> tpList = tpRepository.findAllByResId(resId); //id res
+        List<Tp> deleteList = new ArrayList<>();
+        for(Tp tp: tpList){
+            if(tp.getFiders().isEmpty()){
+                deleteList.add(tp);
+            }
+            for (Tp tp1 : tpList) {
+                if ((tp.getName().equals(tp1.getName())) && (tp.getId() != tp1.getId())) {
+
+                    if (tp1.getPart() == null) {
+                        tp1.setPart(tp.getPart());
+                        tpRepository.save(tp1);
+                    }
+                    if (tp.getPart() == null) {
+                        tp.setPart(tp1.getPart());
+                        tpRepository.save(tp);
+                    }
+                    break;
+                }
+            }
+        }
+        tpRepository.deleteAll(deleteList);
+        tpRepository.flush();
+        logger.info("Удалено {} пустых и дубликатов ТП!", deleteList.size());
+    }
+
+
     public void deepSave(List<Tp> tps) {
         for (Tp tp:tps) {
             //полное совпадение
