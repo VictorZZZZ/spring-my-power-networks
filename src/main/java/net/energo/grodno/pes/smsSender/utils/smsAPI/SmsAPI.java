@@ -88,7 +88,7 @@ public class SmsAPI {
         List<SmsResponse> smsResponses = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             SmsResponse smsResp = new SmsResponse(
-                    jsonArray.getJSONObject(i).getLong("sms_id"),
+                    String.valueOf(jsonArray.getJSONObject(i).getLong("sms_id")),
                     jsonArray.getJSONObject(i).getInt("sms_count"),
                     jsonArray.getJSONObject(i).getInt("operator"),
                     jsonArray.getJSONObject(i).getInt("error_code"),
@@ -101,7 +101,7 @@ public class SmsAPI {
 
 
     //Проверка статуса СМС
-    public List<StatusResponse> checkStatuses(List<Long> strList) throws SmsSenderErrorException, IOException, InterruptedException {
+    public List<StatusResponse> checkStatuses(List<String> strList) throws SmsSenderErrorException, IOException, InterruptedException {
         //готовим JSON
         JSONObject jsonBody = prepareJSON4Statuses(strList);
 
@@ -141,7 +141,7 @@ public class SmsAPI {
         List<StatusResponse> statusResponses = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             StatusResponse smsResp = new StatusResponse(
-                    jsonArray.getJSONObject(i).getLong("sms_id"),
+                    String.valueOf(jsonArray.getJSONObject(i).getLong("sms_id")),
                     jsonArray.getJSONObject(i).getInt("sms_count"),
                     jsonArray.getJSONObject(i).getInt("operator"),
                     jsonArray.getJSONObject(i).getString("sms_status"),
@@ -180,17 +180,15 @@ public class SmsAPI {
         return jsonBody;
     }
 
-    private JSONObject prepareJSON4Statuses(List<Long> longList) {
+    private JSONObject prepareJSON4Statuses(List<String> idList) {
         JSONObject jsonBody = new JSONObject();
         jsonBody.put("login", smsUser);
         jsonBody.put("password", smsPassword);
         jsonBody.put("command", "statuses");
 
         JSONArray smsIdArray = new JSONArray();
-        for (Long smsId : longList) {
-            if (smsId instanceof Long) {
-                smsIdArray.put((new JSONObject()).put("sms_id", smsId.toString()));
-            }
+        for (String smsId : idList) {
+                smsIdArray.put((new JSONObject()).put("sms_id", smsId));
         }
 
         JSONObject msg = new JSONObject();

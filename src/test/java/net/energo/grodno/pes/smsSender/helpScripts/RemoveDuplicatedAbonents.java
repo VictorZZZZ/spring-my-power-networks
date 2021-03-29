@@ -4,6 +4,7 @@ import net.energo.grodno.pes.smsSender.AbstractClass;
 import net.energo.grodno.pes.smsSender.Services.FiderService;
 import net.energo.grodno.pes.smsSender.entities.Abonent;
 import net.energo.grodno.pes.smsSender.entities.Fider;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +20,7 @@ public class RemoveDuplicatedAbonents extends AbstractClass {
 
     @Test
     @Transactional
+    @Ignore
     public void removeDuplicatedAbonents(){
         Fider fider= fiderService.getOne(705L);
         List<Abonent> abonentList = fider.getAbonents();
@@ -30,7 +32,7 @@ public class RemoveDuplicatedAbonents extends AbstractClass {
             Abonent abonent = abonentList.get(i);
             for(Abonent compareAbonent: abonentList.subList(i+1,abonentList.size())){
                 if(abonent.getFirstPhone().equals(compareAbonent.getFirstPhone())
-                        && abonent.getAccountNumber()!=compareAbonent.getAccountNumber()
+                        && !abonent.getAccountNumber().equals(compareAbonent.getAccountNumber())
                         && !abonent.getFirstPhone().equals("0")){
                     numbersToClean.add(abonent.getFirstPhone());
                     break;

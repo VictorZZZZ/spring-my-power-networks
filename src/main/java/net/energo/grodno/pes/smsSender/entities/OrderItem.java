@@ -41,7 +41,7 @@ public class OrderItem {
     private Abonent abonent;
 
     @Column(name = "sms_id")
-    private Long smsId;
+    private String smsId;
 
     @Column(name = "sms_count")
     private Integer smsCount;
@@ -85,11 +85,11 @@ public class OrderItem {
         this.abonent = abonent;
     }
 
-    public Long getSmsId() {
+    public String getSmsId() {
         return smsId;
     }
 
-    public void setSmsId(Long smsId) {
+    public void setSmsId(String smsId) {
         this.smsId = smsId;
     }
 

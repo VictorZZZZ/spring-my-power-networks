@@ -51,7 +51,7 @@ public class SmsController {
         try {
             Order order = orderService.getOne(id);
             List<OrderItem> orderItems = order.getItems();
-            List<Long> smsIds = new ArrayList<>();
+            List<String> smsIds = new ArrayList<>();
             for (OrderItem item:orderItems) {
                 smsIds.add(item.getSmsId());
             }
@@ -75,7 +75,7 @@ public class SmsController {
         int counter=0;
         for(StatusResponse statusResponse:statusResponses){
             for(OrderItem orderItem:orderItems){
-                if((orderItem.getSmsId() instanceof Long) && (orderItem.getSmsId().equals(statusResponse.getSmsId()))){
+                if(orderItem.getSmsId().equals(statusResponse.getSmsId())){
                     //"sms_id":886055815,"sms_count":"1","operator":"2","sms_status":"Delivered","recipient":"+375297819778"
                     orderItem.setSmsStatus(ErrorsTable.STATUS.get(statusResponse.getSmsStatus()));
                     counter++;

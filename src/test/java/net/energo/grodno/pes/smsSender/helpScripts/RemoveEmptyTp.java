@@ -31,38 +31,7 @@ public class RemoveEmptyTp extends AbstractClass {
     @Test
     @Rollback(false) // Чтобы не откатывало изменения в базе
     @Transactional
-    @Ignore
     public void removeEmptyTp(){
-//        List<Tp> tpList = tpRepository.findAllByResId(ResService.SCHRES_ID); //id res
-//        List<Tp> deleteList = new ArrayList<>();
-//        for(Tp tp: tpList){
-//            if(tp.getFiders().size()==0){
-//                deleteList.add(tp);
-//            }
-//            for (Tp tp1 : tpList) {
-//                if ((tp.getName().equals(tp1.getName())) && (tp.getId() != tp1.getId())) {
-//
-//                    if (tp1.getPart() == null) {
-//                        tp1.setPart(tp.getPart());
-//                        tpRepository.save(tp1);
-//                        System.out.print(".");
-//                    }
-//                    if (tp.getPart() == null) {
-//                        tp.setPart(tp1.getPart());
-//                        tpRepository.save(tp);
-//                        System.out.print(":");
-//                    }
-//
-////                    System.out.printf("Id:%d Name:%s DbfId:%d Fiders:%d PartId:%s\nId:%d Name:%s DbfId:%d Fiders:%d PartId:%s \n \n"
-////                            ,tp.getId(),tp.getName(),tp.getDbfId(),tp.getFiders().size(),tp.getPart(),
-////                             tp1.getId(),tp1.getName(),tp1.getDbfId(),tp1.getFiders().size(),tp1.getPart());
-//                    break;
-//                }
-//            }
-//        }
-//        tpRepository.deleteAll(deleteList);
-//        tpRepository.flush();
-//        System.out.println("\nУдалено ТП " + deleteList.size());
-        tpService.removeDuplicatedAndEmpty(ResService.SCHRES_ID);
+        tpService.removeDuplicatedAndEmpty(ResService.GSRES_ID);
     }
 }

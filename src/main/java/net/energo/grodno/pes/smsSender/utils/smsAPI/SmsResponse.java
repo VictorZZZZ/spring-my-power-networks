@@ -1,13 +1,13 @@
 package net.energo.grodno.pes.smsSender.utils.smsAPI;
 
 public class SmsResponse {
-    private Long smsId;
+    private String smsId;
     private Integer smsCount;
     private Integer operator;
     private Integer errorCode;
     private String recipient;
 
-    public SmsResponse(Long smsId, Integer smsCount, Integer operator, Integer errorCode, String recipient) {
+    public SmsResponse(String smsId, Integer smsCount, Integer operator, Integer errorCode, String recipient) {
         this.smsId = smsId;
         this.smsCount = smsCount;
         this.operator = operator;
@@ -15,7 +15,7 @@ public class SmsResponse {
         this.recipient = recipient;
     }
 
-    public Long getSmsId() {
+    public String getSmsId() {
         return smsId;
     }
 

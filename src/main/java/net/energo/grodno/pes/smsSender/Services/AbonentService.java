@@ -96,8 +96,8 @@ public class AbonentService {
     }
 
     public List<String> updateAll(List<Abonent> abonentList) {
-        List<String> resultList = new ArrayList<>();
-        resultList.add("Обработка абонентов...");
+        List<String> messages = new ArrayList<>();
+        messages.add("Обработка абонентов...");
         for(Abonent abonent:abonentList){
             //поиск абонентов для присвоения поля notes из Базы(Остальные данные считаем верными из DBF)
             Abonent bufferAbonent = abonentRepository.findOneByAccountNumber(abonent.getAccountNumber());
@@ -108,10 +108,10 @@ public class AbonentService {
         }
         logger.info("Сохранение абонентов.");
         abonentRepository.saveAll(abonentList);
-        resultList.add("Обработано "+abonentList.size()+" абонентов");
+        messages.add("Обработано "+abonentList.size()+" абонентов");
         logger.info("Проверка обратных пар.");
-        resultList.addAll(updateBackCouples(abonentList));
-        return resultList;
+        messages.addAll(updateBackCouples(abonentList));
+        return messages;
     }
 
     private List<String> updateBackCouples(List<Abonent> abonentList) {
