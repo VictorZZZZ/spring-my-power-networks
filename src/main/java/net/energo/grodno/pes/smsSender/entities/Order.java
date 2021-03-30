@@ -30,13 +30,13 @@ public class Order {
      * Цена одного смс
      */
     @Column(name = "price", precision = 5, scale = 4)
-    private BigDecimal price;
+    private Double price;
 
     /**
      * Стоимость рассылки
      */
     @Column(name = "amount", precision = 5, scale = 4)
-    private BigDecimal amount;
+    private Double amount;
 
     /**
      * Количество смс в Рассылке
@@ -55,4 +55,17 @@ public class Order {
     @CreationTimestamp
     @DateTimeFormat(pattern="dd-MMM-YYYY HH:mm")
     private Date created;
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", message='" + message + '\'' +
+                ", price=" + price +
+                ", amount=" + amount +
+                ", smsCount=" + smsCount +
+                ", user=" + user +
+                ", created=" + created +
+                '}';
+    }
 }

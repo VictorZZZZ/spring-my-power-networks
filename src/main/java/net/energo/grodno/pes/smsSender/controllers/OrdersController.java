@@ -24,8 +24,8 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping("/orders")
 public class OrdersController {
-    private OrderService orderService;
-    private UserService userService;
+    private final OrderService orderService;
+    private final UserService userService;
 
     @Autowired
     public OrdersController(OrderService orderService, UserService userService) {

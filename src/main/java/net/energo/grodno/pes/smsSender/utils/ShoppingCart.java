@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -156,16 +154,16 @@ public class ShoppingCart {
         try {
             User user = userService.findByUsername(principal.getName());
             order.setUser(user);
-            order.setPrice(new BigDecimal(Double.valueOf(smsPrice)).setScale(4, RoundingMode.DOWN));
-            Integer smsCountInOrder = countSmsInMessage(order) * items.size();
+            order.setPrice(Double.valueOf(smsPrice));
+            int itemSize = items.size();
+            Integer smsCountInOrder = countSmsInMessage(order) * itemSize;
             order.setSmsCount(smsCountInOrder);
-            order.setAmount(new BigDecimal(Double.valueOf(smsPrice)).multiply(new BigDecimal(smsCountInOrder))
-                    .setScale(4, RoundingMode.DOWN));
+            order.setAmount(Double.valueOf(smsPrice));
             List<SmsResponse> smsResponse = smsAPI.sendSms(getNumbersForSms(), order.getMessage());
             parseSmsResponse(smsResponse);
             orderService.saveOrderWithItems(order, items);
             items.clear();
-            return items.size();
+            return itemSize;
         } catch (Exception e) {
             e.printStackTrace();
             return 0;

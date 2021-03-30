@@ -12,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,14 +39,9 @@ public class OrderService {
 
         if (ordersCount < startItem) {
             list = Collections.emptyList();
-            Page<Order> orderPage
-                    = new PageImpl<Order>(list, PageRequest.of(currentPage, pageSize), ordersCount);
-
-            return orderPage;
+            return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), ordersCount);
         } else {
-            Page<Order> orderPage
-                    = orderRepository.findPageByUserId(user,pageable);
-            return orderPage;
+            return orderRepository.findPageByUserId(user,pageable);
         }
 
     }
@@ -61,14 +55,9 @@ public class OrderService {
 
         if (ordersCount < startItem) {
             list = Collections.emptyList();
-            Page<Order> orderPage
-                    = new PageImpl<Order>(list, PageRequest.of(currentPage, pageSize), ordersCount);
-
-            return orderPage;
+            return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), ordersCount);
         } else {
-            Page<Order> orderPage
-                    = orderRepository.findAllByOrderByCreatedDesc(pageable);
-            return orderPage;
+           return orderRepository.findAllByOrderByCreatedDesc(pageable);
         }
 
     }

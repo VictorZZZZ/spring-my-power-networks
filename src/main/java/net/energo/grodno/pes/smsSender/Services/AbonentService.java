@@ -83,14 +83,10 @@ public class AbonentService {
 
         if (abonentCount < startItem) {
             list = Collections.emptyList();
-            Page<Abonent> abonentPage
-                = new PageImpl<Abonent>(list, PageRequest.of(currentPage, pageSize), abonentCount);
 
-            return abonentPage;
+            return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), abonentCount);
         } else {
-            Page<Abonent> abonentPage
-                    = abonentRepository.findAll(pageable);
-            return abonentPage;
+            return abonentRepository.findAll(pageable);
         }
 
     }
@@ -174,7 +170,7 @@ public class AbonentService {
     @Cacheable("totalAbonents")
     public Long getCount(){
         return abonentRepository.count();
-    };
+    }
 
     public List<Abonent> searchBySurname(String searchLine) {
         return abonentRepository.findBySurnameIgnoreCaseContaining(searchLine);

@@ -108,12 +108,12 @@ public class TpService {
             }
             boolean foundTp=false;
             for(Tp compareTp:tpList){
-                if(tp.getId()==compareTp.getId()){
+                if(tp.getId().equals(compareTp.getId())){
                     foundTp=true;
                     break;
                 }
             }
-            if(foundTp==false) {
+            if(!foundTp) {
                 if(!tp.isInputManually() && tp.getDbfId()!=0) {
                     //Если ТП не было введено вручную
                     listToDelete.add(tp);
@@ -158,14 +158,16 @@ public class TpService {
                 deleteList.add(tp);
             }
             for (Tp tp1 : tpList) {
-                if ((tp.getName().equals(tp1.getName())) && (tp.getId() != tp1.getId())) {
+                if ((tp.getName().equals(tp1.getName())) && (!tp.getId().equals(tp1.getId()))) {
 
                     if (tp1.getPart() == null) {
                         tp1.setPart(tp.getPart());
+                        System.out.println(tp1.getName());
                         tpRepository.save(tp1);
                     }
                     if (tp.getPart() == null) {
                         tp.setPart(tp1.getPart());
+                        System.out.println(tp.getName());
                         tpRepository.save(tp);
                     }
                     break;
@@ -230,7 +232,7 @@ public class TpService {
 
             if(tp.getResId().equals(ResService.GSRES_ID)
                     /*|| tp.getResId()==3*/){
-                Pattern pattern = Pattern.compile("[а-яА-Я]{1,2}\\-\\d{1,3}");//от 1 до 2 русских букв  + знак "тире" + 1 или 3 цифры
+                Pattern pattern = Pattern.compile("[а-яА-Я]{1,2}-\\d{1,3}");//от 1 до 2 русских букв  + знак "тире" + 1 или 3 цифры
                 Matcher matcher = pattern.matcher(tp.getName());
                 if(matcher.find()){
 
@@ -318,13 +320,9 @@ public class TpService {
 
         if (tpCount < startItem) {
             list = Collections.emptyList();
-            Page<Tp> tpPage
-                    = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), tpCount);
-            return tpPage;
+            return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), tpCount);
         } else {
-            Page<Tp> tpPage
-                    = tpRepository.findAll(pageable);
-            return tpPage;
+            return tpRepository.findAll(pageable);
         }
 
     }
