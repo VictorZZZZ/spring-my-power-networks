@@ -1,13 +1,10 @@
 package net.energo.grodno.pes.smsSender.controllers;
 
+import lombok.RequiredArgsConstructor;
 import net.energo.grodno.pes.smsSender.Services.AbonentService;
 import net.energo.grodno.pes.smsSender.Services.FiderService;
+import net.energo.grodno.pes.smsSender.Services.TpService;
 import net.energo.grodno.pes.smsSender.entities.Abonent;
-import net.energo.grodno.pes.smsSender.entities.Fider;
-import net.energo.grodno.pes.smsSender.entities.Tp;
-import net.energo.grodno.pes.smsSender.repositories.AbonentRepository;
-import net.energo.grodno.pes.smsSender.repositories.FiderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -16,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,24 +21,20 @@ import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/abonent")
+@RequiredArgsConstructor
 public class AbonentController {
-    private AbonentService abonentService;
-    private FiderService fiderService;
-
-    @Autowired
-    public AbonentController(AbonentService abonentService, FiderService fiderService) {
-        this.abonentService = abonentService;
-        this.fiderService = fiderService;
-    }
+    private final AbonentService abonentService;
+    private final TpService tpService;
+    private final FiderService fiderService;
 
     //@GetMapping(value={"","/","index"})
-    public String showAll(Model model){
+    public String showAll(Model model) {
         List<Abonent> abonents = abonentService.getAll();
-        model.addAttribute("abonents",abonents);
+        model.addAttribute("abonents", abonents);
         return "abonent/index";
     }
 
-    @RequestMapping(value = {"","/","index","/listAbonents"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"", "/", "index", "/listAbonents"}, method = RequestMethod.GET)
     public String listAbonents(
             Model model,
             @RequestParam("page") Optional<Integer> page,
@@ -62,49 +56,57 @@ public class AbonentController {
         }
 
         long totalAbonents = abonentService.getCount();
-        model.addAttribute("totalAbonents",totalAbonents);
+        model.addAttribute("totalAbonents", totalAbonents);
 
         return "abonent/index_paginated";
     }
 
-    @GetMapping(value={"/add"})
-    public String addAbonent(Model model){
-        Abonent abonent = new Abonent();
-        //List<Fider> fiderList= fiderService.getAll();
-        model.addAttribute("abonent",abonent);
-        //model.addAttribute("fiderList",fiderList);
+    @GetMapping(value = {"/add"})
+    public String addAbonent(Model model) {
+        var abonent = new Abonent();
+        var tpList = tpService.getAll();
+        model.addAttribute("abonent", abonent);
+        model.addAttribute("tpList", tpList);
+        model.addAttribute("fiderList", new ArrayList<>());
         return "abonent/edit";
     }
 
     @GetMapping("/edit/{id}")
-    public String editAbonent(Model model, @PathVariable("id") Long id){
+    public String editAbonent(Model model, @PathVariable("id") Long id) {
         Abonent abonent = abonentService.getOne(id);
-        //List<Fider> fiderList= fiderService.getAll();
-        model.addAttribute("abonent",abonent);
-        //model.addAttribute("fiderList",fiderList);
+        var tpList = tpService.getAll();
+        var fider = abonent.getFider();
+        var tp = fider.getTp();
+        var fiderList = tp.getFiders();
+        model.addAttribute("abonent", abonent);
+        model.addAttribute("tpList", tpList);
+        model.addAttribute("fiderList", fiderList);
+        model.addAttribute("tp", tp);
+        model.addAttribute("fider", fider);
         return "abonent/edit";
     }
 
     @GetMapping("/view/{id}")
-    public String viewAbonent(Model model, @PathVariable("id") Long id){
+    public String viewAbonent(Model model, @PathVariable("id") Long id) {
         Abonent abonent = abonentService.getOne(id);
-        model.addAttribute("abonent",abonent);
+        model.addAttribute("abonent", abonent);
         return "abonent/view";
     }
 
-    @RequestMapping(value = "/saveAbonent", method = RequestMethod.POST)
+    @PostMapping("/saveAbonent")
     public String saveAbonent(@Valid Abonent abonent, BindingResult bindingResult, Model model) {
-        if(bindingResult.hasErrors()){
-            model.addAttribute("fiderList",fiderService.getAll());
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("fiderList", fiderService.getAll());
             return "abonent/edit";
         } else {
-            abonentService.saveOne(abonent);
-            return "redirect:/abonent/index";
+            Abonent savedAbonent = abonentService.saveOne(abonent);
+            return "redirect:/abonent/view/" + savedAbonent.getAccountNumber();
         }
     }
+
     //todo сделать через POST + csrf
     @GetMapping("/delete/{id}")
-    public String deleteAbonentById(@PathVariable("id") Long id){
+    public String deleteAbonentById(@PathVariable("id") Long id) {
         abonentService.deleteOne(id);
         return "redirect:/abonent";
     }

@@ -48,8 +48,8 @@ public class AbonentService {
         return abonentRepository.findOneByAccountNumber(id);
     }
 
-    public void saveOne(Abonent abonent) {
-        abonentRepository.save(abonent);
+    public Abonent saveOne(Abonent abonent) {
+        return abonentRepository.save(abonent);
     }
 
     public void saveAll(List<Abonent> abonentList) {

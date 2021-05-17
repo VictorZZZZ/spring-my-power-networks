@@ -17,14 +17,10 @@ import java.util.Date;
                      columnDefinition = "varchar(31)")
 @DiscriminatorValue("null")
 public class Abonent {
-//    @Id
-//    @Column(name = "id")
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Integer id;
 
     @Id
     @Column(name="account_number")
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountNumber;
 
     @Column(name="surname")

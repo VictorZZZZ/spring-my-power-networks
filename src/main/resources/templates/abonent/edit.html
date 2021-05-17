@@ -39,18 +39,38 @@
                     <div th:replace="~{flashMessages :: flash}"/>
 
                     <!-- todo найти как обращаться к URL из thymeleaf -->
-                    <h1>Редактировать Абонента</h1>
+                    <h1>Абонент</h1>
 
 
                         <form action="#" th:action="@{/abonent/saveAbonent}" th:object="${abonent}" method="post">
                             <!-- todo Сделать inputManually=true только при add -->
                             <input type="hidden" name="inputManually" th:value="true" />
-
                             <div class="form-group">
                                 <label>Лицевой счёт</label>
                                 <input class="form-control" type="text" th:field="*{accountNumber}" />
+                                <small class="form-text text-muted">Можно оставить пустым.</small>
                                 <small class="form-text text-danger" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}" />
                             </div>
+
+                            <div class="form-group">
+                                <label>ТП</label>
+                                <select id="tpSelect" class="form-control" th:name="tp">
+                                    <option th:each="item : ${tpList}"
+                                            th:value="${item.id}"
+                                            th:text="${item.name}" th:selected="${(tp!=null) ? tp.id==item.id : null}">Part name</option>
+                                </select>
+                                <small class="form-text text-muted">Выберите ТП.</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Фидер</label>
+                                <select id="fiderSelect" class="form-control" th:name="fider">
+                                    <option th:each="item : ${fiderList}"
+                                            th:value="${item.id}"
+                                            th:text="${item.name}" th:selected="${fider.id==item.id}">Fider id : NAME</option>
+                                </select>
+                                <small class="form-text text-muted">Выберите Фидер *.</small>
+                            </div>
+
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                     <label>Фамилия</label>
@@ -98,7 +118,7 @@
                             </div>
                             <!-- todo modified чтобы сам подставлялся -->
 
-                            <input class="btn btn-outline-info" type="submit" value="Сохранить" />
+                            <input id="submitButton" class="btn btn-outline-info" type="submit" value="Сохранить" />
                         </form>
                 </div>
             </div>
@@ -107,5 +127,57 @@
 </div>
 
 <th:block th:insert="~{mandatory_styles :: script}"></th:block>
+<script>
+
+    //Функция изменяет options у targetObj при изменении selected value у selectedObj
+    var selectOnChange = function(selectedObj,targetObj,entity,disableArr){
+        selectedObj.on("click change",function(){
+            var selectedVal =$("option:selected", selectedObj).val();
+            var requestURL = "/app/ajax/resTree?parent="+entity+"_"+selectedVal;
+            $.ajax({
+                url: requestURL,
+                dataType: "html",
+                method: "GET",
+                success: function(data) {
+                    if(!selectedObj.data("last")) {
+                        $.each(disableArr, function (index, domObj) {
+                            domObj.attr('disabled', 'disabled');
+                            domObj.html('');
+                        });
+                    }
+                    setSelectOptions(targetObj,data);
+                },
+                error: function(err){
+                    console.log(err);
+                }
+            });
+        });
+    }
+
+    //Функция выполняет Ajax запрос и выставляет поля <option> у changeObj
+    var setSelectOptions = function(changeObj,data){
+        changeObj.html('');
+        objArray = jQuery.parseJSON(data);
+        $.each(objArray, function(index, value){
+            var id = value.id.split('_')[1];
+            var text = value.text;
+            var tag = '<option value="'+id+'">'+text+'</option>';
+            changeObj.append(tag);
+            changeObj.removeAttr('disabled');
+            if(changeObj.data("last")) {
+                $("#submitButton").prop('disabled',false);
+            }
+        });
+    }
+
+
+    $(document).ready(function () {
+        selectOnChange($("#tpSelect"),$("#fiderSelect"),"tp",[]);
+
+        var minHeight = $(window).height()-83;
+        $("div.page-content").css("min-height",minHeight+"px");
+    });
+
+</script>
 </body>
 </html>
