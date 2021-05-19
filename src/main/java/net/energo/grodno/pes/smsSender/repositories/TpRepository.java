@@ -33,6 +33,8 @@ public interface TpRepository extends JpaRepository<Tp,Long> {
 
     List<Tp> findByNameAndResId(String name,Integer resId);
 
+    List<Tp> findByNameIgnoreCaseContainsAndResId(String name,Integer resId);
+
     List<Tp> findAll();
 
     List<Tp> findByPartId(Long parentId);
@@ -42,4 +44,6 @@ public interface TpRepository extends JpaRepository<Tp,Long> {
     Long countByResIdAndPartIdOrderByName(Integer id,Long partId);
 
     List<Tp> findAllByResId(Integer resId);
+
+    List<Tp> findByNameLike(String nameLike);
 }

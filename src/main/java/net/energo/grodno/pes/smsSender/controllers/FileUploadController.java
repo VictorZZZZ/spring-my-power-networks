@@ -93,7 +93,7 @@ public class FileUploadController {
     }
 
     @GetMapping("/step_2")
-    public String listUploadedFiles(Model model) throws IOException {
+    public String listUploadedFiles(Model model) {
 
 
         model.addAttribute("countTp",dbfManager.getTpMap().size());
@@ -128,7 +128,7 @@ public class FileUploadController {
         List<String> resultOfImport = new ArrayList<>();
         long startTime = System.currentTimeMillis(); // Get the start Time
         Map<Integer, Tp> tpsFromDbf = dbfManager.getTpMap();
-        List<Tp> tps = new ArrayList<Tp>(tpsFromDbf.values());
+        List<Tp> tps = new ArrayList<>(tpsFromDbf.values());
         Integer resId = tps.get(0).getResId();
 
         logger.info("Начало процесса Импорта");

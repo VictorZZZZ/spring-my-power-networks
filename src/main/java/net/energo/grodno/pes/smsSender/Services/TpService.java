@@ -103,18 +103,15 @@ public class TpService {
         List<Tp> listFromBase = tpRepository.findAllByResIdOrderByName(res);
         List<Tp> listToDelete = new ArrayList<>();
         for (Tp tp: listFromBase) {
-            if(tp.getId()==686){
-                System.out.println("После этого может быть ошибка");
-            }
             boolean foundTp=false;
             for(Tp compareTp:tpList){
-                if(tp.getId().equals(compareTp.getId())){
+                if(tp.getDbfId() == compareTp.getDbfId()){
                     foundTp=true;
                     break;
                 }
             }
             if(!foundTp) {
-                if(!tp.isInputManually() && tp.getDbfId()!=0) {
+                if(!tp.isInputManually()) {
                     //Если ТП не было введено вручную
                     listToDelete.add(tp);
                     logger.info("Будет удалено ТП: " + tp.toShortString());
@@ -147,7 +144,7 @@ public class TpService {
      * Для конкретного РЭСа
      * Удаляет все ТП у которых нет в подчинении Фидеров
      * Удаляет все ТП у которых совпадает название
-     * @param resId
+     * @param resId {@link Integer}
      */
     public void removeDuplicatedAndEmpty(Integer resId){
         logger.info("Поиск пустых и дубликатов ТП!");
