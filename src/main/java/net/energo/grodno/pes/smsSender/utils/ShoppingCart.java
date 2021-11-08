@@ -158,7 +158,7 @@ public class ShoppingCart {
             int itemSize = items.size();
             Integer smsCountInOrder = countSmsInMessage(order) * itemSize;
             order.setSmsCount(smsCountInOrder);
-            order.setAmount(Double.valueOf(smsPrice));
+            order.setAmount(Double.parseDouble(smsPrice) * smsCountInOrder);
             List<SmsResponse> smsResponse = smsAPI.sendSms(getNumbersForSms(), order.getMessage());
             parseSmsResponse(smsResponse);
             orderService.saveOrderWithItems(order, items);

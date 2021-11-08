@@ -42,7 +42,7 @@ public class CartController {
         this.resService = resService;
     }
 
-    @RequestMapping(value = {"", "/", "index"}, method = RequestMethod.GET)
+    @GetMapping(value = {"", "/", "index"})
     @Transactional
     public String cart(HttpSession session, Model model, Principal principal) {
         session.setAttribute("cartItemsCount", cart.getItems().size());
@@ -102,7 +102,7 @@ public class CartController {
     }
 
     //создание ЗАКАЗА
-    @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
+    @PostMapping(value = "/createOrder")
     public String createOrderAndSendSms(@Valid Order order,
                                         BindingResult bindingResult,
                                         Model model,

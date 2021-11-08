@@ -111,7 +111,7 @@ public class TpService {
                 }
             }
             if(!foundTp) {
-                if(!tp.isInputManually()) {
+                if(!tp.isInputManually() && tp.getDbfId()!=0) {
                     //Если ТП не было введено вручную
                     listToDelete.add(tp);
                     logger.info("Будет удалено ТП: " + tp.toShortString());

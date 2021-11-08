@@ -2,9 +2,12 @@ package net.energo.grodno.pes.smsSender.controllers;
 
 import net.energo.grodno.pes.smsSender.Services.OrderService;
 import net.energo.grodno.pes.smsSender.Services.UserService;
+import net.energo.grodno.pes.smsSender.entities.Abonent;
 import net.energo.grodno.pes.smsSender.entities.Order;
+import net.energo.grodno.pes.smsSender.entities.OrderItem;
 import net.energo.grodno.pes.smsSender.entities.users.User;
 import net.energo.grodno.pes.smsSender.security.AuthDetails;
+import net.energo.grodno.pes.smsSender.utils.ShoppingCart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,11 +30,13 @@ import java.util.stream.IntStream;
 public class OrdersController {
     private final OrderService orderService;
     private final UserService userService;
+    private final ShoppingCart cart;
 
     @Autowired
-    public OrdersController(OrderService orderService, UserService userService) {
+    public OrdersController(OrderService orderService, UserService userService, ShoppingCart cart) {
         this.orderService = orderService;
         this.userService = userService;
+        this.cart = cart;
     }
 
     @GetMapping(value = {"", "/", "index", "/listOrders"})
@@ -103,5 +109,23 @@ public class OrdersController {
             redirectAttributes.addFlashAttribute("messageError", "Нет пользователя с id=" + id);
             return "redirect:/";
         }
+    }
+
+    @GetMapping(value = "/{id}/addConsumersToNewList")
+    public String addConsumersToNewList(@PathVariable("id") Long orderId, HttpServletRequest request, RedirectAttributes resdirectAttributes){
+        Order order = orderService.getOne(orderId);
+        if(order == null){
+            resdirectAttributes.addFlashAttribute("messageError", String.format("Заказа с идентификатором %d не существует", orderId));
+            return "redirect:"+request.getHeader("Referer");
+        }
+        List<OrderItem> smsList = order.getItems();
+        if(!smsList.isEmpty()){
+            List<Abonent> abonents = smsList.stream()
+                    .map(OrderItem::getAbonent)
+                    .collect(Collectors.toList());
+            abonents.forEach(abonent -> cart.addAbonent(abonent.getAccountNumber()));
+            resdirectAttributes.addFlashAttribute("messageInfo", String.format("В список рассылки добавлено %d абонентов",abonents.size()));
+        }
+        return "redirect:"+request.getHeader("Referer");
     }
 }
