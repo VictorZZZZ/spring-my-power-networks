@@ -53,23 +53,26 @@ public class FiderService {
         fiderRepository.deleteById(id);
     }
 
+    @Transactional
     public List<String> updateAll(List<Fider> fidersList) {
         List<String> resultList = new ArrayList<>();
         resultList.add("Обработка Фидеров...");
         List<Fider> listToSave = new ArrayList<>();
         for (Fider fider:fidersList) {
             //поиск уже имеющихся фидеров, чтобы неделать лишний update в базе данных
-            Fider bufferFider = fiderRepository.findOneByTpIdAndDbfId(fider.getTp().getId(),fider.getDbfId());
+            Fider bufferFider = fiderRepository.findTopByTpIdAndDbfId(fider.getTp().getId(),fider.getDbfId())
+                    .orElse(null);
             if(bufferFider!=null){
                 fider.setId(bufferFider.getId());
             } else {
                 listToSave.add(fider);
             }
         }
-        if(listToSave.size()>0) {
+        if(!listToSave.isEmpty()) {
             fiderRepository.saveAll(listToSave);
             resultList.add("В базу добавлено "+listToSave.size()+" новых Фидеров");
         }
+
         resultList.add("Обработано "+fidersList.size()+" фидеров");
         resultList.addAll(updateBackCouples(fidersList));
         return resultList;
@@ -77,6 +80,7 @@ public class FiderService {
 
     @Transactional
     public List<String> updateBackCouples(List<Fider> fidersList) {
+        logger.info("Обновление обратных пар фидеров.");
         //Обратное сравнение базы со списком фидеров
         List<Fider> listToDelete = new ArrayList<>();
         List<String> resultList = new ArrayList<>();
@@ -90,7 +94,7 @@ public class FiderService {
                     break;
                 }
             }
-            if(found==false) {
+            if(!found) {
                 if(!fiderFromBase.isInputManually()) {
                     //Если фидер не введён вручную, то можно его удалить
                     listToDelete.add(fiderFromBase);
@@ -103,9 +107,8 @@ public class FiderService {
                 }
             }
         }
-        if(listToDelete.size()>0) {
+        if(!listToDelete.isEmpty()) {
             fiderRepository.deleteAll(listToDelete);
-            //abonentRepository.deleteInBatch(listToDelete);
             resultList.add("===============================================================================================");
             resultList.add("Из Базы удалено "+listToDelete.size()+" Фидеров т.к. они не соответствовали списку из ДБФ файла");
             resultList.add("===============================================================================================");
@@ -118,7 +121,6 @@ public class FiderService {
     @Transactional
     public List<Fider> findAllByResId(Integer id) {
         List<Fider> fidersList =new ArrayList<>();
-        List<Abonent> abonentList =new ArrayList<>();
         Res res = resRepository.getOne(id);
         //todo: переделать
         List<Tp> tpList = tpRepository.findAllByResIdOrderByName(res);
@@ -131,16 +133,16 @@ public class FiderService {
 
     public void deepSave(List<Fider> fiders) {
         for(Fider fider:fiders){
-            Fider fiderFromBase = fiderRepository.findOneByTpIdAndDbfId(fider.getTp().getId(),fider.getDbfId());
+            Fider fiderFromBase = fiderRepository.findTopByTpIdAndDbfId(fider.getTp().getId(),fider.getDbfId())
+                    .orElse(null);
             if(fiderFromBase!=null){
                 fider.setId(fiderFromBase.getId());
                 fider.setDbfId(fiderFromBase.getDbfId());
-                if(fider.getAbonents().size()>0) {
+                if(!fider.getAbonents().isEmpty()) {
                     abonentService.deepSave(fider.getAbonents());
                 }
             } else {
-                //System.out.printf("В базе нет фидера %s - %s \n",fider.getTp().getName(),fider.getName());
-                if(fider.getAbonents().size()>0) {
+                if(!fider.getAbonents().isEmpty()) {
                     saveOne(fider);
                     abonentService.deepSave(fider.getAbonents());
                 }

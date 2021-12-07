@@ -68,8 +68,6 @@ public class FileUploadController {
         String tpFilePath = storageService.store(tpFile);
         String fiderFilePath = storageService.store(fiderFile);
         String abonentFilePath = storageService.store(abonentFile);
-        //System.out.printf("%s \n %s \n %s\n",tpFilePath,fiderFilePath,abonentFilePath);
-
 
         dbfManager = new DBFManager(tpFilePath,fiderFilePath,abonentFilePath);
 
@@ -137,15 +135,17 @@ public class FileUploadController {
 
         List<Fider> fiders = new ArrayList<>();
         List<Abonent> abonents = new ArrayList<>();
-        long counter=0;
         for (Tp tp:tps) {
             fiders.addAll(tp.getFiders());
             for (Fider fider : tp.getFiders() ) {
                 abonents.addAll(fider.getAbonents());
             }
         }
+        logger.info("Обновляем фидера.");
         resultOfImport.addAll(fiderService.updateAll(fiders));
+        logger.info("Обновляем абонентов.");
         resultOfImport.addAll(abonentService.updateAll(abonents));
+        logger.info("Убираем пустых и дубли.");
         tpService.removeDuplicatedAndEmpty(resId);
         long endTime = System.currentTimeMillis(); //Get the end Time
         float processTime = (endTime-startTime)/(1000F);
@@ -169,7 +169,7 @@ public class FileUploadController {
 
 
     @ExceptionHandler(StorageFileNotFoundException.class)
-    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
+    public ResponseEntity handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
     }
 
@@ -182,7 +182,6 @@ public class FileUploadController {
     @ResponseBody
     public String dataExample(@RequestParam(value = "id",required = false) Integer dbfId){
         Tp tp = tpService.getOneByDbfId(dbfId);
-        //Tp tp1 = tpService.getOne(Integer.parseInt(dbfId));
         return "TP: " + tp.toString();
     }
 
