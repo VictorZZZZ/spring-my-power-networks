@@ -1,21 +1,19 @@
 package net.energo.grodno.pes.smsSender.Services;
 
+import net.energo.grodno.pes.sms.Services.OrderService;
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.smsSender.entities.Order;
-import net.energo.grodno.pes.smsSender.entities.OrderItem;
-import net.energo.grodno.pes.smsSender.repositories.OrderItemRepository;
-import net.energo.grodno.pes.smsSender.repositories.OrderRepository;
+import net.energo.grodno.pes.sms.entities.Order;
+import net.energo.grodno.pes.sms.entities.OrderItem;
+import net.energo.grodno.pes.sms.repositories.OrderItemRepository;
+import net.energo.grodno.pes.sms.repositories.OrderRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class OrderServiceTest extends AbstractClass {
     @Autowired

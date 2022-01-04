@@ -1,16 +1,14 @@
 package net.energo.grodno.pes.smsSender.reportTest;
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.smsSender.repositories.OrderItemRepository;
+import net.energo.grodno.pes.sms.repositories.OrderItemRepository;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 public class ReportTest extends AbstractClass {
 

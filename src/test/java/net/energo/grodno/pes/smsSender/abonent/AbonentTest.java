@@ -1,15 +1,13 @@
 package net.energo.grodno.pes.smsSender.abonent;
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.smsSender.Services.AbonentService;
-import net.energo.grodno.pes.smsSender.entities.Abonent;
-import net.energo.grodno.pes.smsSender.repositories.AbonentRepository;
+import net.energo.grodno.pes.sms.Services.AbonentService;
+import net.energo.grodno.pes.sms.entities.Abonent;
+import net.energo.grodno.pes.sms.repositories.AbonentRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;

@@ -2,14 +2,13 @@ package net.energo.grodno.pes.smsSender.helpScripts;
 
 import lombok.extern.slf4j.Slf4j;
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.smsSender.entities.Abonent;
-import net.energo.grodno.pes.smsSender.repositories.AbonentRepository;
+import net.energo.grodno.pes.sms.entities.Abonent;
+import net.energo.grodno.pes.sms.repositories.AbonentRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class clearSpacesInNumbers extends AbstractClass {

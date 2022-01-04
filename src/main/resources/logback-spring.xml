@@ -46,7 +46,7 @@
         <appender-ref ref="RollingFile"/>
     </root>
 
-    <logger name="net.energo.grodno.pes.smsSender.utils.importFromDbf.DBFManager" level="INFO">
+    <logger name="net.energo.grodno.pes.sms.utils.importFromDbf.DBFManager" level="INFO">
         <appender-ref ref="FILE" />
     </logger>
 

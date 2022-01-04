@@ -1,5 +1,4 @@
-C:\Program Files\PostgreSQL\12\bin\pg_restore.exe --host "localhost" --port "5432" --username "postgres" --no-password --dbname "smsSender_base"
---data-only --verbose --schema "public" --table "tp" "E:\\Exchange\\tp.sql"
+C:\Program Files\PostgreSQL\12\bin\pg_restore.exe --host "localhost" --port "5432" --username "postgres" --no-password --dbname "smsSender_base" --data-only --verbose --schema "public" --table "tp" "E:\\Exchange\\tp.sql"
 
 C:\Program Files\PostgreSQL\12\bin\pg_restore.exe --host "localhost" --port "5432" --username "postgres" --no-password --dbname "smsSender_base"
 --data-only --verbose --schema "public" --table "fider" "E:\\Exchange\\fider.sql"

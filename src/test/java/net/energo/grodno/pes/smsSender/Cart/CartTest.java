@@ -1,12 +1,10 @@
 package net.energo.grodno.pes.smsSender.Cart;
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.smsSender.utils.ShoppingCart;
+import net.energo.grodno.pes.sms.utils.ShoppingCart;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.security.Principal;
 
 public class CartTest extends AbstractClass {
     @Autowired

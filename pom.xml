@@ -15,7 +15,8 @@
 	<description>Elektroseti SMS Sender</description>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<github.global.server>github</github.global.server>
 	</properties>
 
@@ -105,6 +106,12 @@
 			<version>2.11.3</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.25</version>
+		</dependency>
+
 	</dependencies>
 
 	<distributionManagement>
@@ -121,7 +128,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>net.energo.grodno.pes.smsSender.SmsSenderApplication</mainClass>
+					<mainClass>net.energo.grodno.pes.sms.SmsSenderApplication</mainClass>
 					<finalName>sms-sender-app</finalName>
 				</configuration>
 			</plugin>

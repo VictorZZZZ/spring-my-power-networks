@@ -2,12 +2,11 @@ package net.energo.grodno.pes.smsSender.Template;
 
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.smsSender.Services.TemplateService;
-import net.energo.grodno.pes.smsSender.Services.UserService;
-import net.energo.grodno.pes.smsSender.entities.TextTemplate;
-import net.energo.grodno.pes.smsSender.entities.users.User;
-import net.energo.grodno.pes.smsSender.repositories.TemplateRepository;
-import org.hibernate.sql.Template;
+import net.energo.grodno.pes.sms.Services.TemplateService;
+import net.energo.grodno.pes.sms.Services.UserService;
+import net.energo.grodno.pes.sms.entities.TextTemplate;
+import net.energo.grodno.pes.sms.entities.users.User;
+import net.energo.grodno.pes.sms.repositories.TemplateRepository;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

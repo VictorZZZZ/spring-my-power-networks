@@ -2,9 +2,9 @@ package net.energo.grodno.pes.smsSender.handler;
 
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.smsSender.Services.LeadService;
+import net.energo.grodno.pes.sms.Services.LeadService;
 
-import net.energo.grodno.pes.smsSender.entities.Lead;
+import net.energo.grodno.pes.sms.entities.Lead;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -31,10 +31,10 @@
 
 
 
-        <mapping class="net.energo.grodno.pes.smsSender.entities.Tp"/>
-        <mapping class="net.energo.grodno.pes.smsSender.entities.Res"/>
-        <mapping class="net.energo.grodno.pes.smsSender.entities.Fider"/>
-        <mapping class="net.energo.grodno.pes.smsSender.entities.Abonent"/>
+        <mapping class="net.energo.grodno.pes.sms.entities.Tp"/>
+        <mapping class="net.energo.grodno.pes.sms.entities.Res"/>
+        <mapping class="net.energo.grodno.pes.sms.entities.Fider"/>
+        <mapping class="net.energo.grodno.pes.sms.entities.Abonent"/>
 
     </session-factory>
 </hibernate-configuration>

@@ -1,9 +1,9 @@
 package net.energo.grodno.pes.smsSender.helpScripts;
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.smsSender.Services.FiderService;
-import net.energo.grodno.pes.smsSender.entities.Abonent;
-import net.energo.grodno.pes.smsSender.entities.Fider;
+import net.energo.grodno.pes.sms.Services.FiderService;
+import net.energo.grodno.pes.sms.entities.Abonent;
+import net.energo.grodno.pes.sms.entities.Fider;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

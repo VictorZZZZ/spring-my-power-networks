@@ -1,15 +1,13 @@
 package net.energo.grodno.pes.smsSender.helpScripts;
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.smsSender.Services.ResService;
-import net.energo.grodno.pes.smsSender.entities.Res;
-import net.energo.grodno.pes.smsSender.utils.importFromJSON.JsonManager;
-import org.junit.Ignore;
+import net.energo.grodno.pes.sms.Services.ResService;
+import net.energo.grodno.pes.sms.entities.Res;
+import net.energo.grodno.pes.sms.utils.importFromJSON.JsonManager;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
