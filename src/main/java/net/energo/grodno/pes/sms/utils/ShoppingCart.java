@@ -2,13 +2,10 @@ package net.energo.grodno.pes.sms.utils;
 
 import net.energo.grodno.pes.sms.Services.*;
 import net.energo.grodno.pes.sms.entities.*;
-import net.energo.grodno.pes.sms.smsSender.Services.*;
+import net.energo.grodno.pes.sms.entities.users.User;
 import net.energo.grodno.pes.sms.utils.smsAPI.ErrorsTable;
 import net.energo.grodno.pes.sms.utils.smsAPI.SmsAPI;
 import net.energo.grodno.pes.sms.utils.smsAPI.SmsResponse;
-import net.energo.grodno.pes.smsSender.Services.*;
-import net.energo.grodno.pes.smsSender.entities.*;
-import net.energo.grodno.pes.sms.entities.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;

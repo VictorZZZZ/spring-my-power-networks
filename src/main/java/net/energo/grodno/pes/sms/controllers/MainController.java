@@ -4,8 +4,6 @@ import net.energo.grodno.pes.sms.Services.*;
 import net.energo.grodno.pes.sms.entities.Lead;
 import net.energo.grodno.pes.sms.entities.Master;
 import net.energo.grodno.pes.sms.entities.Res;
-import net.energo.grodno.pes.sms.smsSender.Services.*;
-import net.energo.grodno.pes.smsSender.Services.*;
 import net.energo.grodno.pes.sms.entities.users.User;
 import net.energo.grodno.pes.sms.security.AuthDetails;
 import org.slf4j.Logger;

@@ -1,7 +1,6 @@
 package net.energo.grodno.pes.sms.utils.importFromJSON;
 
 import net.energo.grodno.pes.sms.entities.*;
-import net.energo.grodno.pes.smsSender.entities.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
