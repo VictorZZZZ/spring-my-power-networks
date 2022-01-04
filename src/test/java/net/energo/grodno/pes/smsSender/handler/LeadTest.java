@@ -2,7 +2,7 @@ package net.energo.grodno.pes.smsSender.handler;
 
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.sms.Services.LeadService;
+import net.energo.grodno.pes.sms.services.LeadService;
 
 import net.energo.grodno.pes.sms.entities.Lead;
 import org.junit.Ignore;

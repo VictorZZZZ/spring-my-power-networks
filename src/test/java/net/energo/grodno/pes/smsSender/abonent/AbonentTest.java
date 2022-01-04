@@ -1,7 +1,7 @@
 package net.energo.grodno.pes.smsSender.abonent;
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.sms.Services.AbonentService;
+import net.energo.grodno.pes.sms.services.AbonentService;
 import net.energo.grodno.pes.sms.entities.Abonent;
 import net.energo.grodno.pes.sms.repositories.AbonentRepository;
 import org.junit.Assert;

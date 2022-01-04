@@ -1,8 +1,8 @@
 package net.energo.grodno.pes.smsSender.helpScripts;
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.sms.Services.ResService;
-import net.energo.grodno.pes.sms.Services.TpService;
+import net.energo.grodno.pes.sms.services.ResService;
+import net.energo.grodno.pes.sms.services.TpService;
 import net.energo.grodno.pes.sms.repositories.ResRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

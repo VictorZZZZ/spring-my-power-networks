@@ -1,6 +1,6 @@
 package net.energo.grodno.pes.sms.controllers;
 
-import net.energo.grodno.pes.sms.Services.*;
+import net.energo.grodno.pes.sms.services.*;
 import net.energo.grodno.pes.sms.entities.*;
 import net.energo.grodno.pes.sms.utils.ShoppingCart;
 import org.json.JSONArray;

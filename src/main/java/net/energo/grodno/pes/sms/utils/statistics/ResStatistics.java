@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.energo.grodno.pes.sms.entities.Res;
-import net.energo.grodno.pes.sms.Services.ResService;
+import net.energo.grodno.pes.sms.services.ResService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @NoArgsConstructor

@@ -1,8 +1,8 @@
 package net.energo.grodno.pes.sms.controllers;
 
-import net.energo.grodno.pes.sms.Services.MasterService;
-import net.energo.grodno.pes.sms.Services.ResService;
-import net.energo.grodno.pes.sms.Services.TemplateService;
+import net.energo.grodno.pes.sms.services.MasterService;
+import net.energo.grodno.pes.sms.services.ResService;
+import net.energo.grodno.pes.sms.services.TemplateService;
 import net.energo.grodno.pes.sms.entities.Master;
 import net.energo.grodno.pes.sms.entities.Res;
 import net.energo.grodno.pes.sms.entities.TextTemplate;

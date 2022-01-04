@@ -1,4 +1,4 @@
-package net.energo.grodno.pes.sms.Services;
+package net.energo.grodno.pes.sms.services;
 
 import net.energo.grodno.pes.sms.entities.OrderItem;
 import net.energo.grodno.pes.sms.repositories.OrderItemRepository;

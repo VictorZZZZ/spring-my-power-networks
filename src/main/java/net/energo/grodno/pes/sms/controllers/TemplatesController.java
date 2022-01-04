@@ -2,8 +2,8 @@ package net.energo.grodno.pes.sms.controllers;
 
 
 import net.energo.grodno.pes.sms.entities.TextTemplate;
-import net.energo.grodno.pes.sms.Services.TemplateService;
-import net.energo.grodno.pes.sms.Services.UserService;
+import net.energo.grodno.pes.sms.services.TemplateService;
+import net.energo.grodno.pes.sms.services.UserService;
 import net.energo.grodno.pes.sms.entities.users.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

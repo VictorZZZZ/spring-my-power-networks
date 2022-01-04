@@ -2,9 +2,9 @@ package net.energo.grodno.pes.sms.controllers;
 
 import net.energo.grodno.pes.sms.entities.Res;
 import net.energo.grodno.pes.sms.repositories.user.UserRepr;
-import net.energo.grodno.pes.sms.Services.ResService;
-import net.energo.grodno.pes.sms.Services.RoleService;
-import net.energo.grodno.pes.sms.Services.UserService;
+import net.energo.grodno.pes.sms.services.ResService;
+import net.energo.grodno.pes.sms.services.RoleService;
+import net.energo.grodno.pes.sms.services.UserService;
 import net.energo.grodno.pes.sms.entities.users.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

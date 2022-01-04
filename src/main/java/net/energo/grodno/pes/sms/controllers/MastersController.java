@@ -2,8 +2,8 @@ package net.energo.grodno.pes.sms.controllers;
 
 import net.energo.grodno.pes.sms.entities.Master;
 import net.energo.grodno.pes.sms.entities.Res;
-import net.energo.grodno.pes.sms.Services.MasterService;
-import net.energo.grodno.pes.sms.Services.UserService;
+import net.energo.grodno.pes.sms.services.MasterService;
+import net.energo.grodno.pes.sms.services.UserService;
 import net.energo.grodno.pes.sms.entities.users.User;
 import net.energo.grodno.pes.sms.utils.ShoppingCart;
 import org.springframework.beans.factory.annotation.Autowired;

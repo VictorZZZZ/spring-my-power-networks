@@ -1,7 +1,7 @@
 package net.energo.grodno.pes.sms.controllers;
 
-import net.energo.grodno.pes.sms.Services.OrderService;
-import net.energo.grodno.pes.sms.Services.UserService;
+import net.energo.grodno.pes.sms.services.OrderService;
+import net.energo.grodno.pes.sms.services.UserService;
 import net.energo.grodno.pes.sms.entities.Abonent;
 import net.energo.grodno.pes.sms.entities.Order;
 import net.energo.grodno.pes.sms.entities.OrderItem;

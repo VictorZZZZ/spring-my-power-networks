@@ -1,6 +1,6 @@
 package net.energo.grodno.pes.smsSender.Services;
 
-import net.energo.grodno.pes.sms.Services.OrderService;
+import net.energo.grodno.pes.sms.services.OrderService;
 import net.energo.grodno.pes.smsSender.AbstractClass;
 import net.energo.grodno.pes.sms.entities.Order;
 import net.energo.grodno.pes.sms.entities.OrderItem;

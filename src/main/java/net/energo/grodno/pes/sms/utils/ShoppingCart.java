@@ -1,6 +1,6 @@
 package net.energo.grodno.pes.sms.utils;
 
-import net.energo.grodno.pes.sms.Services.*;
+import net.energo.grodno.pes.sms.services.*;
 import net.energo.grodno.pes.sms.entities.*;
 import net.energo.grodno.pes.sms.entities.users.User;
 import net.energo.grodno.pes.sms.utils.smsAPI.ErrorsTable;

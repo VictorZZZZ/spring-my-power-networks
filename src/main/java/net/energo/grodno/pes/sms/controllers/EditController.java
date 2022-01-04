@@ -1,6 +1,6 @@
 package net.energo.grodno.pes.sms.controllers;
 
-import net.energo.grodno.pes.sms.Services.*;
+import net.energo.grodno.pes.sms.services.*;
 import net.energo.grodno.pes.sms.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

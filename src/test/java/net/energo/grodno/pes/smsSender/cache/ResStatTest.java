@@ -1,7 +1,7 @@
 package net.energo.grodno.pes.smsSender.cache;
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.sms.Services.ResService;
+import net.energo.grodno.pes.sms.services.ResService;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

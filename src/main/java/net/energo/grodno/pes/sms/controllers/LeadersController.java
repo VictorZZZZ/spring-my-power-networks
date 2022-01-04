@@ -1,7 +1,7 @@
 package net.energo.grodno.pes.sms.controllers;
 
 import net.energo.grodno.pes.sms.entities.Lead;
-import net.energo.grodno.pes.sms.Services.LeadService;
+import net.energo.grodno.pes.sms.services.LeadService;
 import net.energo.grodno.pes.sms.utils.ShoppingCart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

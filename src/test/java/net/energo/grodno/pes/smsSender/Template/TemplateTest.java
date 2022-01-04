@@ -2,8 +2,8 @@ package net.energo.grodno.pes.smsSender.Template;
 
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.sms.Services.TemplateService;
-import net.energo.grodno.pes.sms.Services.UserService;
+import net.energo.grodno.pes.sms.services.TemplateService;
+import net.energo.grodno.pes.sms.services.UserService;
 import net.energo.grodno.pes.sms.entities.TextTemplate;
 import net.energo.grodno.pes.sms.entities.users.User;
 import net.energo.grodno.pes.sms.repositories.TemplateRepository;

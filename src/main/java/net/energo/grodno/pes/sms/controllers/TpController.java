@@ -1,7 +1,7 @@
 package net.energo.grodno.pes.sms.controllers;
 
-import net.energo.grodno.pes.sms.Services.ResService;
-import net.energo.grodno.pes.sms.Services.TpService;
+import net.energo.grodno.pes.sms.services.ResService;
+import net.energo.grodno.pes.sms.services.TpService;
 import net.energo.grodno.pes.sms.entities.Res;
 import net.energo.grodno.pes.sms.entities.Fider;
 import net.energo.grodno.pes.sms.entities.Tp;

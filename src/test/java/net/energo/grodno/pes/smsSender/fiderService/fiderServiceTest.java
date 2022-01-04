@@ -1,7 +1,7 @@
 package net.energo.grodno.pes.smsSender.fiderService;
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.sms.Services.FiderService;
+import net.energo.grodno.pes.sms.services.FiderService;
 import net.energo.grodno.pes.sms.entities.Fider;
 import org.junit.Ignore;
 import org.junit.Test;

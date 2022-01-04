@@ -1,7 +1,7 @@
 package net.energo.grodno.pes.smsSender.helpScripts;
 
 import net.energo.grodno.pes.smsSender.AbstractClass;
-import net.energo.grodno.pes.sms.Services.ResService;
+import net.energo.grodno.pes.sms.services.ResService;
 import net.energo.grodno.pes.sms.entities.Res;
 import net.energo.grodno.pes.sms.utils.importFromJSON.JsonManager;
 import org.junit.Test;

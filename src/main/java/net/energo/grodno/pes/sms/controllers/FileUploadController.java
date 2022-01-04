@@ -1,9 +1,9 @@
 package net.energo.grodno.pes.sms.controllers;
 
 import com.linuxense.javadbf.DBFException;
-import net.energo.grodno.pes.sms.Services.AbonentService;
-import net.energo.grodno.pes.sms.Services.FiderService;
-import net.energo.grodno.pes.sms.Services.TpService;
+import net.energo.grodno.pes.sms.services.AbonentService;
+import net.energo.grodno.pes.sms.services.FiderService;
+import net.energo.grodno.pes.sms.services.TpService;
 import net.energo.grodno.pes.sms.entities.Abonent;
 import net.energo.grodno.pes.sms.entities.Fider;
 import net.energo.grodno.pes.sms.entities.Tp;
