@@ -20,7 +20,6 @@ public class Abonent {
 
     @Id
     @Column(name="account_number")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountNumber;
 
     @Column(name="surname")
@@ -72,14 +71,6 @@ public class Abonent {
         this.fider = fider;
         this.inputManually=inputManually;
     }
-
-//    public Integer getId() {
-//        return id;
-//    }
-//
-//    public void setId(Integer id) {
-//        this.id = id;
-//    }
 
     public String getSurname() {
         return surname;
