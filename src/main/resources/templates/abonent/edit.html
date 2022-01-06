@@ -47,8 +47,8 @@
                             <input type="hidden" name="inputManually" th:value="true" />
                             <div class="form-group">
                                 <label>Лицевой счёт</label>
-                                <input class="form-control" type="text" th:field="*{accountNumber}" />
-                                <small class="form-text text-muted">Можно оставить пустым.</small>
+                                <input class="form-control" type="text" th:field="*{accountNumber}" required/>
+                                <small class="form-text text-muted">Обязательное поле!!!</small>
                                 <small class="form-text text-danger" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}" />
                             </div>
 
