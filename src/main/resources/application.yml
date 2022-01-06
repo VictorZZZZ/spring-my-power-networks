@@ -21,10 +21,10 @@ spring:
   #База данных
   datasource:
     driver-class-name: org.postgresql.Driver
-    #url=jdbc:postgresql://10.182.128.188:5432/smsSender_base?currentSchema=public
+    #url: jdbc:postgresql://10.182.128.188:5432/smsSender_base?currentSchema=public
     url: jdbc:postgresql://localhost:5432/smsSender_base?currentSchema=public
-    username: postgres
-    password: root
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:root}
   #Загрузка файлов
   servlet:
     multipart:
@@ -44,10 +44,23 @@ logging:
 
 #SmsAPI settings
 smsApi:
-  user: xxx
-  password: xxx
-  from : xxx
+  user: ${SMS_USER}
+  password: ${SMS_PASSWORD}
+  from : ${SMS_FROM}
 
-  #Стоимость смс
+#Стоимость смс
 sms:
   price: 0.0145
+
+#ФТП настройки
+ftp:
+  connection:
+    server: ${FTP_SERVER}
+    port: ${FTP_PORT}
+    login: ${FTP_LOGIN}
+    password: ${FTP_PASSWORD}
+  baseFolder: ${FTP_BASE_FOLDER}
+
+#Номера телефонов администраторов приложения, для высылки служебной информации(например о неверном импорте)
+#Можно указывать через запятую
+adminsNumbers: ${ADMINS_NUMBERS}

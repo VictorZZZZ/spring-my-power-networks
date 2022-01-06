@@ -1,18 +1,18 @@
 package net.energo.grodno.pes.sms.controllers;
 
 import com.linuxense.javadbf.DBFException;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.energo.grodno.pes.sms.entities.Fider;
+import net.energo.grodno.pes.sms.entities.Tp;
+import net.energo.grodno.pes.sms.exceptions.DBFManagerException;
 import net.energo.grodno.pes.sms.services.AbonentService;
 import net.energo.grodno.pes.sms.services.FiderService;
 import net.energo.grodno.pes.sms.services.TpService;
-import net.energo.grodno.pes.sms.entities.Abonent;
-import net.energo.grodno.pes.sms.entities.Fider;
-import net.energo.grodno.pes.sms.entities.Tp;
+import net.energo.grodno.pes.sms.services.update.ImportService;
 import net.energo.grodno.pes.sms.storage.StorageFileNotFoundException;
 import net.energo.grodno.pes.sms.storage.StorageService;
 import net.energo.grodno.pes.sms.utils.importFromDbf.DBFManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,36 +32,27 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/importFromDbf")
+@AllArgsConstructor
+@Slf4j
 public class FileUploadController {
-    Logger logger = LoggerFactory.getLogger(FileUploadController.class);
 
     private final StorageService storageService;
     private final TpService tpService;
     private final FiderService fiderService;
     private final AbonentService abonentService;
-    private DBFManager dbfManager;
+    private final DBFManager dbfManager;
+    private final ImportService importService;
 
-    @Autowired
-    public FileUploadController(StorageService storageService, TpService tpService, FiderService fiderService, AbonentService abonentService, DBFManager dbfManager) {
-        this.storageService = storageService;
-        this.tpService = tpService;
-        this.fiderService = fiderService;
-        this.abonentService = abonentService;
-        this.dbfManager = dbfManager;
-    }
-
-
-
-    @GetMapping(value = {"","/","index","step_1"})
-    public String index(){
+    @GetMapping(value = {"", "/", "index", "step_1"})
+    public String index() {
         return "importFromDbf/step_1";
     }
 
-    @PostMapping(value = {"","/","index"})
+    @PostMapping(value = {"", "/", "index"})
     public String handleFileUpload(@RequestParam("tpFile") MultipartFile tpFile,
                                    @RequestParam("fiderFile") MultipartFile fiderFile,
                                    @RequestParam("abonentFile") MultipartFile abonentFile,
-                                   RedirectAttributes redirectAttributes) {
+                                   RedirectAttributes redirectAttributes) throws DBFManagerException {
         storageService.deleteAll();
         storageService.init();
 
@@ -70,11 +60,11 @@ public class FileUploadController {
         String fiderFilePath = storageService.store(fiderFile);
         String abonentFilePath = storageService.store(abonentFile);
 
-        dbfManager = new DBFManager(tpFilePath,fiderFilePath,abonentFilePath);
+        dbfManager.setReaders(tpFilePath, fiderFilePath, abonentFilePath);
 
-        if(!dbfManager.isValid()){
+        if (!dbfManager.isValid()) {
             redirectAttributes.addFlashAttribute("messageError",
-                    "Ошибка загруженных файлов: \n"+
+                    "Ошибка загруженных файлов: \n" +
                             dbfManager.getErrors());
             storageService.deleteAll();
             return "redirect:/importFromDbf/step_1";
@@ -95,21 +85,21 @@ public class FileUploadController {
     public String listUploadedFiles(Model model) {
 
 
-        model.addAttribute("countTp",dbfManager.getTpMap().size());
-        int fidersCount=0;
-        int abonentsCount=0;
+        model.addAttribute("countTp", dbfManager.getTpMap().size());
+        int fidersCount = 0;
+        int abonentsCount = 0;
         for (Map.Entry<Integer, Tp> entry : dbfManager.getTpMap().entrySet()) {
             Tp tp = entry.getValue();
             fidersCount += tp.getFiders().size();
-            for(Fider fider:tp.getFiders()){
-                abonentsCount+=fider.getAbonents().size();
+            for (Fider fider : tp.getFiders()) {
+                abonentsCount += fider.getAbonents().size();
             }
         }
-        model.addAttribute("countFid",fidersCount);
-        model.addAttribute("countAbonents",abonentsCount);
+        model.addAttribute("countFid", fidersCount);
+        model.addAttribute("countAbonents", abonentsCount);
         try {
-            List<String> logs =  storageService.readFileToStringList("logs\\dbfManage.log");
-            model.addAttribute("logs",logs);
+            List<String> logs = storageService.readFileToStringList("logs\\dbfManage.log");
+            model.addAttribute("logs", logs);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -125,37 +115,17 @@ public class FileUploadController {
 
 
     @GetMapping("/step_3")
-    public String showResultsOfImport(Model model)  {
-        List<String> resultOfImport = new ArrayList<>();
+    public String showResultsOfImport(Model model) {
         long startTime = System.currentTimeMillis(); // Get the start Time
-        Map<Integer, Tp> tpsFromDbf = dbfManager.getTpMap();
-        List<Tp> tps = new ArrayList<>(tpsFromDbf.values());
-        Integer resId = tps.get(0).getResId();
 
-        logger.info("Начало процесса Импорта");
+        List<String> resultOfImport = importService.updateDb();
 
-        resultOfImport.addAll(tpService.updateAll(tps));
-
-        List<Fider> fiders = new ArrayList<>();
-        List<Abonent> abonents = new ArrayList<>();
-        for (Tp tp:tps) {
-            fiders.addAll(tp.getFiders());
-            for (Fider fider : tp.getFiders() ) {
-                abonents.addAll(fider.getAbonents());
-            }
-        }
-        logger.info("Обновляем фидера.");
-        resultOfImport.addAll(fiderService.updateAll(fiders));
-        logger.info("Обновляем абонентов.");
-        resultOfImport.addAll(abonentService.updateAll(abonents));
-        logger.info("Убираем пустых и дубли.");
-        tpService.removeDuplicatedAndEmpty(resId);
         long endTime = System.currentTimeMillis(); //Get the end Time
-        float processTime = (endTime-startTime)/(1000F);
-        resultOfImport.add("Время обработки "+processTime+" секунд");
+        float processTime = (endTime - startTime) / (1000F);
+        resultOfImport.add("Время обработки " + processTime + " секунд");
 
-        model.addAttribute("resultOfImport",resultOfImport);
-        logger.info("Процесс импорта занял {} секунд",processTime); // Print the difference in seconds
+        model.addAttribute("resultOfImport", resultOfImport);
+        log.info("Процесс импорта занял {} секунд", processTime); // Print the difference in seconds
         return "importFromDbf/step_3";
     }
 
@@ -170,7 +140,6 @@ public class FileUploadController {
     }
 
 
-
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
@@ -183,7 +152,7 @@ public class FileUploadController {
 
     @GetMapping("/test")
     @ResponseBody
-    public String dataExample(@RequestParam(value = "id",required = false) Integer dbfId){
+    public String dataExample(@RequestParam(value = "id", required = false) Integer dbfId) {
         Tp tp = tpService.getOneByDbfId(dbfId);
         return "TP: " + tp.toString();
     }

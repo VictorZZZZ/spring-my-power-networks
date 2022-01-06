@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FiderService {
@@ -57,18 +58,22 @@ public class FiderService {
         List<String> resultList = new ArrayList<>();
         resultList.add("Обработка Фидеров...");
         List<Fider> listToSave = new ArrayList<>();
+        List<Fider> fidersFromBase = fiderRepository.findAllByTpId(fidersList.stream().map(f -> f.getTp().getId()).collect(Collectors.toList()));
         for (Fider fider:fidersList) {
             //поиск уже имеющихся фидеров, чтобы неделать лишний update в базе данных
-            Fider bufferFider = fiderRepository.findTopByTpIdAndDbfId(fider.getTp().getId(),fider.getDbfId())
+            Fider bufferFider = fidersFromBase.stream()
+                    .filter(f -> f.getTp().getId().equals(fider.getTp().getId()) && f.getDbfId()==fider.getDbfId()).findFirst()
                     .orElse(null);
             if(bufferFider!=null){
                 fider.setId(bufferFider.getId());
+                fidersFromBase.remove(bufferFider);
             } else {
                 listToSave.add(fider);
             }
         }
         if(!listToSave.isEmpty()) {
             fiderRepository.saveAll(listToSave);
+            fiderRepository.flush();
             resultList.add("В базу добавлено "+listToSave.size()+" новых Фидеров");
         }
 

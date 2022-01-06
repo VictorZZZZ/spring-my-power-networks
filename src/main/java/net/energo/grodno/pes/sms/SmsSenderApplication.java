@@ -1,5 +1,7 @@
 package net.energo.grodno.pes.sms;
 
+import lombok.AllArgsConstructor;
+import net.energo.grodno.pes.sms.services.schedule.SchedulerService;
 import net.energo.grodno.pes.sms.storage.StorageProperties;
 import net.energo.grodno.pes.sms.storage.StorageService;
 import org.springframework.boot.CommandLineRunner;
@@ -8,30 +10,24 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
 @EnableCaching
+@AllArgsConstructor
 public class SmsSenderApplication {
+    private final SchedulerService schedulerService;
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		SpringApplication.run(SmsSenderApplication.class, args);
-	}
+        SpringApplication.run(SmsSenderApplication.class, args);
+    }
 
-	@Bean
-	CommandLineRunner init(StorageService storageService) {
-		return (args) -> {
-			storageService.init();
-		};
-	}
-
-	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
-
+    @Bean
+    CommandLineRunner init(StorageService storageService) {
+        return (args) -> {
+            storageService.init();
+        };
+    }
 }

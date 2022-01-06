@@ -5,6 +5,7 @@ import net.energo.grodno.pes.sms.entities.Res;
 import net.energo.grodno.pes.sms.entities.Abonent;
 import net.energo.grodno.pes.sms.entities.Fider;
 import net.energo.grodno.pes.sms.entities.Tp;
+import net.energo.grodno.pes.sms.exceptions.DBFManagerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -18,11 +19,9 @@ public class DBFManager {
 
     Logger logger = LoggerFactory.getLogger(DBFManager.class);
 
-    private static DBFReader tpReader;
-
-    private static DBFReader fiderReader;
-
-    private static DBFReader abonentReader;
+    private DBFReader tpReader;
+    private DBFReader fiderReader;
+    private DBFReader abonentReader;
 
     private List<Fider> fiderList = new ArrayList<>();
     private Map<Integer,Tp> tpMap = new HashMap<>();
@@ -30,29 +29,19 @@ public class DBFManager {
     private List<String> errors= new ArrayList<>();
     private String resIdForDBF="";
 
-
-    public DBFManager() {
-    }
-
-    public DBFManager(String tpFilename, String fiderFilename, String abonentFilename) {
+    public void setReaders(String tpFilename, String fiderFilename, String abonentFilename) throws DBFManagerException {
         try {
             if ((tpFilename.endsWith(".dbf") || tpFilename.endsWith(".DBF"))
                     && (fiderFilename.endsWith(".dbf") || fiderFilename.endsWith(".DBF"))
                     && (abonentFilename.endsWith(".dbf") || abonentFilename.endsWith(".DBF"))) {
-                // create a DBFReader object
-                //reader = new DBFReader(new FileInputStream(System.getProperty("user.dir") + "/src/main/resources/static/files/ГГРЭС/GGRES.DBF"));
                 tpReader = new DBFReader(new FileInputStream(tpFilename));
                 fiderReader = new DBFReader(new FileInputStream(fiderFilename));
                 abonentReader = new DBFReader(new FileInputStream(abonentFilename));
             } else {
                 this.errors.add("Файлы имеют неверное раширение(необходимо .dbf!)");
             }
-
-            logger.info("Connected to DBF");
-        } catch (DBFException  e){
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e){
+            throw new DBFManagerException("Ошибка загрузки ДБФ файлов!");
         }
     }
 
@@ -86,15 +75,6 @@ public class DBFManager {
 
         if(errors.size()>0) return false;
         else return true;
-    }
-
-    public static void main(String args[]) {
-        DBFManager dbfManager = new DBFManager(
-                System.getProperty("user.dir")+"\\src\\main\\resources\\static\\files\\БРЭС\\1KARTTP.DBF",
-                System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\БРЭС\\1KARTFID.DBF",
-                System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\БРЭС\\BRES.DBF");
-        System.out.println(dbfManager.isValid());
-        dbfManager.manage();
     }
 
     public void manage(){

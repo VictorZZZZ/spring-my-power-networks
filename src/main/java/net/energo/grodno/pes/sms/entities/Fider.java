@@ -8,35 +8,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="fider")
+@Table(name = "fider")
 public class Fider {
     public static final int EMPTY_FIDER_ID = 0;
-    public static final String EMPTY_FIDER_NAME ="Без номера";
+    public static final String EMPTY_FIDER_NAME = "Без номера";
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
-    @Column(name="dbf_id",nullable = false, columnDefinition="integer default 0")
+    @Column(name = "dbf_id", nullable = false, columnDefinition = "integer default 0")
     private int dbfId;
-    @Column(name="input_manually",nullable = false, columnDefinition="boolean default false")
+    @Column(name = "input_manually", nullable = false, columnDefinition = "boolean default false")
     private boolean inputManually;
 
     @ManyToOne
-    @JoinColumn(name="tp_id")
+    @JoinColumn(name = "tp_id")
     private Tp tp;
 
-    @OneToMany(mappedBy = "fider",fetch = FetchType.EAGER)
-    @OnDelete(action=OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "fider", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OrderBy("surname")
     private List<Abonent> abonents;
 
     public Fider() {
     }
 
-    public Fider(String name, int dbfId, Tp tp,boolean inputManually) {
+    public Fider(String name, int dbfId, Tp tp, boolean inputManually) {
         this.name = name;
         this.dbfId = dbfId;
         this.tp = tp;
@@ -91,12 +91,12 @@ public class Fider {
         this.inputManually = inputManually;
     }
 
-    public void addAbonent(Abonent abonent){
-        if(this.getAbonents()==null){
-            List<Abonent> abonentList=new ArrayList<>();
+    public void addAbonent(Abonent abonent) {
+        if (this.getAbonents() == null) {
+            List<Abonent> abonentList = new ArrayList<>();
             abonentList.add(abonent);
             this.setAbonents(abonentList);
-        } else{
+        } else {
             List<Abonent> abonentList = this.getAbonents();
             abonentList.add(abonent);
             this.setAbonents(abonentList);
@@ -114,7 +114,7 @@ public class Fider {
     }
 
     public String toShortString() {
-        return name+" - "+tp.getName();
+        return name + " - " + tp.getName();
     }
 
     public void info() {
@@ -122,8 +122,8 @@ public class Fider {
                 "name='" + name + '\'' +
                 ", dbfId='" + dbfId + '\'' +
                 '}');
-        for (Abonent abonent:abonents) {
-            System.out.println("\t\t\t\t\t\t\t"+abonent.toShortString());
+        for (Abonent abonent : abonents) {
+            System.out.println("\t\t\t\t\t\t\t" + abonent.toShortString());
         }
     }
 }

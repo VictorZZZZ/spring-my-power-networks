@@ -2,7 +2,6 @@ package net.energo.grodno.pes.sms.repositories.user;
 
 import net.energo.grodno.pes.sms.entities.Res;
 import net.energo.grodno.pes.sms.entities.users.Role;
-import org.checkerframework.common.aliasing.qual.Unique;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -11,7 +10,6 @@ public class UserRepr {
     private Long id;
 
     @NotBlank
-    @Unique
     private String username;
 
     @NotBlank

@@ -82,6 +82,7 @@ public class TpService {
         }
         if(listToSave.size()>0) {
             tpRepository.saveAll(listToSave);
+            tpRepository.flush();
             messages.add("В базу добавлено "+listToSave.size()+" новых ТП");
             logger.info("В базу добавлено {} новых ТП",listToSave.size());
         } else {
