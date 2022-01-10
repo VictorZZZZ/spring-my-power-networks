@@ -68,10 +68,10 @@ public class SchedulerService {
                 String errorMsg = String.format("Ошибка импорта БД для %s ", target.name());
                 log.info("Автоматический старт импорта БД для {}", target);
                 try {
-                    if (!importToDatabase(target)) {
-                        smsAPI.sendSms(adminsNumbers, errorMsg);
+                    boolean isImportSuccess = importToDatabase(target);
+                    if(isImportSuccess){
+                        smsAPI.sendSms(adminsNumbers, target.name() + ": успешно обновлено!");
                     }
-                    smsAPI.sendSms(adminsNumbers, target.name() + ": успешно обновлено!");
                 } catch (DBFManagerException | SchedulerServiceException e) {
                     e.printStackTrace();
                     smsAPI.sendSms(adminsNumbers, errorMsg + ":" + e.getMessage());
@@ -123,7 +123,7 @@ public class SchedulerService {
             return true;
         } catch (IOException | FtpClientException e) {
             e.printStackTrace();
-            return false;
+            throw new SchedulerServiceException(e.getMessage());
         }
     }
 
