@@ -35,28 +35,28 @@ public class SchedulerService {
     private final SmsAPI smsAPI;
 
     //At 10:00:00am, on every Sunday, every month
-    @Scheduled(cron="0 0 10 ? * SUN *")
+    @Scheduled(cron="0 0 10 ? * SUN")
     public void importBres() {
         ImportData target = ImportData.BRES;
         importToTarget(target);
     }
 
     //At 12:00:00am, on every Sunday, every month
-    @Scheduled(cron="0 0 12 ? * SUN *")
+    @Scheduled(cron="0 0 12 ? * SUN")
     public void importSchres() {
         ImportData target = ImportData.SCHRES;
         importToTarget(target);
     }
 
     //At 14:00:00am, on every Sunday, every month
-    @Scheduled(cron="0 0 14 ? * SUN *")
+    @Scheduled(cron="0 0 14 ? * SUN")
     public void importGgres() {
         ImportData target = ImportData.GGRES;
         importToTarget(target);
     }
 
     //At 16:00:00am, on every Sunday, every month
-    @Scheduled(cron="0 0 16 ? * SUN *")
+    @Scheduled(cron="0 0 16 ? * SUN")
     public void importGsres() {
         ImportData target = ImportData.GSRES;
         importToTarget(target);
