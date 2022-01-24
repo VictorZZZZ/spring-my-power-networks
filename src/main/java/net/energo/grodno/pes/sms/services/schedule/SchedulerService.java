@@ -62,7 +62,7 @@ public class SchedulerService {
         importToTarget(target);
     }
 
-    private void importToTarget(ImportData target) {
+    public void importToTarget(ImportData target) {
         new Thread(() -> {
             try {
                 String errorMsg = String.format("Ошибка импорта БД для %s ", target.name());

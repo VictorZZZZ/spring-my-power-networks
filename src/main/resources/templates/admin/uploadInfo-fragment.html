@@ -1,0 +1,6 @@
+<div th:fragment="uploadInfo(resData)" xmlns:th="http://www.w3.org/1999/xhtml" style="margin-top:20px;">
+    <h2> Будут загружены файлы</h2>
+    <p th:text="${baseFtpFolder + resData.getTpFilename()}"></p>
+    <p th:text="${baseFtpFolder + resData.getFidFilename()}"></p>
+    <p th:text="${baseFtpFolder + resData.getBaseName()}"></p>
+</div>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8"/>
+
+    <title th:text="${title!=null} ? ${title} :'СМС Оповещение абонентов'">СМС оповещение Абонентов</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+
+    <th:block th:insert="~{mandatory_styles :: link}"></th:block>
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link th:href="@{/css/assets/global/plugins/jstree/dist/themes/default/style.min.css}" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
+
+    <script th:src="@{/js/jquery.js}"></script>
+
+</head>
+<!-- END HEAD -->
+
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-full-width page-md">
+<div class="page-wrapper">
+    <!-- BEGIN HEADER -->
+    <div th:replace="~{nav :: nav(Home)}"/>
+    <!-- END HEADER -->
+    <!-- BEGIN HEADER & CONTENT DIVIDER -->
+    <div class="clearfix"></div>
+    <!-- END HEADER & CONTENT DIVIDER -->
+    <!-- BEGIN CONTAINER -->
+    <div class="page-container">
+        <!-- BEGIN CONTENT -->
+        <div class="page-content-wrapper">
+            <!-- BEGIN CONTENT BODY -->
+            <div class="page-content">
+
+                <div th:replace="~{flashMessages :: flash}"/>
+                <div class="container">
+                    <!-- BEGIN PAGE TITLE-->
+                    <h1 class="page-title"> Импорт из ФТП</h1>
+                    <!-- END PAGE TITLE-->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <i>
+                                После нажатия на кнопку СТАРТ будет запущен
+                                импорт в парллельном потоке.
+                                СМС сообщение о результатах импорта придёт на номер
+                                администратора <span style="font-weight: bold" th:text="${adminPhone}">номер</span>
+                            </i>
+                            <div class="col-md-12">
+                                <h2>БРЭС</h2>
+                                <div th:replace="~{admin/uploadInfo-fragment :: uploadInfo(resData = ${bresImportData})}"/>
+                                <a class="btn btn-danger btn-circle" th:href="@{/admin/startFtpImport?res=BRES}">
+                                    Старт БРЭС
+                                </a>
+                            </div>
+                            <br/>
+                            <div class="col-md-12">
+                                <h2>ЩРЭС</h2>
+                                <div th:replace="~{admin/uploadInfo-fragment :: uploadInfo(resData = ${schresImportData})}"/>
+                                <a class="btn btn-danger btn-circle" th:href="@{/admin/startFtpImport?res=SCHRES}">
+                                    Старт ЩРЭС
+                                </a>
+                            </div>
+                            <br/>
+                            <div class="col-md-12">
+                                <h2>СРЭС</h2>
+                                <div th:replace="~{admin/uploadInfo-fragment :: uploadInfo(resData = ${gsresImportData})}"/>
+                                <a class="btn btn-danger btn-circle" th:href="@{/admin/startFtpImport?res=GSRES}">
+                                    Старт СРЭС
+                                </a>
+                            </div>
+                            <br/>
+                            <div class="col-md-12">
+                                <h2>ГГРЭС</h2>
+                                <div th:replace="~{admin/uploadInfo-fragment :: uploadInfo(resData = ${ggresImportData})}"/>
+                                <a class="btn btn-danger btn-circle" th:href="@{/admin/startFtpImport?res=GGRES}">
+                                    Старт ГГРЭС
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END CONTENT BODY -->
+        </div>
+        <!-- END CONTENT -->
+    </div>
+    <!-- END CONTAINER -->
+    <!-- BEGIN FOOTER -->
+    <div th:replace="~{footer :: footer}"/>
+    <!-- END FOOTER -->
+</div>
+
+
+<th:block th:insert="~{mandatory_styles :: script}"></th:block>
+<!-- END THEME LAYOUT SCRIPTS -->
+
+</body>
+
+</html>
