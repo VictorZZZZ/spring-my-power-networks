@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import net.energo.grodno.pes.sms.config.FtpProperties;
 import net.energo.grodno.pes.sms.config.ImportData;
 import net.energo.grodno.pes.sms.services.schedule.SchedulerService;
+import net.energo.grodno.pes.sms.utils.RegexpUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.annotation.Secured;
@@ -15,12 +16,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Controller
 @RequestMapping("/admin")
 @AllArgsConstructor
 public class AdminController {
+    private static final String THREAD_NAME_REGEXP = "^[^-]*";
     @Value("${adminsNumbers}")
     private List<String> adminsNumbers;
     private final FtpProperties ftpProperties;
@@ -28,7 +32,7 @@ public class AdminController {
 
     @Secured("ROLE_ADMIN")
     @GetMapping(value = "/ftpImport")
-    public String ftpImport(Model model){
+    public String ftpImport(Model model) {
         model.addAttribute("bresImportData", ImportData.BRES.getResData());
         model.addAttribute("schresImportData", ImportData.SCHRES.getResData());
         model.addAttribute("gsresImportData", ImportData.GSRES.getResData());
@@ -36,22 +40,39 @@ public class AdminController {
         model.addAttribute("baseFtpFolder", ftpProperties.getBaseFolder());
         model.addAttribute("adminPhone", adminsNumbers);
 
+        List<String> workingImportThreads = findWorkingImportThreads();
+        model.addAttribute("workingImportThreads", workingImportThreads);
         return "admin/ftpImport";
     }
 
     @Secured("ROLE_ADMIN")
     @GetMapping(value = "startFtpImport")
-    public String startFtpImport(@Param("res") String res, HttpServletRequest request, RedirectAttributes resdirectAttributes){
-        try{
+    public String startFtpImport(@Param("res") String res, HttpServletRequest request, RedirectAttributes resdirectAttributes) {
+        List<String> workingImportThreads = findWorkingImportThreads();
+        if (workingImportThreads.contains(res)) {
+            resdirectAttributes.addFlashAttribute("messageError", "Рабочий поток существует. Запуск импорта по данному РЭСу невозможен!");
+            return "redirect:/admin/ftpImport";
+        }
+
+        try {
             ImportData target = ImportData.valueOf(res);
-            //todo: сделать проверку на поиск существующего thread, если interrupted, то запускать.
             schedulerService.importToTarget(target);
             resdirectAttributes.addFlashAttribute("messageInfo", "Старт импорта по: " + target);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             resdirectAttributes.addFlashAttribute("messageError", "Нет такого РЭСа: " + res);
             return "redirect:/admin/ftpImport";
         }
-        return "redirect:"+request.getHeader("Referer");
+        return "redirect:" + request.getHeader("Referer");
+    }
+
+    private List<String> findWorkingImportThreads() {
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
+        return threads.stream()
+                .map(Thread::getName)
+                .filter(name -> name.contains("import-thread"))
+                .map(name -> RegexpUtils.findFirstMatch(name, THREAD_NAME_REGEXP))
+                .filter(name -> !name.isBlank())
+                .collect(Collectors.toList());
     }
 
 }

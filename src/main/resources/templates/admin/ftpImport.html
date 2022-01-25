@@ -50,7 +50,7 @@
                             <div class="col-md-12">
                                 <h2>БРЭС</h2>
                                 <div th:replace="~{admin/uploadInfo-fragment :: uploadInfo(resData = ${bresImportData})}"/>
-                                <a class="btn btn-danger btn-circle" th:href="@{/admin/startFtpImport?res=BRES}">
+                                <a class="btn btn-danger btn-circle" th:href="@{/admin/startFtpImport?res=BRES}" th:classappend="${workingImportThreads.contains('BRES')} ?'disabled':''">
                                     Старт БРЭС
                                 </a>
                             </div>
@@ -58,7 +58,7 @@
                             <div class="col-md-12">
                                 <h2>ЩРЭС</h2>
                                 <div th:replace="~{admin/uploadInfo-fragment :: uploadInfo(resData = ${schresImportData})}"/>
-                                <a class="btn btn-danger btn-circle" th:href="@{/admin/startFtpImport?res=SCHRES}">
+                                <a class="btn btn-danger btn-circle" th:href="@{/admin/startFtpImport?res=SCHRES}" th:classappend="${workingImportThreads.contains('SCHRES')} ?'disabled':''">
                                     Старт ЩРЭС
                                 </a>
                             </div>
@@ -66,7 +66,7 @@
                             <div class="col-md-12">
                                 <h2>СРЭС</h2>
                                 <div th:replace="~{admin/uploadInfo-fragment :: uploadInfo(resData = ${gsresImportData})}"/>
-                                <a class="btn btn-danger btn-circle" th:href="@{/admin/startFtpImport?res=GSRES}">
+                                <a class="btn btn-danger btn-circle" th:href="@{/admin/startFtpImport?res=GSRES}" th:classappend="${workingImportThreads.contains('GSRES')} ?'disabled':''">
                                     Старт СРЭС
                                 </a>
                             </div>
@@ -74,7 +74,7 @@
                             <div class="col-md-12">
                                 <h2>ГГРЭС</h2>
                                 <div th:replace="~{admin/uploadInfo-fragment :: uploadInfo(resData = ${ggresImportData})}"/>
-                                <a class="btn btn-danger btn-circle" th:href="@{/admin/startFtpImport?res=GGRES}">
+                                <a class="btn btn-danger btn-circle" th:href="@{/admin/startFtpImport?res=GGRES}" th:classappend="${workingImportThreads.contains('GGRES')} ?'disabled':''">
                                     Старт ГГРЭС
                                 </a>
                             </div>
